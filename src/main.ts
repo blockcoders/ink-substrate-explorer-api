@@ -18,7 +18,7 @@ async function bootstrap() {
   )
   const env = app.get(EnvService)
 
-  app.enableCors()
+  // app.enableCors()
   app.useLogger(app.get(Logger))
   app.setGlobalPrefix(env.API_BASE_PATH)
   app.useGlobalPipes(
