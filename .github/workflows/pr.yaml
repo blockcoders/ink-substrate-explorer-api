@@ -1,0 +1,62 @@
+name: Pulll Request App Build
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow pull request events but only for the main and develop branch
+  pull_request:
+    branches: [main, develop, staging]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Check linter, unit and e2e tests.
+  check:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout files
+        uses: actions/checkout@v2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
+
+      - name: Install Node LTS Gallium
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/gallium'
+          cache: 'pnpm'
+
+      - name: Pnpm Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+            **/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}
+
+      - name: Audit
+        run: pnpm audit --audit-level=high --prod
+
+      - name: Install dependencies from lock.
+        run: pnpm i --frozen-lockfile
+
+      - name: Linter.
+        run: pnpm lint:ci
+
+      - name: Unit tests.
+        run: pnpm test:cov
+
+      # - name: E2E tests.
+      #   run: pnpm test:e2e
+
+      - name: Build source code.
+        run: pnpm build

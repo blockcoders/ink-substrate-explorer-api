@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  backend:
+    restart: on-failure
+    depends_on:
+     - mariadb
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    networks:
+      - ink-substrate-explorer-api-network
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
+
+networks:
+  ink-substrate-explorer-api-network:
