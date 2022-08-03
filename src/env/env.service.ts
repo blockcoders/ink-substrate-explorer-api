@@ -16,6 +16,11 @@ export class EnvService {
   public readonly GRAPHQL_PLAYGROUND: boolean
   public readonly GRAPHQL_SORT_SCHEMA: boolean
   public readonly GRAPHQL_INTROSPECTION: boolean
+  /*public readonly POSTGRES_HOST: string
+  public readonly POSTGRES_PORT: number
+  public readonly POSTGRES_USER: string
+  public readonly POSTGRES_PASSWORD: string
+  public readonly POSTGRES_DB: string*/
 
   constructor(private readonly config: ConfigService) {
     // public env variables
@@ -28,6 +33,11 @@ export class EnvService {
     this.GRAPHQL_PLAYGROUND = config.get<string>('GRAPHQL_PLAYGROUND', 'false') === 'true'
     this.GRAPHQL_SORT_SCHEMA = config.get<string>('GRAPHQL_SORT_SCHEMA', 'true') === 'true'
     this.GRAPHQL_INTROSPECTION = config.get<string>('GRAPHQL_INTROSPECTION', 'false') === 'true'
+    /*this.POSTGRES_HOST = config.get<string>('POSTGRES_HOST', 'localhost')
+    this.POSTGRES_PORT = parseInt(config.get<string>('POSTGRES_PORT', '5432'))
+    this.POSTGRES_USER = config.get<string>('POSTGRES_USER', 'root')
+    this.POSTGRES_PASSWORD = config.get<string>('POSTGRES_PASSWORD', 'root')
+    this.POSTGRES_DB = config.get<string>('POSTGRES_DB', 'ink')*/
   }
 
   public isProduction(): boolean {

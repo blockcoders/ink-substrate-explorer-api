@@ -5,3 +5,13 @@
 type Query {
   ping: String!
 }
+
+type Transaction {
+  hash: String!
+  method: String!
+  nonce: Int
+  section: String!
+  signature: String!
+  signer: String
+  tip: Int
+}
