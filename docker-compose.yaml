@@ -7,8 +7,6 @@ services:
     build:
       context: .
       dockerfile: dev.Dockerfile
-    networks:
-      - ink-substrate-explorer-api-network
     ports:
       - 8085:8085
     volumes:
@@ -24,8 +22,6 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=ink
-    networks:
-      - ink-substrate-explorer-api-network
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -35,8 +31,3 @@ services:
       - 80:80
     depends_on:
       - postgres
-    networks:
-      - ink-substrate-explorer-api-network
-
-networks:
-  ink-substrate-explorer-api-network:

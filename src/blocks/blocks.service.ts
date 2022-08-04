@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Block } from 'src/db/block.entity'
 import { Repository } from 'typeorm'
-import Block from './block.entity'
 import { CreateBlockInput } from './dtos/create-block.input'
 
 @Injectable()
@@ -12,8 +12,7 @@ export class BlocksService {
   ) {}
 
   async create(createBlockInput: CreateBlockInput): Promise<Block> {
-    const block = this.blockRepository.create(createBlockInput)
-    return await this.blockRepository.save(block)
+    return this.blockRepository.save(createBlockInput)
   }
 
   async findOne(hash: string): Promise<Block> {

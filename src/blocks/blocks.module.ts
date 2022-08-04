@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import Transaction from '../transactions/transaction.entity'
-import { TransactionsModule } from '../transactions/transactions.module'
+import { DBModule } from 'src/db/db.module'
 import { TransactionsService } from '../transactions/transactions.service'
-import Block from './block.entity'
 import { BlocksResolver } from './blocks.resolver'
 import { BlocksService } from './blocks.service'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Block, Transaction]), TransactionsModule],
+  imports: [DBModule],
   providers: [BlocksResolver, BlocksService, TransactionsService],
 })
 export class BlocksModule {}

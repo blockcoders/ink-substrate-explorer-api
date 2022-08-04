@@ -1,11 +1,11 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
-import { TypeOrmModule } from '@nestjs/typeorm'
 import { LoggerModule } from 'nestjs-pino'
 import { join } from 'path'
 import { AppResolver } from './app.resolver'
 import { BlocksModule } from './blocks/blocks.module'
+import { DBModule } from './db/db.module'
 import { EnvModule } from './env/env.module'
 import { EnvService } from './env/env.service'
 import { EventsModule } from './events/events.module'
@@ -33,25 +33,7 @@ import { TransactionsModule } from './transactions/transactions.module'
         }
       },
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [EnvModule],
-      inject: [EnvService],
-      useFactory: async (env: EnvService) => {
-        return {
-          type: 'postgres',
-          host: env.DATABASE_HOST,
-          port: env.DATABASE_PORT,
-          username: env.DATABASE_USERNAME,
-          password: env.DATABASE_PASSWORD,
-          database: env.DATABASE_NAME,
-          retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
-          retryDelay: env.DATABASE_RETRY_DELAY,
-          synchronize: true,
-          autoLoadEntities: true,
-          keepConnectionAlive: false,
-        }
-      },
-    }),
+    DBModule,
     BlocksModule,
     EventsModule,
     TransactionsModule,

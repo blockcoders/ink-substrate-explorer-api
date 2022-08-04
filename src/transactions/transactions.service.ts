@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Transaction } from 'src/db/transaction.entity'
 import { Repository } from 'typeorm'
 import { CreateTransactionInput } from './dtos/create-transaction.input'
-import Transaction from './transaction.entity'
 
 @Injectable()
 export class TransactionsService {
@@ -12,8 +12,7 @@ export class TransactionsService {
   ) {}
 
   async create(createTransactionInput: CreateTransactionInput): Promise<Transaction> {
-    const transaction = this.transactionRepository.create(createTransactionInput)
-    return await this.transactionRepository.save(transaction)
+    return this.transactionRepository.save(createTransactionInput)
   }
 
   async findOne(hash: string): Promise<Transaction> {

@@ -5,7 +5,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { Logger } from 'nestjs-pino'
 import { AppModule } from './app.module'
 import { EnvService } from './env/env.service'
-import { substrateSubscriptions } from './utils'
+// import { substrateSubscriptions } from './utils'
 const compress = require('@fastify/compress')
 const helmet = require('@fastify/helmet')
 
@@ -58,7 +58,7 @@ async function bootstrap() {
 
     NestLogger.log(`App listening on ${address}`)
   })
-  await substrateSubscriptions()
+  // await substrateSubscriptions()
 }
 
 bootstrap()
