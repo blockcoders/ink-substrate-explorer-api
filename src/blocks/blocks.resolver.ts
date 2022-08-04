@@ -1,7 +1,7 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { TransactionsService } from '../transactions/transactions.service'
 import Block from './block.entity'
 import { BlocksService } from './blocks.service'
-import { TransactionsService } from '../transactions/transactions.service'
 
 @Resolver(() => Block)
 export class BlocksResolver {
