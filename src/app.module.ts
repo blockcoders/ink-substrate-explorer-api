@@ -10,7 +10,6 @@ import { EnvService } from './env/env.service'
 import { BlocksModule } from './blocks/blocks.module'
 import { EventsModule } from './events/events.module'
 import { TransactionsModule } from './transactions/transactions.module'
-import { TxModule } from './tx/tx.module';
 
 @Module({
   imports: [
@@ -49,7 +48,6 @@ import { TxModule } from './tx/tx.module';
         }
       },
     }),
-    TxModule,
   ],
   providers: [AppResolver],
 })
