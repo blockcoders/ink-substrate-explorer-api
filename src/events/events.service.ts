@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CreateEventInput } from '../dtos/create-event.input'
-import Event from '../models/event.entity'
+import { CreateEventInput } from './dtos/create-event.input'
+import Event from './event.entity'
 
 @Injectable()
 export class EventsService {

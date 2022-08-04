@@ -45,8 +45,15 @@ export default class Transaction {
   args: any
 
   constructor(extrinsic: Extrinsic, blockHash: Hash) {
-    const { hash, era, nonce, signature, signer, tip } = extrinsic
-    const { method, args, section } = extrinsic.method
+    const {
+      hash,
+      era,
+      nonce,
+      signature,
+      signer,
+      tip,
+      method: { method, args, section },
+    } = extrinsic
     this.hash = hash.toString()
     this.blockHash = blockHash.toString()
     this.method = method

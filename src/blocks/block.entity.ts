@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { Header, Extrinsic, Hash } from '@polkadot/types/interfaces'
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import Transaction from './transaction.entity'
+import Transaction from '../transactions/transaction.entity'
 
 @Entity()
 @ObjectType()

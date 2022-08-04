@@ -1,8 +1,8 @@
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import erc20 from './metadata/erc20'
-import Block from './models/block.entity'
-import Event from './models/event.entity'
+import Block from './blocks/block.entity'
+import Event from './events/event.entity'
 
 export const substrateSubscriptions = async () => {
   const providerUrl = process.env.WS_PROVIDER || ''

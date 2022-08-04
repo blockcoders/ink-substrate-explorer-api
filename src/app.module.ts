@@ -7,9 +7,10 @@ import { join } from 'path'
 import { AppResolver } from './app.resolver'
 import { EnvModule } from './env/env.module'
 import { EnvService } from './env/env.service'
-import { BlocksModule } from './modules/blocks.module'
-import { EventsModule } from './modules/events.module'
-import { TransactionsModule } from './modules/transactions.module'
+import { BlocksModule } from './blocks/blocks.module'
+import { EventsModule } from './events/events.module'
+import { TransactionsModule } from './transactions/transactions.module'
+import { TxModule } from './tx/tx.module';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { TransactionsModule } from './modules/transactions.module'
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
       retryDelay: 3000,
       retryAttempts: 10,
     }),
@@ -48,6 +49,7 @@ import { TransactionsModule } from './modules/transactions.module'
         }
       },
     }),
+    TxModule,
   ],
   providers: [AppResolver],
 })

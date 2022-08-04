@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
-import Event from '../models/event.entity'
-import { EventsService } from '../services/events.service'
+import Event from './event.entity'
+import { EventsService } from './events.service'
 
 @Resolver(() => Event)
 export class EventsResolver {

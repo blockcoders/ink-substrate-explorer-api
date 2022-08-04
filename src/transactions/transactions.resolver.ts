@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
-import Transaction from '../models/transaction.entity'
-import { TransactionsService } from '../services/transactions.service'
+import Transaction from './transaction.entity'
+import { TransactionsService } from './transactions.service'
 
 @Resolver(() => Transaction)
 export class TransactionsResolver {

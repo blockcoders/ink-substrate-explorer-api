@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql'
-import Transaction from '../models/transaction.entity'
+import Transaction from '../../transactions/transaction.entity'
 
 @InputType()
 export class CreateBlockInput {

@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql'
 import { Vec } from '@polkadot/types-codec'
 import { Event as PolkadotEvent } from '@polkadot/types/interfaces'
 import { v4 as uuidv4 } from 'uuid'
-import { FrameSystemPhase } from '../interfaces'
+import { FrameSystemPhase } from '../../interfaces'
 
 @InputType()
 export class CreateEventInput {
