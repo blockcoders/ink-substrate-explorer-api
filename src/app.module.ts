@@ -13,22 +13,7 @@ import { TransactionsModule } from './transactions/transactions.module'
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT || '5432'),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      retryDelay: 3000,
-      retryAttempts: 10,
-    }),
     EnvModule,
-    BlocksModule,
-    EventsModule,
-    TransactionsModule,
     LoggerModule.forRootAsync({
       imports: [EnvModule],
       inject: [EnvService],
@@ -48,6 +33,28 @@ import { TransactionsModule } from './transactions/transactions.module'
         }
       },
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [EnvModule],
+      inject: [EnvService],
+      useFactory: async (env: EnvService) => {
+        return {
+          type: 'postgres',
+          host: env.DATABASE_HOST,
+          port: env.DATABASE_PORT,
+          username: env.DATABASE_USERNAME,
+          password: env.DATABASE_PASSWORD,
+          database: env.DATABASE_NAME,
+          retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
+          retryDelay: env.DATABASE_RETRY_DELAY,
+          synchronize: true,
+          autoLoadEntities: true,
+          keepConnectionAlive: false,
+        }
+      },
+    }),
+    BlocksModule,
+    EventsModule,
+    TransactionsModule,
   ],
   providers: [AppResolver],
 })

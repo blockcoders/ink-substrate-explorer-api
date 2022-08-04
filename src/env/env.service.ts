@@ -16,11 +16,13 @@ export class EnvService {
   public readonly GRAPHQL_PLAYGROUND: boolean
   public readonly GRAPHQL_SORT_SCHEMA: boolean
   public readonly GRAPHQL_INTROSPECTION: boolean
-  /*public readonly POSTGRES_HOST: string
-  public readonly POSTGRES_PORT: number
-  public readonly POSTGRES_USER: string
-  public readonly POSTGRES_PASSWORD: string
-  public readonly POSTGRES_DB: string*/
+  public readonly DATABASE_HOST: string
+  public readonly DATABASE_PORT: number
+  public readonly DATABASE_NAME: string
+  public readonly DATABASE_USERNAME: string
+  public readonly DATABASE_PASSWORD: string
+  public readonly DATABASE_RETRY_ATTEMPTS: number
+  public readonly DATABASE_RETRY_DELAY: number
 
   constructor(private readonly config: ConfigService) {
     // public env variables
@@ -33,11 +35,13 @@ export class EnvService {
     this.GRAPHQL_PLAYGROUND = config.get<string>('GRAPHQL_PLAYGROUND', 'false') === 'true'
     this.GRAPHQL_SORT_SCHEMA = config.get<string>('GRAPHQL_SORT_SCHEMA', 'true') === 'true'
     this.GRAPHQL_INTROSPECTION = config.get<string>('GRAPHQL_INTROSPECTION', 'false') === 'true'
-    /*this.POSTGRES_HOST = config.get<string>('POSTGRES_HOST', 'localhost')
-    this.POSTGRES_PORT = parseInt(config.get<string>('POSTGRES_PORT', '5432'))
-    this.POSTGRES_USER = config.get<string>('POSTGRES_USER', 'root')
-    this.POSTGRES_PASSWORD = config.get<string>('POSTGRES_PASSWORD', 'root')
-    this.POSTGRES_DB = config.get<string>('POSTGRES_DB', 'ink')*/
+    this.DATABASE_HOST = this.config.get<string>('DATABASE_HOST', 'localhost')
+    this.DATABASE_PORT = parseInt(this.config.get<string>('DATABASE_PORT', '5432'), 10)
+    this.DATABASE_NAME = this.config.get<string>('DATABASE_NAME', '')
+    this.DATABASE_USERNAME = this.config.get<string>('DATABASE_USERNAME', '')
+    this.DATABASE_PASSWORD = this.config.get<string>('DATABASE_PASSWORD', 'password')
+    this.DATABASE_RETRY_ATTEMPTS = parseInt(this.config.get<string>('DATABASE_RETRY_ATTEMPTS', '20'), 10)
+    this.DATABASE_RETRY_DELAY = parseInt(this.config.get<string>('DATABASE_RETRY_DELAY', '6000'), 10)
   }
 
   public isProduction(): boolean {
