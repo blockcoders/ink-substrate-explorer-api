@@ -1,8 +1,9 @@
-import { Field, Int } from '@nestjs/graphql'
+import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { GenericExtrinsicEra } from '@polkadot/types'
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
-@Entity()
+@ObjectType()
+@Entity({ name: 'transactions' })
 export class Transaction extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String, { description: 'Transaction hash' })
@@ -28,17 +29,16 @@ export class Transaction extends BaseEntity {
   @Field(() => String, { description: 'Address of the signer', nullable: true })
   signer?: string
 
-  // TODO: add this
-  era?: GenericExtrinsicEra
-
   @Column('int')
   @Field(() => Int, { description: "Transaction's nonce", nullable: true })
   nonce?: number
-
+  
   @Column('int')
   @Field(() => Int, { description: 'Extra gas paid for the Tx as tip', nullable: true })
   tip?: number
-
+  
+  // TODO: add this
+  era?: GenericExtrinsicEra
   // We are not storing this for now
   args: any
 }

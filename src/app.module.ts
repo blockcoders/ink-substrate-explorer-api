@@ -5,11 +5,17 @@ import { LoggerModule } from 'nestjs-pino'
 import { join } from 'path'
 import { AppResolver } from './app.resolver'
 import { BlocksModule } from './blocks/blocks.module'
+import { BlocksResolver } from './blocks/blocks.resolver'
+import { BlocksService } from './blocks/blocks.service'
 import { DBModule } from './db/db.module'
 import { EnvModule } from './env/env.module'
 import { EnvService } from './env/env.service'
 import { EventsModule } from './events/events.module'
+import { EventsResolver } from './events/events.resolver'
+import { EventsService } from './events/events.service'
 import { TransactionsModule } from './transactions/transactions.module'
+import { TransactionsResolver } from './transactions/transactions.resolver'
+import { TransactionsService } from './transactions/transactions.service'
 
 @Module({
   imports: [
@@ -20,7 +26,7 @@ import { TransactionsModule } from './transactions/transactions.module'
       useFactory: async (env: EnvService) => env.getPinoConfig(),
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      imports: [EnvModule],
+      imports: [EnvModule, BlocksModule, EventsModule, TransactionsModule],
       inject: [EnvService],
       driver: ApolloDriver,
       useFactory: (env: EnvService) => {
@@ -38,6 +44,14 @@ import { TransactionsModule } from './transactions/transactions.module'
     EventsModule,
     TransactionsModule,
   ],
-  providers: [AppResolver],
+  providers: [
+    AppResolver,
+    BlocksResolver,
+    BlocksService,
+    EventsResolver,
+    EventsService,
+    TransactionsResolver,
+    TransactionsService,
+  ],
 })
 export class AppModule {}

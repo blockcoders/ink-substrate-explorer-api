@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { EnvModule } from '../env/env.module'
 import { EnvService } from '../env/env.service'
-import { Block } from './block.entity'
-import { Event } from './event.entity'
-import { Transaction } from './transaction.entity'
+import { Block } from '../blocks/entity/block.entity'
+import { Event } from '../events/entity/event.entity'
+import { Transaction } from '../transactions/entity/transaction.entity'
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { Transaction } from './transaction.entity'
           database: env.DATABASE_NAME,
           retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
           retryDelay: env.DATABASE_RETRY_DELAY,
-          synchronize: false,
+          synchronize: true,
           autoLoadEntities: true,
           keepConnectionAlive: false,
         }
