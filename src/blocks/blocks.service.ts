@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Block } from './entity/block.entity'
 import { Repository } from 'typeorm'
 import { CreateBlockInput } from './dtos/create-block.input'
+import { Block } from './entity/block.entity'
 
 @Injectable()
 export class BlocksService {

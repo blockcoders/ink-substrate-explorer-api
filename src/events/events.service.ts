@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Event } from './entity/event.entity'
 import { Repository } from 'typeorm'
 import { CreateEventInput } from './dtos/create-event.input'
+import { Event } from './entity/event.entity'
 
 @Injectable()
 export class EventsService {
@@ -12,7 +12,7 @@ export class EventsService {
   ) {}
 
   async create(createEventInput: CreateEventInput): Promise<Event> {
-    return this.eventRepository.save({})
+    return this.eventRepository.save(createEventInput)
   }
 
   async findAll(contract: string): Promise<Event[]> {

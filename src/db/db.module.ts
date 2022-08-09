@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { Block } from '../blocks/entity/block.entity'
 import { EnvModule } from '../env/env.module'
 import { EnvService } from '../env/env.service'
-import { Block } from '../blocks/entity/block.entity'
 import { Event } from '../events/entity/event.entity'
 import { Transaction } from '../transactions/entity/transaction.entity'
 

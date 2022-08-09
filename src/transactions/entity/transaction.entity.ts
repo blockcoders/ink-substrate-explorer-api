@@ -32,11 +32,11 @@ export class Transaction extends BaseEntity {
   @Column('int')
   @Field(() => Int, { description: "Transaction's nonce", nullable: true })
   nonce?: number
-  
+
   @Column('int')
   @Field(() => Int, { description: 'Extra gas paid for the Tx as tip', nullable: true })
   tip?: number
-  
+
   // TODO: add this
   era?: GenericExtrinsicEra
   // We are not storing this for now

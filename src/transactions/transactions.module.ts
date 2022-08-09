@@ -6,5 +6,6 @@ import { TransactionsService } from './transactions.service'
 @Module({
   imports: [DBModule],
   providers: [TransactionsResolver, TransactionsService],
+  exports: [TransactionsService],
 })
 export class TransactionsModule {}

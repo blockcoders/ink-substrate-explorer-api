@@ -13,10 +13,10 @@ import { EnvService } from './env/env.service'
 import { EventsModule } from './events/events.module'
 import { EventsResolver } from './events/events.resolver'
 import { EventsService } from './events/events.service'
+import { SubscriptionsModule } from './subscriptions/subscriptions.module'
 import { TransactionsModule } from './transactions/transactions.module'
 import { TransactionsResolver } from './transactions/transactions.resolver'
 import { TransactionsService } from './transactions/transactions.service'
-import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 
 @Module({
   imports: [

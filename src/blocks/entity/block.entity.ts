@@ -1,13 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm'
 
 @ObjectType()
 @Entity({ name: 'blocks' })
 export class Block extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   @Field(() => String)
   hash!: string
-  
+
   @Column()
   @Field(() => String)
   parentHash!: string

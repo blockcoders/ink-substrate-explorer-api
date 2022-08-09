@@ -12,5 +12,5 @@ export class CreateBlockInput {
   number!: number
 
   // @Field(() => [Transaction], { description: 'List of transactions corresponding to this block' })
-  transactions: string[] = []
+  //transactions: string[] = []
 }

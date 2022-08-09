@@ -5,7 +5,7 @@ import { Block } from './entity/block.entity'
 
 @Resolver(() => Block)
 export class BlocksResolver {
-  constructor(private blocksService: BlocksService/*, private transactionsService: TransactionsService*/) {}
+  constructor(private blocksService: BlocksService /*, private transactionsService: TransactionsService*/) {}
   @Query(() => Block)
   async getBlock(@Args('hash', { type: () => String }) hash: string) {
     return this.blocksService.findOne(hash)
