@@ -16,6 +16,7 @@ import { EventsService } from './events/events.service'
 import { TransactionsModule } from './transactions/transactions.module'
 import { TransactionsResolver } from './transactions/transactions.resolver'
 import { TransactionsService } from './transactions/transactions.service'
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { TransactionsService } from './transactions/transactions.service'
     BlocksModule,
     EventsModule,
     TransactionsModule,
+    SubscriptionsModule,
   ],
   providers: [
     AppResolver,

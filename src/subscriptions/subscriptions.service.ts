@@ -1,27 +1,26 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { Block } from '../../blocks/entity/block.entity'
-import { Event } from '../../events/entity/event.entity'
+import { Block } from '../blocks/entity/block.entity'
+import { Event } from '../events/entity/event.entity'
 //import erc20 from '../metadata/erc20'
 
 @Injectable()
-export class SubscriptionsService {
-  provider: WsProvider
-  constructor(providerUrl: string) {
-    console.log(`\n\nConnecting to ${providerUrl}`)
-    this.provider = new WsProvider(providerUrl)
-  }
-
-  async substrateSubscriptions() {
+export class SubscriptionsService implements OnModuleInit {
+  async onModuleInit(): Promise<void> {
     console.log(`\n\nSubscribing to new heads...`)
-    await this.subscribeAllHeads()
+    await SubscriptionsService.subscribeAllHeads()
     console.log(`\n\nSubscribing to new events...`)
-    await this.subscribeToNewEvents()
+    await SubscriptionsService.subscribeToNewEvents()
   }
 
-  async subscribeAllHeads(cb?: (b: Block) => Promise<void> | void) {
-    const api: ApiPromise = await ApiPromise.create({ provider: this.provider })
+  static async connect() {
+    const provider = new WsProvider(process.env.WS_PROVIDER)
+    return ApiPromise.create({ provider })
+  }
+
+  static async subscribeAllHeads(cb?: (b: Block) => Promise<void> | void) {
+    const api = await SubscriptionsService.connect()
     await api.rpc.chain.subscribeAllHeads(async (h: any) => {
       const { block } = await api.rpc.chain.getBlock(h.hash)
       //const { hash, header, extrinsics } = block
@@ -38,8 +37,8 @@ export class SubscriptionsService {
     })
   }
 
-  async subscribeToNewEvents(cb?: (e: Event) => Promise<void> | void) {
-    const api: ApiPromise = await ApiPromise.create({ provider: this.provider })
+  static async subscribeToNewEvents(cb?: (e: Event) => Promise<void> | void) {
+    const api = await SubscriptionsService.connect()
     await api.query.system.events((events) => {
       events.forEach(async (record) => {
         const { event /*phase, topics*/ } = record
