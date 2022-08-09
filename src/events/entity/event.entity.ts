@@ -31,5 +31,7 @@ export class Event extends BaseEntity {
   // phase: FrameSystemPhase
   // meta: EventMetadataLatest
   // typeDef: any
-  // data: any
+  @Column()
+  @Field(() => String)
+  data!: string
 }

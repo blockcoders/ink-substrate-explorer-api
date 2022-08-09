@@ -16,4 +16,7 @@ export class CreateEventInput {
 
   @Field(() => String)
   topics!: string
+
+  @Field(() => String)
+  data!: string
 }
