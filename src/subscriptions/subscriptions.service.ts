@@ -7,6 +7,10 @@ import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import erc20 from '../metadata/erc20'
 import { TransactionsService } from '../transactions/transactions.service'
+import { CreateTransactionInput } from '../transactions/dtos/create-transaction.input'
+import { CreateEventInput } from '../events/dtos/create-event.input'
+import { CreateBlockInput } from '../blocks/dtos/create-block.input'
+import { DecodedEvent } from '@polkadot/api-contract/types'
 
 @Injectable()
 export class SubscriptionsService implements OnModuleInit {
@@ -32,36 +36,20 @@ export class SubscriptionsService implements OnModuleInit {
     const api = await SubscriptionsService.connect()
     await api.rpc.chain.subscribeAllHeads(async (h: Header) => {
       const { block } = await api.rpc.chain.getBlock(h.hash)
-      const {
-        hash,
-        header: { parentHash, number },
-        extrinsics,
-      } = block
-      const createBlockInput = {
-        hash: hash.toString(),
-        parentHash: parentHash.toString(),
-        number: parseInt(number.toHex()),
-      }
-      const b = await this.blocksService.create(createBlockInput)
-      console.log('\n-----------------New block-----------------\n')
-      console.log('BLOCK HASH: %j', b.hash)
-      console.log('TX COUNT: %j', extrinsics.length)
+      const { header, extrinsics } = block
       extrinsics.forEach(async (ex) => {
-        const { hash, nonce, signature, signer, tip } = ex
-        const { method, section } = ex.method
-        const createTransactionInput = {
-          hash: hash.toString(),
-          blockHash: b.hash,
-          method,
-          section,
-          nonce: nonce.toNumber(),
-          signature: signature.toString(),
-          signer: signer.toString(),
-          tip: tip.toNumber(),
-        }
-        const tx = await this.transactionsService.create(createTransactionInput)
-        console.log('\n\t TX: %j', tx)
+        const txInput = CreateTransactionInput.fromExtrinsic(ex, header.hash.toString())
+        await this.transactionsService.create(txInput)
       })
+      const blockInput = CreateBlockInput.fromHeader(header)
+      const b = await this.blocksService.create(blockInput)
+      console.log('\n-----------------New block-----------------\n')
+      console.log('\nBlock Hash: %j', b.hash)
+      console.log('\nTransactions count: %j', extrinsics.length)
+      console.log(
+        '\nTxs: %j',
+        extrinsics.map((ex) => ex.hash),
+      )
       console.log('\n-------------------------------------------\n')
     })
   }
@@ -70,40 +58,16 @@ export class SubscriptionsService implements OnModuleInit {
     const api = await SubscriptionsService.connect()
     await api.query.system.events((events) => {
       events.forEach(async (record) => {
-        const { event, topics } = record
+        const { event } = record
         if (api.events.contracts.ContractEmitted.is(event)) {
-          const { section, method, data, index } = event
-          const [account_id] = data
-          const createEventInput = {
-            contract: account_id.toString(),
-            index: index.toHex(),
-            section,
-            method,
-            topics: topics.toString(),
-            data: data.toString(),
-          }
-          const e = await this.eventsService.create(createEventInput)
-          const decoded = SubscriptionsService.decode(erc20, data)
-          const summary: any = {}
-          for (let i = 0; i < decoded?.event?.args.length; i++) {
-            const arg = decoded.event.args[i].name
-            const { type } = decoded.event.args[i].type
-            summary[arg] = type === 'Balance' ? parseInt(decoded.args[i].toString()) / 1000000000000 : decoded.args[i]
-          }
-
+          const eventInput = CreateEventInput.fromRecord(record)
+          const e = await this.eventsService.create(eventInput)
+          const decoded = SubscriptionsService.decode(erc20, event.data)
+          const formatted = SubscriptionsService.formatDecoded(decoded)
           console.log('\n-----------------New Event-----------------\n')
-          console.log('\nEvent: %j', decoded.event.identifier)
-          console.log('\nSummary: %j', summary)
           console.log('\nContract: %j', e.contract)
-          console.log('\nIndex: %j', e.index)
-          console.log('\nSection: %j', e.section)
-          console.log('\nMethod: %j', e.method)
-          //console.log('\nPhase: %j', phase)
-          console.log('\nTopics: %j', topics)
-          //console.log('\nMeta: %j', e.meta)
-          //console.log('\nTypeDef: %j', e.typeDef)
-          //console.log('\nData: %j', e.data)
-          console.log('\nDecoded: %j', decoded)
+          console.log('\nEvent: %j', decoded.event.identifier)
+          console.log('\nSummary: %j', formatted)
           console.log('\n-------------------------------------------\n')
         }
       })
@@ -113,5 +77,15 @@ export class SubscriptionsService implements OnModuleInit {
   static decode(abi: string | Record<string, unknown>, data: any) {
     const [, contract_evt] = data
     return new Abi(abi).decodeEvent(contract_evt)
+  }
+
+  static formatDecoded(decoded: DecodedEvent) {
+    const formatted: any = {}
+    for (let i = 0; i < decoded?.event?.args.length; i++) {
+      const arg = decoded.event.args[i].name
+      const { type } = decoded.event.args[i].type
+      formatted[arg] = type === 'Balance' ? parseInt(decoded.args[i].toString()) / 1000000000000 : decoded.args[i]
+    }
+    return formatted
   }
 }

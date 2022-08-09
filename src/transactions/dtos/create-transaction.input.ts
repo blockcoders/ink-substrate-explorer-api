@@ -1,4 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql'
+import { Extrinsic } from '@polkadot/types/interfaces'
 
 @InputType()
 export class CreateTransactionInput {
@@ -25,4 +26,19 @@ export class CreateTransactionInput {
 
   @Field(() => Int, { description: 'Extra gas paid for the Tx as tip', nullable: true })
   tip?: number
+
+  static fromExtrinsic(ex: Extrinsic, blockHash: string): CreateTransactionInput {
+    const { hash, nonce, signature, signer, tip } = ex
+    const { method, section } = ex.method
+    const txInput = new CreateTransactionInput()
+    txInput.blockHash = blockHash
+    txInput.hash = hash.toString()
+    txInput.method = method
+    txInput.section = section
+    txInput.nonce = nonce.toNumber()
+    txInput.signature = signature.toString()
+    txInput.signer = signer.toString()
+    txInput.tip = tip.toNumber()
+    return txInput
+  }
 }

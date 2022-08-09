@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql'
+import { FrameSystemEventRecord } from '@polkadot/types/lookup'
 
 @InputType()
 export class CreateEventInput {
@@ -19,4 +20,20 @@ export class CreateEventInput {
 
   @Field(() => String)
   data!: string
+
+  static fromRecord(record: FrameSystemEventRecord) {
+    const {
+      event: { section, method, data, index },
+      topics,
+    } = record
+    const [account_id] = data
+    const eventInput = new CreateEventInput()
+    eventInput.contract = account_id.toString()
+    eventInput.index = index.toHex()
+    eventInput.section = section
+    eventInput.method = method
+    eventInput.topics = topics.toString()
+    eventInput.data = data.toString()
+    return eventInput
+  }
 }
