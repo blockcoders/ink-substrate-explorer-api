@@ -1,9 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { GenericExtrinsicEra } from '@polkadot/types'
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, Index, PrimaryColumn } from 'typeorm'
 
 @ObjectType()
 @Entity({ name: 'transactions' })
+@Index(['signer', 'blockHash'])
 export class Transaction extends BaseEntity {
   @PrimaryColumn()
   @Field(() => String, { description: 'Transaction hash' })

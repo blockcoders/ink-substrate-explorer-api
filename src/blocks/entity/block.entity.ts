@@ -1,8 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, Index, PrimaryColumn, Unique } from 'typeorm'
 
 @ObjectType()
 @Entity({ name: 'blocks' })
+@Index(['hash', 'number'])
+@Unique(['parentHash', 'number'])
 export class Block extends BaseEntity {
   @PrimaryColumn()
   @Field(() => String)
@@ -16,5 +18,5 @@ export class Block extends BaseEntity {
   @Field(() => Int)
   number!: number
 
-  // transactions: Transaction[] = []
+  //transactions: Transaction[] = []
 }

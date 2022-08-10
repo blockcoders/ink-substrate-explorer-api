@@ -1,4 +1,5 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
+import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
 import { TransactionsService } from './transactions.service'
 
@@ -8,5 +9,10 @@ export class TransactionsResolver {
   @Query(() => Transaction)
   async getTransaction(@Args('hash', { type: () => String }) hash: string) {
     return this.transactionsService.findOne(hash)
+  }
+
+  @Query(() => [Transaction])
+  async getTransactions(@Args() args: FetchTransactionsInput) {
+    return this.transactionsService.fetchTransactions(args)
   }
 }

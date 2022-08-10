@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CreateTransactionInput } from './dtos/create-transaction.input'
+import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
 
 @Injectable()
@@ -29,5 +30,9 @@ export class TransactionsService {
       throw new NotFoundException(`Transactions of block: ${blockHash} not found`)
     }
     return transactions
+  }
+
+  async fetchTransactions(args: FetchTransactionsInput): Promise<Transaction[]> {
+    return this.transactionRepository.find(args)
   }
 }

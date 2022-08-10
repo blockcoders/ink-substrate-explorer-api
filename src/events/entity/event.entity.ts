@@ -1,8 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
 
 @ObjectType()
 @Entity({ name: 'events' })
+@Index(['contract'])
 export class Event extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)

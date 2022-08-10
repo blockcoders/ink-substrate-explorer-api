@@ -20,8 +20,10 @@ type Event {
 
 type Query {
   getBlock(hash: String!): Block!
-  getEvent(contractAddress: String!): [Event!]!
+  getBlocks(skip: Int = 0, take: Int = 10): [Block!]!
+  getEvents(contract: String, skip: Int = 0, take: Int = 20): [Event!]!
   getTransaction(hash: String!): Transaction!
+  getTransactions(blockHash: String, skip: Int = 0, take: Int = 20): [Transaction!]!
   status: String!
 }
 
