@@ -1,17 +1,21 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { BaseEntity, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
+import { Transaction } from '../../transactions/entity/transaction.entity'
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 @ObjectType()
 @Entity({ name: 'events' })
-@Index(['contract'])
 export class Event extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id!: string
 
-  @Column()
-  @Field(() => String)
-  contract!: string
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  contract?: string
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  transactionHash?: string
 
   @Column()
   @Field(() => String)
@@ -29,9 +33,13 @@ export class Event extends BaseEntity {
   @Field(() => String)
   topics!: string
 
-  // phase: FrameSystemPhase
-  // meta: EventMetadataLatest
-  // typeDef: any
+  @ManyToOne(() => Transaction, (transaction: Transaction) => transaction.events, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn()
+  transaction!: Transaction
+
   @Column()
   @Field(() => String)
   data!: string

@@ -1,12 +1,14 @@
-import { Args, /*Parent,*/ Query, /*ResolveField,*/ Resolver } from '@nestjs/graphql'
-//import { TransactionsService } from '../transactions/transactions.service'
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { FetchTransactionsInput } from '../transactions/dtos/fetch-transactions.input'
+import { Transaction } from '../transactions/entity/transaction.entity'
+import { TransactionsService } from '../transactions/transactions.service'
 import { BlocksService } from './blocks.service'
 import { FetchBlocksInput } from './dtos/fetch-blocks.input'
 import { Block } from './entity/block.entity'
 
 @Resolver(() => Block)
 export class BlocksResolver {
-  constructor(private blocksService: BlocksService /*, private transactionsService: TransactionsService*/) {}
+  constructor(private blocksService: BlocksService , private transactionsService: TransactionsService) {}
   @Query(() => Block)
   async getBlock(@Args('hash', { type: () => String }) hash: string) {
     return this.blocksService.findOne(hash)
@@ -16,9 +18,13 @@ export class BlocksResolver {
   async getBlocks(@Args() args: FetchBlocksInput) {
     return this.blocksService.fetchBlocks(args)
   }
-  /*@ResolveField()
+
+  @ResolveField('transactions', () => [Transaction])
   async getTransactions(@Parent() block: Block) {
     const { hash } = block
-    return this.transactionsService.findByBlock(hash)
-  }*/
+    const args: FetchTransactionsInput = {
+      blockHash: hash
+    }
+    return this.transactionsService.fetchTransactions(args)
+  }
 }

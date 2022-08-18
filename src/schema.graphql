@@ -6,29 +6,32 @@ type Block {
   hash: String!
   number: Int!
   parentHash: String!
+  transactions: [Transaction!]!
 }
 
 type Event {
-  contract: String!
+  contract: String
   data: String!
   id: String!
   index: String!
   method: String!
   section: String!
   topics: String!
+  transactionHash: String
 }
 
 type Query {
   getBlock(hash: String!): Block!
   getBlocks(skip: Int = 0, take: Int = 10): [Block!]!
-  getEvents(contract: String, skip: Int = 0, take: Int = 20): [Event!]!
+  getEvents(contract: String, skip: Int = 0, take: Int = 20, transactionHash: String): [Event!]!
   getTransaction(hash: String!): Transaction!
   getTransactions(blockHash: String, skip: Int = 0, take: Int = 20): [Transaction!]!
   status: String!
 }
 
 type Transaction {
-  blockHash: String!
+  blockHash: String
+  events: [Event!]!
 
   """Transaction hash"""
   hash: String!

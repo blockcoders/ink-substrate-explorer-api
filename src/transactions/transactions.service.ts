@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { GenericExtrinsic } from '@polkadot/types'
+import { Vec } from '@polkadot/types-codec'
+import { AnyTuple } from '@polkadot/types-codec/types'
 import { Repository } from 'typeorm'
-import { CreateTransactionInput } from './dtos/create-transaction.input'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
 
@@ -12,10 +14,6 @@ export class TransactionsService {
     private readonly transactionRepository: Repository<Transaction>,
   ) {}
 
-  async create(createTransactionInput: CreateTransactionInput): Promise<Transaction> {
-    return this.transactionRepository.save(createTransactionInput)
-  }
-
   async findOne(hash: string): Promise<Transaction> {
     const transaction = await this.transactionRepository.findOneBy({ hash })
     if (!transaction) {
@@ -24,15 +22,31 @@ export class TransactionsService {
     return transaction
   }
 
-  async findByBlock(blockHash: string): Promise<Transaction[]> {
-    const transactions = await this.transactionRepository.findBy({ blockHash })
-    if (!transactions) {
-      throw new NotFoundException(`Transactions of block: ${blockHash} not found`)
-    }
-    return transactions
+  async fetchTransactions(args: FetchTransactionsInput): Promise<Transaction[]> {
+    const { skip, take, blockHash } = args
+    return this.transactionRepository.find({ skip, take, where: { blockHash } })
   }
 
-  async fetchTransactions(args: FetchTransactionsInput): Promise<Transaction[]> {
-    return this.transactionRepository.find(args)
+  async createTransactionsFromExtrinsics(
+    extrinsics: Vec<GenericExtrinsic<AnyTuple>>,
+    blockHash: string,
+  ): Promise<Transaction[]> {
+    return Promise.all(
+      extrinsics.map(async (extrinsic) => {
+        const { hash: transactionHash, nonce, signature, signer, tip } = extrinsic
+        const { method, section } = extrinsic.method
+        const tx = this.transactionRepository.create({
+          hash: transactionHash.toString(),
+          method: method,
+          section: section,
+          nonce: nonce.toNumber(),
+          signature: signature.toString(),
+          signer: signer.toString(),
+          tip: tip.toNumber(),
+          blockHash,
+        })
+        return await this.transactionRepository.save(tx)
+      }),
+    )
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Header } from '@polkadot/types/interfaces'
 import { Repository } from 'typeorm'
-import { CreateBlockInput } from './dtos/create-block.input'
 import { FetchBlocksInput } from './dtos/fetch-blocks.input'
 import { Block } from './entity/block.entity'
 
@@ -11,10 +11,6 @@ export class BlocksService {
     @InjectRepository(Block)
     private readonly blockRepository: Repository<Block>,
   ) {}
-
-  async create(createBlockInput: CreateBlockInput): Promise<Block> {
-    return this.blockRepository.save(createBlockInput)
-  }
 
   async findOne(hash: string): Promise<Block> {
     const block = await this.blockRepository.findOneBy({ hash })
@@ -26,5 +22,15 @@ export class BlocksService {
 
   async fetchBlocks(args: FetchBlocksInput): Promise<Block[]> {
     return this.blockRepository.find(args)
+  }
+
+  async createFromHeader(header: Header): Promise<Block> {
+    const { hash, parentHash, number } = header || {}
+    const block = this.blockRepository.create({
+      hash: hash.toString(),
+      parentHash: parentHash.toString(),
+      number: parseInt(number.toHex()),
+    })
+    return this.blockRepository.save(block)
   }
 }
