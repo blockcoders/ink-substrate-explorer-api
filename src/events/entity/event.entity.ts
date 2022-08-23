@@ -1,6 +1,8 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, ObjectType} from '@nestjs/graphql'
 import { Transaction } from '../../transactions/entity/transaction.entity'
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Codec } from '@polkadot/types-codec/types'
+import { IEventData } from '@polkadot/types/types'
 
 @ObjectType()
 @Entity({ name: 'events' })
@@ -43,4 +45,8 @@ export class Event extends BaseEntity {
   @Column()
   @Field(() => String)
   data!: string
+
+  @Column({ type: 'jsonb', nullable: true, default: {} })
+  @Field(() => String,{ nullable: true })
+  jsonData?: Codec[] & IEventData
 }

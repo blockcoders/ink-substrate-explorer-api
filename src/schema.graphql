@@ -14,6 +14,7 @@ type Event {
   data: String!
   id: String!
   index: String!
+  jsonData: String
   method: String!
   section: String!
   topics: String!

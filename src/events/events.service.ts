@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Vec } from '@polkadot/types-codec'
+import { Bytes, Vec } from '@polkadot/types-codec'
 import { FrameSystemEventRecord } from '@polkadot/types/lookup'
 import { Repository } from 'typeorm'
 import { FetchEventsInput } from './dtos/fetch-events.input'
@@ -21,6 +21,10 @@ export class EventsService {
     return this.eventRepository.find({ skip, take, where: { contract } })
   }
 
+  async findById(id: string): Promise<Event | null> {
+    return this.eventRepository.findOneBy({id})
+  }
+
   async createEventsFromRecords(
     records: Vec<FrameSystemEventRecord>,
     extrinsicIndex: number,
@@ -34,8 +38,7 @@ export class EventsService {
       } = record
       const [contract] = data
       const abi = erc20
-      const dataString = this.getDataString(abi, method, data)
-
+      const dataString = this.decode(abi, method, record)
       return this.eventRepository.create({
         contract: method === 'ContractEmitted' ? contract.toString() : undefined,
         index: index.toHex(),
@@ -43,19 +46,20 @@ export class EventsService {
         method: method,
         topics: topics.toString(),
         data: dataString,
+        jsonData: data,
         transactionHash: transactionHash.toString(),
       })
     })
     return Promise.all(eventsToSave.map((event) => this.eventRepository.save(event)))
   }
 
-  private getDataString(abi: string | Record<string, unknown>, method: string, data: any) {
-    const [, event] = data
+  decode(abi: string | Record<string, unknown>, method: string, record: FrameSystemEventRecord) {
+    const [, event] = record.event.data
     let stringData: any = {
-      raw: data,
+      raw: record.event.data,
     }
     if (abi && method === 'ContractEmitted') {
-      const decoded = new Abi(abi).decodeEvent(event)
+      const decoded = new Abi(abi).decodeEvent(event as Uint8Array | Bytes)
       stringData = { ...stringData, decoded, formatted: this.formatDecoded(decoded) }
     }
     return JSON.stringify(stringData)
