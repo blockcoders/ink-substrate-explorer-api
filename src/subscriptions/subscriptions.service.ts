@@ -1,16 +1,16 @@
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { IEventData } from '@polkadot/types/types'
 
 import { Header } from '@polkadot/types/interfaces'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
+/*import { IEventData } from '@polkadot/types/types'
 import { Abi } from '@polkadot/api-contract'
 import { Bytes } from '@polkadot/types-codec'
 import erc20 from '../metadata/erc20'
-import { Codec } from '@polkadot/types-codec/types'
+import { Codec } from '@polkadot/types-codec/types'*/
 
 @Injectable()
 export class SubscriptionsService implements OnModuleInit {
@@ -44,7 +44,8 @@ export class SubscriptionsService implements OnModuleInit {
       transactions.forEach(async (transaction, index) => {
         const events = await this.eventsService.createEventsFromRecords(records, index, transaction.hash)
         events.forEach(async (e) => {
-          const event = await this.eventsService.findById(e.id)
+          console.log("EVENT: %j", e)
+          /*const event = await this.eventsService.findById(e.id)
           if (!event)
             throw new Error(`NOT FOUND WITH ID: ${e.id}`)
           const [, ev] = event.jsonData as Codec[] & IEventData
@@ -52,7 +53,7 @@ export class SubscriptionsService implements OnModuleInit {
             const decoded = new Abi(erc20).decodeEvent(ev as Uint8Array | Bytes)
             console.log(decoded)
           }
-        
+        */
         })
       })
 
