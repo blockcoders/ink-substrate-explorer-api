@@ -61,6 +61,7 @@
     "@polkadot/types": "^8.14.1",
     "@polkadot/types-codec": "^8.14.1",
     "@polkadot/types-create": "^8.14.1",
+    "@polkadot/util": "^10.1.6",
     "@substrate/txwrapper": "^7.0.1",
     "@substrate/txwrapper-core": "^3.1.7",
     "@substrate/txwrapper-registry": "^3.1.7",
