@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 import { Transaction } from '../../transactions/entity/transaction.entity'
-import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
 
 @ObjectType()
 @Entity({ name: 'blocks' })
@@ -20,4 +20,9 @@ export class Block extends BaseEntity {
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.block)
   transactions!: Transaction[]
+
+  @CreateDateColumn({
+    default: () => 'NOW()',
+  })
+  createdDate!: Date
 }

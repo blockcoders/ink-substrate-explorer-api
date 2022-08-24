@@ -1,7 +1,17 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 //import { GenericExtrinsicEra } from '@polkadot/types'
 import { Block } from '../../blocks/entity/block.entity'
-import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm'
 import { Event } from 'src/events/entity/event.entity'
 
 @ObjectType()
@@ -47,6 +57,10 @@ export class Transaction extends BaseEntity {
   @Field(() => Int, { description: 'Extra gas paid for the Tx as tip', nullable: true })
   tip?: number
 
+  @CreateDateColumn({
+    default: () => 'NOW()',
+  })
+  createdDate!: Date
   // TODO: add this
   //era?: GenericExtrinsicEra
   // We are not storing this for now

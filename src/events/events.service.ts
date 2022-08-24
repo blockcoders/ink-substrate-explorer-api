@@ -22,7 +22,7 @@ export class EventsService {
   }
 
   async findById(id: string): Promise<Event | null> {
-    return this.eventRepository.findOneBy({id})
+    return this.eventRepository.findOneBy({ id })
   }
 
   async createEventsFromRecords(
@@ -31,7 +31,8 @@ export class EventsService {
     transactionHash: string,
   ): Promise<Event[]> {
     const events = records.filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(extrinsicIndex))
-    const eventsToSave = events.map((record) => {
+    const contractEmittedEvents = events.filter((record) => record?.event?.method === 'ContractEmitted')
+    const eventsToSave = contractEmittedEvents.map((record) => {
       const {
         event: { section, method, data, index },
         topics,
@@ -40,7 +41,8 @@ export class EventsService {
       const abi = erc20
       const dataString = this.decode(abi, method, record)
       return this.eventRepository.create({
-        contract: method === 'ContractEmitted' ? contract.toString() : undefined,
+        id: data[1].toString() || '',
+        contract: contract.toString(),
         index: index.toHex(),
         section: section,
         method: method,
