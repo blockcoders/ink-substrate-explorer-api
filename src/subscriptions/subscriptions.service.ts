@@ -1,10 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { Abi } from '@polkadot/api-contract'
 import { Header } from '@polkadot/types/interfaces'
-import { numberToU8a } from '@polkadot/util'
-import erc20 from 'src/metadata/erc20'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
@@ -39,21 +36,7 @@ export class SubscriptionsService implements OnModuleInit {
       const block = await this.blocksService.createFromHeader(header)
       const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
       transactions.forEach(async (transaction, index) => {
-        const events = await this.eventsService.createEventsFromRecords(records, index, transaction.hash)
-
-        events.forEach(async (e) => {
-          const event = await this.eventsService.findById(e.id)
-          if (!event) throw new Error(`NOT FOUND WITH ID: ${e.id}`)
-          const [, ev] = event.jsonData as any
-          if (e.method === 'ContractEmitted') {
-            try {
-              const a = new Abi(erc20).decodeEvent(numberToU8a(ev))
-              console.log(a.event)
-            } catch (error) {
-              console.warn(error)
-            }
-          }
-        })
+        await this.eventsService.createEventsFromRecords(records, index, transaction.hash)
       })
 
       console.log('\n-----------------New block-----------------\n')

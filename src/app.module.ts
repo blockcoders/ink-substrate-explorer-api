@@ -17,6 +17,9 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module'
 import { TransactionsModule } from './transactions/transactions.module'
 import { TransactionsResolver } from './transactions/transactions.resolver'
 import { TransactionsService } from './transactions/transactions.service'
+import { ContractsModule } from './contracts/contracts.module';
+import { ContractsService } from './contracts/contracts.service'
+import { ContractsResolver } from './contracts/contracts.resolver'
 
 @Module({
   imports: [
@@ -44,6 +47,7 @@ import { TransactionsService } from './transactions/transactions.service'
     BlocksModule,
     EventsModule,
     TransactionsModule,
+    ContractsModule,
     SubscriptionsModule,
   ],
   providers: [
@@ -54,6 +58,8 @@ import { TransactionsService } from './transactions/transactions.service'
     EventsService,
     TransactionsResolver,
     TransactionsService,
+    ContractsResolver,
+    ContractsService,
   ],
 })
 export class AppModule {}

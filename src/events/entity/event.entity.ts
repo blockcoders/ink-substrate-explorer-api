@@ -42,13 +42,9 @@ export class Event extends BaseEntity {
   @JoinColumn()
   transaction!: Transaction
 
-  @Column()
-  @Field(() => String)
-  data!: string
-
   @Column({ type: 'jsonb', nullable: true, default: {} })
   @Field(() => String, { nullable: true })
-  jsonData?: Codec[] & IEventData
+  data?: Codec[] & IEventData
 
   @CreateDateColumn({
     default: () => 'NOW()',

@@ -11,3 +11,17 @@ export class EventsResolver {
     return this.eventsService.fetchEvents(args)
   }
 }
+/*
+events.forEach(async (e) => {
+          try {
+            const event = await this.eventsService.findById(e.id)
+            if (!event) throw new Error(`NOT FOUND WITH ID: ${e.id}`)
+            if (event.method === 'ContractEmitted')
+              console.log(
+                '%j',
+                this.eventsService.formatDecoded(this.eventsService.decodeContractEmittedEvent(erc20, event.data)),
+              )
+          } catch (error) {
+            console.warn(error)
+          }
+        })*/

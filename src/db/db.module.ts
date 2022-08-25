@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { Contract } from '../contracts/entity/contract.entity'
 import { Block } from '../blocks/entity/block.entity'
 import { EnvModule } from '../env/env.module'
 import { EnvService } from '../env/env.service'
@@ -27,7 +28,7 @@ import { Transaction } from '../transactions/entity/transaction.entity'
         }
       },
     }),
-    TypeOrmModule.forFeature([Block, Transaction, Event]),
+    TypeOrmModule.forFeature([Block, Transaction, Event, Contract]),
   ],
   exports: [TypeOrmModule],
 })

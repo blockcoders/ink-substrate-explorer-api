@@ -9,21 +9,30 @@ type Block {
   transactions: [Transaction!]!
 }
 
+type Contract {
+  hash: String!
+  metadata: String!
+}
+
 type Event {
   contract: String
-  data: String!
+  data: String
   id: String!
   index: String!
-  jsonData: String
   method: String!
   section: String!
   topics: String!
   transactionHash: String
 }
 
+type Mutation {
+  uploadMetadata: Contract!
+}
+
 type Query {
   getBlock(hash: String!): Block!
   getBlocks(skip: Int = 0, take: Int = 10): [Block!]!
+  getContract(hash: String!): Contract!
   getEvents(contract: String, skip: Int = 0, take: Int = 20, transactionHash: String): [Event!]!
   getTransaction(hash: String!): Transaction!
   getTransactions(blockHash: String, skip: Int = 0, take: Int = 20): [Transaction!]!
