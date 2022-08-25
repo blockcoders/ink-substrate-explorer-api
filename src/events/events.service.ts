@@ -8,6 +8,7 @@ import { Event } from './entity/event.entity'
 import { Abi } from '@polkadot/api-contract'
 import { DecodedEvent } from '@polkadot/api-contract/types'
 import { numberToU8a } from '@polkadot/util'
+import { fromString } from 'uuidv4'
 
 @Injectable()
 export class EventsService {
@@ -38,8 +39,9 @@ export class EventsService {
         topics,
       } = record
       const [contract] = data
+      const compoundId = data[1].toString() + transactionHash.toString()
       return this.eventRepository.create({
-        id: data[1].toString() || '',
+        id: fromString(compoundId),
         contract: contract.toString(),
         index: index.toHex(),
         section: section,
