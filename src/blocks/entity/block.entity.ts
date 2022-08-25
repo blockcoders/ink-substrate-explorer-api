@@ -6,7 +6,9 @@ import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, Primary
 @Entity({ name: 'blocks' })
 @Index(['hash', 'number'])
 export class Block extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({
+    unique: true,
+  })
   @Field(() => String)
   hash!: string
 

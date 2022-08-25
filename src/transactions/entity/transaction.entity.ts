@@ -18,7 +18,9 @@ import { Event } from 'src/events/entity/event.entity'
 @Entity({ name: 'transactions' })
 @Index(['signer'])
 export class Transaction extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({
+    unique: true,
+  })
   @Field(() => String, { description: 'Transaction hash' })
   hash!: string
 
