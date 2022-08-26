@@ -3,15 +3,19 @@ import { BaseEntity, Column, CreateDateColumn, Entity, Index, PrimaryColumn } fr
 
 @ObjectType()
 @Entity({ name: 'contracts' })
-@Index(['hash'])
+@Index(['address'])
 export class Contract extends BaseEntity {
   @PrimaryColumn()
   @Field(() => String)
-  hash!: string
+  address!: string
 
-  @Column()
-  @Field(() => String)
-  metadata!: string
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  fileName?: string
+  
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  metadata?: string
 
   @CreateDateColumn({
     default: () => 'NOW()',

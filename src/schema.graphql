@@ -10,8 +10,9 @@ type Block {
 }
 
 type Contract {
-  hash: String!
-  metadata: String!
+  address: String!
+  fileName: String
+  metadata: String
 }
 
 type Event {
@@ -26,7 +27,7 @@ type Event {
 }
 
 type Mutation {
-  uploadMetadata: Contract!
+  uploadMetadata(contractAddress: String!, file: Upload!): Boolean!
 }
 
 type Query {
@@ -60,3 +61,6 @@ type Transaction {
   """Extra gas paid for the Tx as tip"""
   tip: Int
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload

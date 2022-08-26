@@ -40,6 +40,7 @@ import { ContractsResolver } from './contracts/contracts.resolver'
           playground: env.GRAPHQL_PLAYGROUND,
           autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
           introspection: env.GRAPHQL_INTROSPECTION,
+          uploads: false
         }
       },
     }),
