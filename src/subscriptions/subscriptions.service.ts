@@ -28,8 +28,6 @@ export class SubscriptionsService implements OnModuleInit {
   async subscribeAllHeads() {
     const api = await SubscriptionsService.connect()
 
-    if (process.env.LOAD_ALL_BLOCKS === 'true') await this.loadAllBlocks(api)
-
     await api.rpc.chain.subscribeAllHeads(async (lastHeader: Header) => {
       const [
         {
@@ -39,6 +37,8 @@ export class SubscriptionsService implements OnModuleInit {
       ] = await Promise.all([api.rpc.chain.getBlock(lastHeader.hash), api.query.system.events.at(lastHeader.hash)])
       await this.registerAllBlockData(header, extrinsics, records)
     })
+
+    if (process.env.LOAD_ALL_BLOCKS === 'true') await this.loadAllBlocks(api)
   }
 
   async loadAllBlocks(api: ApiPromise) {
