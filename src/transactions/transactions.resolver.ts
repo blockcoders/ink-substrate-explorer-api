@@ -23,7 +23,7 @@ export class TransactionsResolver {
   async getEvents(@Parent() transaction: Transaction) {
     const { hash } = transaction
     const args: FetchEventsInput = {
-      transactionHash: hash
+      transactionHash: hash,
     }
     return this.eventsService.fetchEvents(args)
   }
