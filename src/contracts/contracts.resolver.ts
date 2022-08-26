@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { GraphQLUpload, FileUpload } from 'graphql-upload'
 import { ContractsService } from './contracts.service'
-import { UploadMetadataInput } from './dtos/upload-metadata.input'
 import { Contract } from './entity/contract.entity'
 
 @Resolver(() => Contract)
@@ -12,12 +12,15 @@ export class ContractsResolver {
     return this.contractsService.findOne(hash)
   }
 
-  @Mutation(() => Contract)
-  async uploadMetadata(data: UploadMetadataInput) {
-    const contract = await this.contractsService.findOne(data.hash)
+  @Mutation(() => Boolean)
+  async uploadMetadata(
+    @Args('file', { type: () => GraphQLUpload }) file: FileUpload,
+    @Args('contractAddress', { type: () => String }) contractAddress: String,
+  ): Promise<Boolean> {
+    const contract = await this.contractsService.findOne(contractAddress as string)
     if (!contract) {
       throw new Error('Contract does not exist')
     }
-    return this.contractsService.uploadMetadata(contract, data.metadata)
+    return this.contractsService.uploadMetadata(contract, file)
   }
 }

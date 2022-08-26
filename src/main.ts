@@ -7,6 +7,8 @@ import { AppModule } from './app.module'
 import { EnvService } from './env/env.service'
 const compress = require('@fastify/compress')
 const helmet = require('@fastify/helmet')
+//import { graphqlUploadExpress } from 'graphql-upload';
+//const fmp = require('fastify-multipart')
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -48,7 +50,8 @@ async function bootstrap() {
   })
 
   app.register(compress)
-
+ //app.register(fmp)
+  //app.use(graphqlUploadExpress())
   await app.listen(env.PORT, '0.0.0.0', (err: Error, address: string) => {
     if (err) {
       NestLogger.error(err)
