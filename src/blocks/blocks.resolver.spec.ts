@@ -1,65 +1,76 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { EventsService } from 'src/events/events.service'
-import { EventsResolver } from '../events/events.resolver.spec'
+import { TestingModule, Test } from '@nestjs/testing'
+import { TransactionsModule } from '../transactions/transactions.module'
+import { BlocksResolver } from './blocks.resolver'
+import { BlocksService } from './blocks.service'
+import { Block } from './entity/block.entity'
 
-const eventsMocks = [
+const mockBlock = {
+  hash: '0x03b26a67c6c7fda467f7b96d09b99d04ef9a8163043e72b5e5474358631afad2',
+  parentHash: '0x9b0f818b9cac7d9451819de6172e308d67c4b8ff8c2f1f6773cdb20c40573858',
+  number: '27',
+  createdDate: '2022-08-25 22:49:21.843575',
+}
+
+const mockBlocks = [
   {
-    id: '09ff3513-d192-5957-b8d8-61ba3aec4fb1',
-    contract: '5F73xwbK9jtcG1YY38DG5wVLm42y15pCa8zE79snVT5z9X1t',
-    transactionHash: '0x490e16ee0997d50a67c9eea3b885c092bf6483949d5f92f12a0925e92a9baad7',
-    index: '0x0703',
-    section: 'contracts',
-    method: 'ContractEmitted',
-    topics:
-      '[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]',
-    data: '["5F73xwbK9jtcG1YY38DG5wVLm42y15pCa8zE79snVT5z9X1t","0x0001d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d018eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a480010a5d4e80000000000000000000000"]',
-    createdDate: '2022-08-25 22:49:21.66883',
+    hash: '0x03b26a67c6c7fda467f7b96d09b99d04ef9a8163043e72b5e5474358631afad2',
+    parentHash: '0x9b0f818b9cac7d9451819de6172e308d67c4b8ff8c2f1f6773cdb20c40573858',
+    number: '27',
+    createdDate: '2022-08-25 22:49:21.843575',
   },
   {
-    id: '181d7167-f23d-55d7-b403-248f62530fdd',
-    contract: '5F73xwbK9jtcG1YY38DG5wVLm42y15pCa8zE79snVT5z9X1t',
-    transactionHash: '0xc70b40d973ab3147127efc61e71f532e425e23ebae9dc660146682bb2402b9c5',
-    index: '0x0703',
-    section: 'contracts',
-    method: 'ContractEmitted',
-    topics:
-      '[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x33766995fd9b44bd45f351b3abd7e5041960638db0075c84ab7af1a734e20d1b, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]',
-    data: '["5F73xwbK9jtcG1YY38DG5wVLm42y15pCa8zE79snVT5z9X1t","0x0001d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d01d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0010a5d4e80000000000000000000000"]',
-    createdDate: '2022-08-25 22:49:21.923151',
+    hash: '0x106981de7fcfa9ecdce5d7d88bdf912260becea7ac22a142236a1d976eed2a12',
+    parentHash: '0x6a573c929bd0bf9ecaf49aaba2fdc72fce82f5451a25485b9678c0e477d8fd8a',
+    number: '14',
+    createdDate: '2022-08-25 22:49:21.657697',
   },
 ]
 
-describe('EventsResolver', () => {
-  let resolver: EventsResolver
+describe('BlocksResolver', () => {
+  let resolver: BlocksResolver
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [TransactionsModule],
       providers: [
-        EventsResolver,
+        BlocksResolver,
         {
-          provide: EventsService,
-          useFactory: jest.fn(() => ({
-            fetchEvents: () => eventsMocks,
-          })),
+          provide: BlocksService,
+          useFactory: () => ({
+            findOne: jest.fn(() => mockBlock),
+            fetchBlocks: jest.fn(() => mockBlocks),
+          }),
         },
       ],
     }).compile()
 
-    resolver = module.get<EventsResolver>(EventsResolver)
+    resolver = module.get<BlocksResolver>(BlocksResolver)
   })
 
   it('should be defined', () => {
     expect(resolver).toBeDefined()
   })
 
-  describe('getEvents', () => {
-    it('should get a transaction by hash', async () => {
-      const events = await resolver.getEvents({
-        skip: 0,
-        take: 10,
-        contract: eventsMocks[0].contract,
-      })
-      expect(events).toEqual(eventsMocks)
+  describe('getBlock', () => {
+    it('should get a block by hash', async () => {
+      const block = await resolver.getBlock(mockBlock.hash)
+      expect(block).toEqual(mockBlock)
+    })
+  })
+
+  describe('getBlocks', () => {
+    it('should get all blocks', async () => {
+      const blocks = await resolver.getBlocks({ skip: 0, take: 10 })
+      expect(blocks).toEqual(mockBlocks)
+    })
+
+    // TODO: fix transaction response
+    it.skip('should obtain all transactions in a block', async () => {
+      const transactions = await resolver.getTransactions({
+        hash: '0xc8b45f687af1e734eb7b7b84f7bf8a0576f5ca1933626cdae42f2e527a76d7b1',
+      } as Block)
+      console.log(transactions)
+      expect(transactions).toEqual([])
     })
   })
 })
