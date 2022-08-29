@@ -12,8 +12,11 @@ export class EventsResolver {
   }
 
   @Query(() => String)
-  async decodeEvents(@Args('contractAddress', { type: () => String }) contractAddress: String) {
+  async decodeEvents(@Args('contractAddress', { type: () => String }) contractAddress: string) {
     const events = await this.eventsService.fetchEvents({ contract: contractAddress as string })
-    return JSON.stringify(this.eventsService.decodeEvents(events, contractAddress as string))
+
+    const response = await this.eventsService.decodeEvents(events, contractAddress as string)
+
+    return JSON.stringify(response)
   }
 }

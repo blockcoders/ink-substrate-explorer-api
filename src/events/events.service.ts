@@ -58,17 +58,15 @@ export class EventsService {
   }
 
   async decodeEvents(events: Event[], contractAddress: string) {
-    const contract = await this.contractRespository.findOneBy({address: contractAddress})
-    if (!contract) throw new Error("Contract not found")
-    if (!contract.metadata) throw new Error("Upload the metadata first")
-    const buff = Buffer.from(contract.metadata, 'base64').toString('ascii')
-    const abi = JSON.parse(buff)
-    return events.map(async (event) => this.decodeContractEmittedEvent(abi, event.data))
+    const contract = await this.contractRespository.findOneBy({ address: contractAddress })
+    if (!contract) throw new Error('Contract not found')
+    if (!contract.metadata) throw new Error('Upload the metadata first')
+    return events.map((event) => this.decodeContractEmittedEvent(contract.metadata as string, event.data))
   }
 
   decodeContractEmittedEvent(abi: string | Record<string, unknown>, data: any): DecodedEvent {
     const [, event] = data
-    return new Abi(abi).decodeEvent(numberToU8a(event))
+    return new Abi(JSON.parse(abi as string)).decodeEvent(numberToU8a(event))
   }
 
   formatDecoded(decoded: DecodedEvent) {
