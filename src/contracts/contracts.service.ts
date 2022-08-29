@@ -19,11 +19,15 @@ export class ContractsService {
   }
 
   async uploadMetadata(contract: Contract, metadata: String): Promise<Boolean> {
+    if (Buffer.from(metadata, 'base64').toString('base64') !== metadata) {
+      throw new Error('Invalid metadata')
+    }
+
     try {
       contract.metadata = metadata as string
       await this.contractRepository.save(contract)
     } catch (error) {
-      console.error("Error: %j", error)
+      console.error('Error: %j', error)
       return false
     }
     return true
