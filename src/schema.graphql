@@ -30,6 +30,7 @@ type Mutation {
 }
 
 type Query {
+  decodeEvents(contractAddress: String!): String!
   getBlock(hash: String!): Block!
   getBlocks(skip: Int = 0, take: Int = 10): [Block!]!
   getContract(hash: String!): Contract!

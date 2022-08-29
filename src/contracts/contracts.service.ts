@@ -20,8 +20,7 @@ export class ContractsService {
 
   async uploadMetadata(contract: Contract, metadata: String): Promise<Boolean> {
     try {
-      const buff = Buffer.from(metadata as string, 'base64');      
-      contract.metadata = buff.toString('ascii')
+      contract.metadata = metadata as string
       await this.contractRepository.save(contract)
     } catch (error) {
       console.error("Error: %j", error)
