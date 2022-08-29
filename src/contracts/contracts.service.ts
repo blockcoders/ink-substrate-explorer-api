@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FileUpload } from 'graphql-upload'
 import { Repository } from 'typeorm'
 import { Contract } from './entity/contract.entity'
 

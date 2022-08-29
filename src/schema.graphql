@@ -27,7 +27,7 @@ type Event {
 }
 
 type Mutation {
-  uploadMetadata(contractAddress: String!, file: Upload!): Boolean!
+  uploadMetadata(contractAddress: String!, metadata: String!): Boolean!
 }
 
 type Query {
@@ -61,6 +61,3 @@ type Transaction {
   """Extra gas paid for the Tx as tip"""
   tip: Int
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
