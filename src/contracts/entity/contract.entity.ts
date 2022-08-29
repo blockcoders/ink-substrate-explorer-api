@@ -8,10 +8,6 @@ export class Contract extends BaseEntity {
   @PrimaryColumn()
   @Field(() => String)
   address!: string
-
-  @Column({ nullable: true })
-  @Field(() => String, { nullable: true })
-  fileName?: string
   
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })

@@ -10,18 +10,10 @@ export class EventsResolver {
   async getEvents(@Args() args: FetchEventsInput) {
     return this.eventsService.fetchEvents(args)
   }
+
+  @Query(() => String)
+  async decodeEvents(@Args('contractAddress', { type: () => String }) contractAddress: String) {
+    const events = await this.eventsService.fetchEvents({ contract: contractAddress as string })
+    return JSON.stringify(this.eventsService.decodeEvents(events, contractAddress as string))
+  }
 }
-/*
-events.forEach(async (e) => {
-          try {
-            const event = await this.eventsService.findById(e.id)
-            if (!event) throw new Error(`NOT FOUND WITH ID: ${e.id}`)
-            if (event.method === 'ContractEmitted')
-              console.log(
-                '%j',
-                this.eventsService.formatDecoded(this.eventsService.decodeContractEmittedEvent(erc20, event.data)),
-              )
-          } catch (error) {
-            console.warn(error)
-          }
-        })*/

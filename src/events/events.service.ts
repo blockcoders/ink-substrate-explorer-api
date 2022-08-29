@@ -9,12 +9,15 @@ import { Abi } from '@polkadot/api-contract'
 import { DecodedEvent } from '@polkadot/api-contract/types'
 import { numberToU8a } from '@polkadot/util'
 import { fromString } from 'uuidv4'
+import { Contract } from '../contracts/entity/contract.entity'
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+    @InjectRepository(Contract)
+    private readonly contractRespository: Repository<Contract>,
   ) {}
 
   async fetchEvents(args: FetchEventsInput): Promise<Event[]> {
@@ -52,6 +55,15 @@ export class EventsService {
       })
     })
     return Promise.all(eventsToSave.map((event) => this.eventRepository.save(event)))
+  }
+
+  async decodeEvents(events: Event[], contractAddress: string) {
+    const contract = await this.contractRespository.findOneBy({address: contractAddress})
+    if (!contract) throw new Error("Contract not found")
+    if (!contract.metadata) throw new Error("Upload the metadata first")
+    const buff = Buffer.from(contract.metadata, 'base64').toString('ascii')
+    const abi = JSON.parse(buff)
+    return events.map(async (event) => this.decodeContractEmittedEvent(abi, event.data))
   }
 
   decodeContractEmittedEvent(abi: string | Record<string, unknown>, data: any): DecodedEvent {

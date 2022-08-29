@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FileUpload } from 'graphql-upload'
 import { Repository } from 'typeorm'
 import { Contract } from './entity/contract.entity'
 
@@ -19,31 +18,9 @@ export class ContractsService {
     return contract
   }
 
-  async uploadMetadata(contract: Contract, metadata: FileUpload): Promise<Boolean> {
+  async uploadMetadata(contract: Contract, metadata: String): Promise<Boolean> {
     try {
-      const { createReadStream, filename } = metadata
-      console.log("FILE NAME: %j", filename)
-      
-      const stream = createReadStream();
-      const chunks: any = [];
-
-      const buffer = await new Promise<Buffer>((resolve, reject) => {
-        let buffer: Buffer;
-
-        stream.on('data', function (chunk: any) {
-          chunks.push(chunk);
-        });
-
-        stream.on('end', function () {
-          buffer = Buffer.concat(chunks);
-          resolve(buffer);
-        });
-
-        stream.on('error', reject);
-      });
-
-      const base64 = buffer.toString('base64');
-      console.log("DATA: %j", base64)
+      contract.metadata = metadata as string
       await this.contractRepository.save(contract)
     } catch (error) {
       console.error("Error: %j", error)
