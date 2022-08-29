@@ -13,9 +13,13 @@ export class ContractsResolver {
 
   @Mutation(() => Boolean)
   async uploadMetadata(
-    @Args('metadata', { type: () => String }) metadata: String,
-    @Args('contractAddress', { type: () => String }) contractAddress: String,
-  ): Promise<Boolean> {
+    @Args('metadata', { type: () => String }) metadata: string,
+    @Args('contractAddress', { type: () => String }) contractAddress: string,
+  ): Promise<boolean> {
+    if (Buffer.from(metadata, 'base64').toString('base64') !== metadata) {
+      throw new Error('Invalid metadata')
+    }
+
     const contract = await this.contractsService.findOne(contractAddress as string)
     if (!contract) {
       throw new Error('Contract does not exist')
