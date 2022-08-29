@@ -11,7 +11,6 @@ type Block {
 
 type Contract {
   address: String!
-  fileName: String
   metadata: String
 }
 

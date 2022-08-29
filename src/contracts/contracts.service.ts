@@ -20,8 +20,8 @@ export class ContractsService {
 
   async uploadMetadata(contract: Contract, metadata: String): Promise<Boolean> {
     try {
-      console.log("Metadata en base64: %j", metadata)
-      //contract.metadata = metadata
+      const buff = Buffer.from(metadata as string, 'base64');      
+      contract.metadata = buff.toString('ascii')
       await this.contractRepository.save(contract)
     } catch (error) {
       console.error("Error: %j", error)
