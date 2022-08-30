@@ -3,6 +3,7 @@ import { Transaction } from '../../transactions/entity/transaction.entity'
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm'
 import { Codec } from '@polkadot/types-codec/types'
 import { IEventData } from '@polkadot/types/types'
+import { Contract } from '../../contracts/entity/contract.entity'
 
 @ObjectType()
 @Entity({ name: 'events' })
@@ -11,9 +12,12 @@ export class Event extends BaseEntity {
   @Field(() => String)
   id!: string
 
-  @Column({ nullable: true })
-  @Field(() => String, { nullable: true })
-  contract?: string
+  @ManyToOne(() => Contract, (contract: Contract) => contract.events, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn()
+  contract?: Contract
 
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })

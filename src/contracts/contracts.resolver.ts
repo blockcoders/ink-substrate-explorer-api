@@ -1,10 +1,13 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { EventsService } from '../events/events.service'
+import { FetchEventsInput } from '../events/dtos/fetch-events.input'
+import { Event } from '../events/entity/event.entity'
 import { ContractsService } from './contracts.service'
 import { Contract } from './entity/contract.entity'
 
 @Resolver(() => Contract)
 export class ContractsResolver {
-  constructor(private contractsService: ContractsService) {}
+  constructor(private contractsService: ContractsService, private eventsService: EventsService) {}
 
   @Query(() => Contract)
   async getContract(@Args('hash', { type: () => String }) hash: string) {
@@ -25,5 +28,14 @@ export class ContractsResolver {
       throw new Error('Contract does not exist')
     }
     return this.contractsService.uploadMetadata(contract, metadata)
+  }
+
+  @ResolveField('events', () => [Event])
+  async getEvents(@Parent() contract: Contract) {
+    const { address } = contract
+    const args: FetchEventsInput = {
+      contract: address,
+    }
+    return this.eventsService.fetchEvents(args)
   }
 }

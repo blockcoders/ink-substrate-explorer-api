@@ -22,7 +22,7 @@ export class EventsService {
 
   async fetchEvents(args: FetchEventsInput): Promise<Event[]> {
     const { skip, take, contract } = args
-    return this.eventRepository.find({ skip, take, where: { contract } })
+    return this.eventRepository.find({ skip, take, where: { contract: { address: contract } } })
   }
 
   async findById(id: string): Promise<Event | null> {
@@ -36,16 +36,28 @@ export class EventsService {
   ): Promise<Event[]> {
     const events = records.filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(extrinsicIndex))
     const contractEmittedEvents = events.filter((record) => record?.event?.method === 'ContractEmitted')
+    const contractsAddresses = contractEmittedEvents.map(record => {
+      const [address] = record.event.data
+      return address.toString()
+    })
+    const contracts = await Promise.all(contractsAddresses.map(async address => {
+      let contract = await this.contractRespository.findOne({where: {address}}) as Contract
+      if(!contract) {
+        contract = await this.contractRespository.create({address}).save() as Contract
+      }
+      return contract
+    }))
+
     const eventsToSave = contractEmittedEvents.map((record) => {
       const {
         event: { section, method, data, index },
         topics,
       } = record
-      const [contract] = data
+      const [contractAddress] = data
       const compoundId = data[1].toString() + transactionHash.toString()
       return this.eventRepository.create({
         id: fromString(compoundId),
-        contract: contract.toString(),
+        contract: contracts.find((contract: Contract) => contract.address === contractAddress.toString()),
         index: index.toHex(),
         section: section,
         method: method,

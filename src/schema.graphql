@@ -11,11 +11,11 @@ type Block {
 
 type Contract {
   address: String!
+  events: [Event!]!
   metadata: String
 }
 
 type Event {
-  contract: String
   data: String
   id: String!
   index: String!
