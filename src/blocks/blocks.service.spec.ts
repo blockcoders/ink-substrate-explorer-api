@@ -3,7 +3,6 @@ import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { BlocksService } from './blocks.service'
 import { Block } from './entity/block.entity'
-import { stringToU8a, compactFromU8a } from '@polkadot/util'
 
 const mockBlock = {
   hash: '0x03b26a67c6c7fda467f7b96d09b99d04ef9a8163043e72b5e5474358631afad2',
@@ -69,6 +68,7 @@ describe('BlocksService', () => {
     })
   })
 
+  // TODO: fix number param as Compact<BlockNumber>
   // describe('createFromHeader', () => {
   //   it('should successfully insert a block', async () => {
   //     const number = compactFromU8a(stringToU8a(mockBlock.number))

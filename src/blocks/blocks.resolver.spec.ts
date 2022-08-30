@@ -2,7 +2,6 @@ import { TestingModule, Test } from '@nestjs/testing'
 import { TransactionsModule } from '../transactions/transactions.module'
 import { BlocksResolver } from './blocks.resolver'
 import { BlocksService } from './blocks.service'
-import { Block } from './entity/block.entity'
 
 const mockBlock = {
   hash: '0x03b26a67c6c7fda467f7b96d09b99d04ef9a8163043e72b5e5474358631afad2',
@@ -65,12 +64,12 @@ describe('BlocksResolver', () => {
     })
 
     // TODO: fix transaction response
-    it.skip('should obtain all transactions in a block', async () => {
-      const transactions = await resolver.getTransactions({
-        hash: '0xc8b45f687af1e734eb7b7b84f7bf8a0576f5ca1933626cdae42f2e527a76d7b1',
-      } as Block)
-      console.log(transactions)
-      expect(transactions).toEqual([])
-    })
+    // it.skip('should obtain all transactions in a block', async () => {
+    //   const transactions = await resolver.getTransactions({
+    //     hash: '0xc8b45f687af1e734eb7b7b84f7bf8a0576f5ca1933626cdae42f2e527a76d7b1',
+    //   } as Block)
+    //   console.log(transactions)
+    //   expect(transactions).toEqual([])
+    // })
   })
 })
