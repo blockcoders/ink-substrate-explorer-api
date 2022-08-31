@@ -1,4 +1,7 @@
 version: '3.7'
+networks:
+  ink-explorer-network:
+    external: true
 services:
   backend:
     restart: on-failure
@@ -13,6 +16,12 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "backend"
+    env_file:
+      - .env
   postgres:
     image: postgres:14.4
     restart: always
@@ -22,6 +31,10 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=ink
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "postgres"
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -31,3 +44,7 @@ services:
       - 80:80
     depends_on:
       - postgres
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "pgadmin"
