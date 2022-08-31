@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Transaction } from '../../transactions/entity/transaction.entity'
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm'
 import { Codec } from '@polkadot/types-codec/types'
 import { IEventData } from '@polkadot/types/types'
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm'
 import { Contract } from '../../contracts/entity/contract.entity'
+import { Transaction } from '../../transactions/entity/transaction.entity'
 
 @ObjectType()
 @Entity({ name: 'events' })

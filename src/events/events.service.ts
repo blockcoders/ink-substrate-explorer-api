@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Vec } from '@polkadot/types-codec'
-import { FrameSystemEventRecord } from '@polkadot/types/lookup'
-import { Repository } from 'typeorm'
-import { FetchEventsInput } from './dtos/fetch-events.input'
-import { Event } from './entity/event.entity'
 import { Abi } from '@polkadot/api-contract'
 import { DecodedEvent } from '@polkadot/api-contract/types'
+import { Vec } from '@polkadot/types-codec'
+import { FrameSystemEventRecord } from '@polkadot/types/lookup'
 import { numberToU8a } from '@polkadot/util'
+import { Repository } from 'typeorm'
 import { fromString } from 'uuidv4'
 import { Contract } from '../contracts/entity/contract.entity'
+import { FetchEventsInput } from './dtos/fetch-events.input'
+import { Event } from './entity/event.entity'
 
 @Injectable()
 export class EventsService {
@@ -36,17 +36,19 @@ export class EventsService {
   ): Promise<Event[]> {
     const events = records.filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(extrinsicIndex))
     const contractEmittedEvents = events.filter((record) => record?.event?.method === 'ContractEmitted')
-    const contractsAddresses = contractEmittedEvents.map(record => {
+    const contractsAddresses = contractEmittedEvents.map((record) => {
       const [address] = record.event.data
       return address.toString()
     })
-    const contracts = await Promise.all(contractsAddresses.map(async address => {
-      let contract = await this.contractRespository.findOne({where: {address}}) as Contract
-      if(!contract) {
-        contract = await this.contractRespository.create({address}).save() as Contract
-      }
-      return contract
-    }))
+    const contracts = await Promise.all(
+      contractsAddresses.map(async (address) => {
+        let contract = (await this.contractRespository.findOne({ where: { address } })) as Contract
+        if (!contract) {
+          contract = (await this.contractRespository.create({ address }).save()) as Contract
+        }
+        return contract
+      }),
+    )
 
     const eventsToSave = contractEmittedEvents.map((record) => {
       const {

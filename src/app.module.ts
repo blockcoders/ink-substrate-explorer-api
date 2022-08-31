@@ -7,6 +7,9 @@ import { AppResolver } from './app.resolver'
 import { BlocksModule } from './blocks/blocks.module'
 import { BlocksResolver } from './blocks/blocks.resolver'
 import { BlocksService } from './blocks/blocks.service'
+import { ContractsModule } from './contracts/contracts.module'
+import { ContractsResolver } from './contracts/contracts.resolver'
+import { ContractsService } from './contracts/contracts.service'
 import { DBModule } from './db/db.module'
 import { EnvModule } from './env/env.module'
 import { EnvService } from './env/env.service'
@@ -17,9 +20,6 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module'
 import { TransactionsModule } from './transactions/transactions.module'
 import { TransactionsResolver } from './transactions/transactions.resolver'
 import { TransactionsService } from './transactions/transactions.service'
-import { ContractsModule } from './contracts/contracts.module';
-import { ContractsService } from './contracts/contracts.service'
-import { ContractsResolver } from './contracts/contracts.resolver'
 
 @Module({
   imports: [

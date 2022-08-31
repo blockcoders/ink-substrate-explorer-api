@@ -60,6 +60,7 @@ specifiers:
   tsconfig-paths: ^4.0.0
   typeorm: ^0.3.7
   typescript: ^4.7.4
+  util: link:@types/@polkadot/util
   uuid: ^8.3.2
   uuidv4: ^6.2.13
   webpack: ^5.74.0
@@ -128,6 +129,7 @@ devDependencies:
   ts-node: 10.9.1_ow5yu25silzxcp7pmv7jv4j54m
   tsconfig-paths: 4.0.0
   typescript: 4.7.4
+  util: link:@types/@polkadot/util
   webpack: 5.74.0
 
 packages:

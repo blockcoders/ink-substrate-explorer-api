@@ -1,7 +1,7 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
-import { EventsService } from '../events/events.service'
 import { FetchEventsInput } from '../events/dtos/fetch-events.input'
 import { Event } from '../events/entity/event.entity'
+import { EventsService } from '../events/events.service'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
 import { TransactionsService } from './transactions.service'

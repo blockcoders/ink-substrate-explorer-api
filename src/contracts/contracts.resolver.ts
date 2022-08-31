@@ -1,7 +1,7 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
-import { EventsService } from '../events/events.service'
 import { FetchEventsInput } from '../events/dtos/fetch-events.input'
 import { Event } from '../events/entity/event.entity'
+import { EventsService } from '../events/events.service'
 import { ContractsService } from './contracts.service'
 import { Contract } from './entity/contract.entity'
 

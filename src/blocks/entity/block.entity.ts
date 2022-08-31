@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
-import { Transaction } from '../../transactions/entity/transaction.entity'
 import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
+import { Transaction } from '../../transactions/entity/transaction.entity'
 
 @ObjectType()
 @Entity({ name: 'blocks' })

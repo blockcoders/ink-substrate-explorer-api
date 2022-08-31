@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Event } from '../../events/entity/event.entity'
 import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
+import { Event } from '../../events/entity/event.entity'
 
 @ObjectType()
 @Entity({ name: 'contracts' })
@@ -9,7 +9,7 @@ export class Contract extends BaseEntity {
   @PrimaryColumn()
   @Field(() => String)
   address!: string
-  
+
   @Column({ nullable: true })
   @Field(() => String, { nullable: true })
   metadata?: string

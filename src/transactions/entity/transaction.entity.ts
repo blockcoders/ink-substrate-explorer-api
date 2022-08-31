@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
-//import { GenericExtrinsicEra } from '@polkadot/types'
-import { Block } from '../../blocks/entity/block.entity'
+import { Event } from '../../events/entity/event.entity'
 import {
   BaseEntity,
   Column,
@@ -12,7 +11,7 @@ import {
   OneToMany,
   PrimaryColumn,
 } from 'typeorm'
-import { Event } from 'src/events/entity/event.entity'
+import { Block } from '../../blocks/entity/block.entity'
 
 @ObjectType()
 @Entity({ name: 'transactions' })

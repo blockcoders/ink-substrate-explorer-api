@@ -1,11 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-// import { Header } from '@polkadot/types/interfaces'
+import { Header } from '@polkadot/types/interfaces'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
-import { Header } from '@polkadot/types/interfaces'
 
 @Injectable()
 export class SubscriptionsService implements OnModuleInit {

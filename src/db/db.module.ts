@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Contract } from '../contracts/entity/contract.entity'
 import { Block } from '../blocks/entity/block.entity'
+import { Contract } from '../contracts/entity/contract.entity'
 import { EnvModule } from '../env/env.module'
 import { EnvService } from '../env/env.service'
 import { Event } from '../events/entity/event.entity'

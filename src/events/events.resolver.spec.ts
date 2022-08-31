@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { EventsService } from 'src/events/events.service'
+import { EventsService } from '../events/events.service'
 import { EventsResolver } from './events.resolver'
 
 const eventsMocks = [

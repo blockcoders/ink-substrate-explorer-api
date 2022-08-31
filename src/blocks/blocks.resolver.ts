@@ -8,7 +8,7 @@ import { Block } from './entity/block.entity'
 
 @Resolver(() => Block)
 export class BlocksResolver {
-  constructor(private blocksService: BlocksService , private transactionsService: TransactionsService) {}
+  constructor(private blocksService: BlocksService, private transactionsService: TransactionsService) {}
   @Query(() => Block)
   async getBlock(@Args('hash', { type: () => String }) hash: string) {
     return this.blocksService.findOne(hash)
@@ -23,7 +23,7 @@ export class BlocksResolver {
   async getTransactions(@Parent() block: Block) {
     const { hash } = block
     const args: FetchTransactionsInput = {
-      blockHash: hash
+      blockHash: hash,
     }
     return this.transactionsService.fetchTransactions(args)
   }
