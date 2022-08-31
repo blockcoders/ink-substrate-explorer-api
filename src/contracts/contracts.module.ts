@@ -6,7 +6,7 @@ import { ContractsService } from './contracts.service'
 
 @Module({
   imports: [DBModule, forwardRef(() => EventsModule)],
-  providers: [ContractsService, ContractsResolver],
+  providers: [ContractsResolver, ContractsService],
   exports: [ContractsService],
 })
 export class ContractsModule {}

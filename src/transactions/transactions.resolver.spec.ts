@@ -4,7 +4,7 @@ import { TransactionsResolver } from './transactions.resolver'
 import { TransactionsService } from './transactions.service'
 
 const mockTransaction = {
-  hash: '0x055878018de242a21b7bd4b9512f4c24217da75ab2b9bf4eb93e95247b1a8f42',
+  hash: '0x055878018de242a21b7bd4b9512f4c24217da75ab2b9bf4eb93e95247b1a8f43',
   blockHash: '0x5721a1e39a8097a6aa312be44baa46d869075d1bd94cf45410d99b113cc68af5',
   method: 'call',
   section: 'contracts',
