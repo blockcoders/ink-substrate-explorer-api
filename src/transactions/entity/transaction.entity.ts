@@ -1,5 +1,4 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
-import { Event } from '../../events/entity/event.entity'
 import {
   BaseEntity,
   Column,
@@ -12,6 +11,7 @@ import {
   PrimaryColumn,
 } from 'typeorm'
 import { Block } from '../../blocks/entity/block.entity'
+import { Event } from '../../events/entity/event.entity'
 
 @ObjectType()
 @Entity({ name: 'transactions' })
