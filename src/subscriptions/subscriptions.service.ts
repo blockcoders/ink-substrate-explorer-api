@@ -51,7 +51,7 @@ export class SubscriptionsService implements OnModuleInit {
 
     const firstBlockToLoad = Number(process.env.FIRST_BLOCK_TO_LOAD)
 
-    if (!isNaN(firstBlockToLoad)) arrayWithBlockNumbers = arrayWithBlockNumbers.slice(firstBlockToLoad)
+    if (!isNaN(firstBlockToLoad)) arrayWithBlockNumbers = arrayWithBlockNumbers.slice(Math.max(firstBlockToLoad, 0))
 
     // load historic data
     const blockAndRecords: any[] = await Promise.all(
