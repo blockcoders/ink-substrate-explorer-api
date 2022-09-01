@@ -45,9 +45,13 @@ export class SubscriptionsService implements OnModuleInit {
     const lastBlock = await api.rpc.chain.getBlock()
     const lastBlockNumber = lastBlock.block.header.number.toNumber()
 
-    const arrayWithBlockNumbers = Array.from(Array(lastBlockNumber + 1).keys())
+    let arrayWithBlockNumbers = Array.from(Array(lastBlockNumber + 1).keys())
 
     const hashes = await Promise.all(arrayWithBlockNumbers.map((i) => api.rpc.chain.getBlockHash(i)))
+
+    const firstBlockToLoad = Number(process.env.FIRST_BLOCK_TO_LOAD)
+
+    if (!isNaN(firstBlockToLoad)) arrayWithBlockNumbers = arrayWithBlockNumbers.slice(firstBlockToLoad)
 
     // load historic data
     const blockAndRecords: any[] = await Promise.all(
