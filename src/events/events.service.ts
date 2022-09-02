@@ -21,8 +21,8 @@ export class EventsService {
   ) {}
 
   async fetchEvents(args: FetchEventsInput): Promise<Event[]> {
-    const { skip, take, contract } = args
-    return this.eventRepository.find({ skip, take, where: { contract: { address: contract } } })
+    const { skip, take, contract, transactionHash } = args
+    return this.eventRepository.find({ skip, take, where: { contract: { address: contract }, transactionHash } })
   }
 
   async findById(id: string): Promise<Event | null> {
