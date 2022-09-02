@@ -10,8 +10,8 @@ export class ContractsResolver {
   constructor(private contractsService: ContractsService, private eventsService: EventsService) {}
 
   @Query(() => Contract)
-  async getContract(@Args('hash', { type: () => String }) hash: string) {
-    return this.contractsService.findOne(hash)
+  async getContract(@Args('address', { type: () => String }) address: string) {
+    return this.contractsService.findOne(address)
   }
 
   @Mutation(() => Boolean)

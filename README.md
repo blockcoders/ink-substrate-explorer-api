@@ -258,29 +258,108 @@ query {
 }
 ```
 
+<span style="color:#385499"> **getTransactions**: Retrieves transactions by block hash (use skip and take to paginate)</span>
 
 ```graphql
-type Query {
-  decodeEvents(contractAddress: String!): String!
-  getContract(hash: String!): Contract!
-  getEvents(
-    contract: String
-    skip: Int = 0
-    take: Int = 20
-    transactionHash: String
-  ): [Event!]!
-  getTransactions(
-    blockHash: String
-    skip: Int = 0
-    take: Int = 20
-  ): [Transaction!]!
+query {
+  getTransactions(blockHash: "0xa7ef8085bfad2354e5191e012bd412c0d76c213f43a68187194b7696a0822b93") {
+    hash
+    blockHash
+    method
+    nonce
+    section
+    signature
+    signer
+    tip
+  }
+}
+```
+<span style="color:#5EBA7D"> Response: </span>
+
+```graphql
+{
+  "data": {
+    "getTransactions": [
+      {
+        "hash": "0xf715221f0e46c5a666e65e99af70631cc32a46cf6121ed3be56768ff303eda36",
+        "blockHash": "0xa7ef8085bfad2354e5191e012bd412c0d76c213f43a68187194b7696a0822b93",
+        "method": "setValidationData",
+        "nonce": 0,
+        "section": "parachainSystem",
+        "signature": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "signer": "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM",
+        "tip": 0,
+        "events": []
+      },
+      ...
+    ]
+  }
 }
 ```
 
-### Mutations
+<span style="color:#385499"> **getEvents**: Retrieves events by contract address or transaction hash (use skip and take to paginate)</span>
 
 ```graphql
-type Mutation {
-  uploadMetadata(contractAddress: String!, metadata: String!): Boolean!
+query {
+	getEvents(contract: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
+    id
+    index
+    method
+    section
+    topics
+    transactionHash
+    data
+  }  
 }
+```
+<span style="color:#5EBA7D"> Response: </span>
+
+```graphql
+
+```
+
+<span style="color:#385499"> **decodeEvents**: Decodes the events data for a specefic contract. Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
+
+```graphql
+query {
+	decodeEvents(contractAddress: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t")
+}
+```
+<span style="color:#5EBA7D"> Response: </span>
+
+```graphql
+
+```
+<span style="color:#385499"> **getContract**: Retrieves a contract by address</span>
+
+```graphql
+query {
+	getContract(address: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
+    address
+    metadata
+  }
+}
+```
+<span style="color:#5EBA7D"> Response: </span>
+
+```graphql
+
+```
+
+### **Mutations**
+
+<span style="color:#385499"> **uploadMetadata**: To decode events it is necessary to upload the contract's ABI. Passing a base64 string ABI to this mutation will save that to DB. After that run a **decodeEvents** query to see the decoded data on the events.</span>
+
+```graphql
+query {
+	getContract(address: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
+    address
+    metadata
+  }
+}
+```
+<span style="color:#5EBA7D"> Response: </span>
+
+```graphql
+
 ```
