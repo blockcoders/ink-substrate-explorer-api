@@ -33,4 +33,24 @@ export class BlocksService {
     })
     return this.blockRepository.save(block)
   }
+
+  async getMissingBlock(): Promise<{ number: number }[]> {
+    const blocks = await this.blockRepository.query(`
+      SELECT generate_series(
+        (SELECT MIN(number) FROM blocks),
+        (SELECT MAX(number) FROM blocks)
+      ) AS number
+      EXCEPT SELECT number FROM blocks
+      ORDER BY number ASC;
+    `)
+    return blocks
+  }
+
+  async getLastBlock(): Promise<Block> {
+    const block = await this.blockRepository.find({
+      take: 1,
+      order: { number: 'DESC' },
+    })
+    return block[0]
+  }
 }
