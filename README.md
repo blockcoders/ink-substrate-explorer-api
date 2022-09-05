@@ -74,24 +74,31 @@ cp .env.sample .env
 ```
 ### Start a Postgres DB using docker (optional)
 
-To start the project a **PostgreSQL DB** is needed. For that, the **docker-compose.yml** file already has an image set up ready to use running the command:
+To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
+Running this command it will also start a container for pgAdmin:
 ```
-docker-compose up -d
+docker-compose up -f dev-docker-compose.yaml -d
 ```
-**Note**: To only start the DB container comment the back-end service on the .yaml file.
 
 ### Start a local Substrate Node (optional)
 
 The service needs to connect to a Substrate Blockchain. To run a local node use [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
 
-### Starting the project
+**Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
+
+### Starting the project (DEV)
 
 * ### `pnpm start:dev`
 
 Runs the service in the development mode.
 The service will reload if you make edits.
 
-**Note**: Alternatively to start both the Back-end service container and the DB container run:
+**Note**: A postgresDB up and running is required.
+
+
+### Starting the project (PROD)
+
+To start both the Back-end service container and the DB container run:
 * ### `docker-compose up -d`
 
 ### Test
@@ -103,7 +110,7 @@ Running the test coverage.
 * ### `pnpm test:cov`
 
 
-## Running the Docker image
+## Running the Back-end service Docker image
 
 ### Download the image from DockerHub
 
@@ -363,3 +370,141 @@ query {
 ```graphql
 
 ```
+
+### **About decoding events**
+
+To see the decoded data of the events there is one requirement, the contract metadata needs to uploaded at least once.
+
+Example of an ERC20 contract metadata:
+
+```json
+{
+  "source": {
+    "hash": "0x3aa1c8ba5f59034a42a93c00ee039a9464d6fa63d70b6889a2596f4528b28a19",
+    "language": "ink! 3.3.0",
+    "compiler": "rustc 1.64.0-nightly"
+  },
+  "contract": {
+    "name": "erc20",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "V3": {
+    "spec": {
+      "constructors": [
+        {
+          "args": [
+            {
+              "label": "initial_supply",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            "Creates a new ERC-20 contract with the specified initial supply."
+          ],
+          "label": "new",
+          "payable": false,
+          "selector": "0x9bae9d5e"
+        }
+      ],
+      "docs": [],
+      "events": [
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "from",
+              "type": {
+                "displayName": [
+                  "Option"
+                ],
+                "type": 11
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "to",
+              "type": {
+                "displayName": [
+                  "Option"
+                ],
+                "type": 11
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Event emitted when a token transfer occurs."
+          ],
+          "label": "Transfer"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "owner",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "spender",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Event emitted when an approval occurs that `spender` is allowed to withdraw",
+            " up to the amount of `value` tokens from `owner`."
+          ],
+          "label": "Approval"
+        }
+      ],
+      ...
+```
+
+Once it is uploaded the events can be decoded using the *decodeEvents* query that can be found on section **Queries**.
+
+**Note**: The metadata should be uploaded as a **base64** string.
+
+For more on uploading the metadata go to the **Mutations** section a search for *uploadMetadata*.
