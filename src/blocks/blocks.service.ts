@@ -25,7 +25,7 @@ export class BlocksService {
   }
 
   async createFromHeader(header: Header): Promise<Block> {
-    const { hash, parentHash, number } = header || {}
+    const { hash, parentHash, number } = header
     const block = this.blockRepository.create({
       hash: hash.toString(),
       parentHash: parentHash.toString(),
@@ -34,7 +34,7 @@ export class BlocksService {
     return this.blockRepository.save(block)
   }
 
-  async getMissingBlock(): Promise<{ number: number }[]> {
+  async getMissingBlocks(): Promise<{ number: number }[]> {
     const blocks = await this.blockRepository.query(`
       SELECT generate_series(
         (SELECT MIN(number) FROM blocks),

@@ -42,7 +42,7 @@ export class SubscriptionsService implements OnModuleInit {
       return
     }
 
-    const missingBlocks = await this.blocksService.getMissingBlock()
+    const missingBlocks = await this.blocksService.getMissingBlocks()
     if (missingBlocks.length > 0) {
       await this.loadAllBlocks(api, missingBlocks[0].number)
       return
