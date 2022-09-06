@@ -24,9 +24,6 @@ export class ContractsResolver {
     }
 
     const contract = await this.contractsService.findOne(contractAddress as string)
-    if (!contract) {
-      throw new Error('Contract does not exist')
-    }
     return this.contractsService.uploadMetadata(contract, metadata)
   }
 

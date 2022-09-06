@@ -3,6 +3,7 @@ import { EventsService } from '../events/events.service'
 import { ContractsResolver } from './contracts.resolver'
 import { ContractsService } from './contracts.service'
 import { Contract } from './entity/contract.entity'
+import { NotFoundException } from '@nestjs/common'
 
 const mockContract = {
   address: '5F73xwbK9jtcG1YY38DG5wVLm42y15pCa8zE79snVT5z9X1t',
@@ -48,6 +49,7 @@ const base64metadata =
 
 describe('ContractsResolver', () => {
   let resolver: ContractsResolver
+  let service: ContractsService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -70,6 +72,7 @@ describe('ContractsResolver', () => {
     }).compile()
 
     resolver = module.get<ContractsResolver>(ContractsResolver)
+    service = module.get<ContractsService>(ContractsService)
   })
 
   it('should be defined', () => {
@@ -87,6 +90,20 @@ describe('ContractsResolver', () => {
     it('should update the metada for a contract', async () => {
       const contract = await resolver.uploadMetadata(base64metadata, mockContract.address)
       expect(contract).toBe(true)
+    })
+
+    it('should show an error message for invalidad base64 metada', async () => {
+      const contract = resolver.uploadMetadata('quwihy4ecf83921pnhyf091p28', mockContract.address)
+      expect(contract).rejects.toThrow(Error)
+    })
+
+    it('should show an error message for not found contract', async () => {
+      jest
+        .spyOn(service, 'findOne')
+        .mockRejectedValueOnce(new NotFoundException(`Contract with address: 123 not found`))
+
+      const contract = resolver.uploadMetadata(base64metadata, '123')
+      expect(contract).rejects.toThrow(NotFoundException)
     })
   })
 
