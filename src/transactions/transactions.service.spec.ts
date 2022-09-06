@@ -1,5 +1,7 @@
+import { NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
+import { stringToHex } from '@polkadot/util'
 import { Repository } from 'typeorm'
 import { Transaction } from './entity/transaction.entity'
 import { TransactionsService } from './transactions.service'
@@ -44,6 +46,68 @@ const mockTransactions = [
   },
 ]
 
+const mockExtrinsics = [
+  {
+    hash: stringToHex('0x01c780fccc47dc4e9652180876a8267dc9f9dd501ed249f077e32c1653a89f2a'),
+    nonce: {
+      toNumber: () => 0,
+    },
+    signature: stringToHex(
+      '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    ),
+    signer: '5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM',
+    tip: {
+      toNumber: () => 0,
+    },
+    method: {
+      method: 'set',
+      section: 'timestamp',
+    },
+  },
+  {
+    hash: stringToHex('0x3aa34206050aa5eca76715ba2a4d05ef5bbe91e173b202b2c7b657cb885b9d06'),
+    nonce: {
+      toNumber: () => 4,
+    },
+    signature: stringToHex(
+      '0x984c98e3d74fcc35ddc5397282d282dcfda496ae95cb98f4e7d6d22125ec1e7cf03dc3f6fab3add1763bec4b8ee01346b198804b4faaaa1b88d37c5dbc9ca98b',
+    ),
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    tip: {
+      toNumber: () => 0,
+    },
+    method: {
+      method: 'call',
+      section: 'timestamp',
+    },
+  },
+]
+
+const mockSavedTransactions = [
+  {
+    hash: '0x01c780fccc47dc4e9652180876a8267dc9f9dd501ed249f077e32c1653a89f2a',
+    blockHash: '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1',
+    nonce: 0,
+    signature:
+      '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    signer: '5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM',
+    tip: 0,
+    method: 'set',
+    section: 'timestamp',
+  },
+  {
+    hash: '0x3aa34206050aa5eca76715ba2a4d05ef5bbe91e173b202b2c7b657cb885b9d06',
+    blockHash: '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1',
+    nonce: 4,
+    signature:
+      '0x984c98e3d74fcc35ddc5397282d282dcfda496ae95cb98f4e7d6d22125ec1e7cf03dc3f6fab3add1763bec4b8ee01346b198804b4faaaa1b88d37c5dbc9ca98b',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    tip: 0,
+    method: 'call',
+    section: 'timestamp',
+  },
+]
+
 describe('TransactionsService', () => {
   let service: TransactionsService
   let repo: Repository<Transaction>
@@ -57,7 +121,9 @@ describe('TransactionsService', () => {
           useValue: {
             findOneBy: jest.fn().mockResolvedValue(mockTransaction),
             find: jest.fn().mockResolvedValue(mockTransactions),
-            create: jest.fn(),
+            create: jest.fn().mockResolvedValue(mockSavedTransactions),
+
+            save: jest.fn().mockResolvedValue(mockSavedTransactions),
           },
         },
       ],
@@ -77,6 +143,12 @@ describe('TransactionsService', () => {
       expect(service.findOne(mockTransaction.hash)).resolves.toEqual(mockTransaction)
       expect(repoSpy).toBeCalledWith({ hash: mockTransaction.hash })
     })
+
+    it('should return not found error', () => {
+      const repoSpy = jest.spyOn(repo, 'findOneBy').mockResolvedValueOnce(null)
+      expect(service.findOne('123')).rejects.toThrow(NotFoundException)
+      expect(repoSpy).toBeCalledWith({ hash: '123' })
+    })
   })
 
   describe('fetchBlocks', () => {
@@ -86,5 +158,16 @@ describe('TransactionsService', () => {
     })
   })
 
-  // TODO: test createTransactionsFromExtrinsics function
+  describe('createTransactionsFromExtrinsics', () => {
+    it('should create transactions', () => {
+      const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
+
+      expect(service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)).resolves.toEqual([
+        mockSavedTransactions,
+        mockSavedTransactions,
+      ])
+      expect(repo.create).toBeCalledTimes(2)
+      expect(repo.save).toBeCalledTimes(2)
+    })
+  })
 })
