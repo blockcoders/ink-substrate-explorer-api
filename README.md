@@ -15,7 +15,7 @@ Blockcoders is a team that is always contributing to blockchain projects to help
 ### Team members
 
 - Jose Ramirez
-- Damián Fixel
+- Ruben
 - Fernando Sirni
 
 ### Contact
@@ -59,19 +59,49 @@ Please also provide the GitHub accounts of all team members. If they contain no 
    - Recommended method is by using [NVM](https://github.com/creationix/nvm)
    - Recommendeded Node.js version is v16.13
  - Install [Docker](https://docs.docker.com/get-docker/)
-
+_____________________________________________________________________________________________________________________________________________
 ### Install all the dependencies
 
 ```
 pnpm i --frozen-lockfile
 ```
-
+_____________________________________________________________________________________________________________________________________________
 ### Configure the environment variables
 
 **Note**: The .env file has the configuration for GraphQL, the PostgreSQL database, Node and the RPC url of the Substrate Blockchain.
 ```
 cp .env.sample .env
 ```
+<span style="color:#2a98db"> **Service configurations** </span>
+
+* **NODE_ENV**=development
+* **PORT**=8080
+* **LOG_NAME**=ink-substrate-explorer-api
+* **LOG_LEVEL**=debug
+
+<span style="color:#2a98db"> **GraphQL configurations** </span>
+
+* **GRAPHQL_DEBUG**=true
+* **GRAPHQL_PLAYGROUND**=true
+* **GRAPHQL_SORT_SCHEMA**=true
+* **GRAPHQL_INTROSPECTION**=true
+
+<span style="color:#2a98db"> **Database configurations** </span>
+
+* **DATABASE_HOST**=postgres
+* **DATABASE_NAME**=ink
+* **DATABASE_USERNAME**=root
+* **DATABASE_PASSWORD**=password
+* **DATABASE_RETRY_ATTEMPTS**=5
+* **DATABASE_RETRY_DELAY**=3000
+
+<span style="color:#2a98db"> **Blockchain and Sync configurations** </span>
+
+* **WS_PROVIDER**=wss://rococo-contracts-rpc.polkadot.io
+* **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Set to *true* to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to *false* to only start processing current blocks.</span>
+
+* **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Block number from which the service will start to process blocks. (Can be genesis or some other block. i.e the first block supporting contracts) </span>
+_____________________________________________________________________________________________________________________________________________
 ### Start a Postgres DB using docker (optional)
 
 To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
@@ -79,13 +109,19 @@ Running this command it will also start a container for pgAdmin:
 ```
 docker-compose up -f dev-docker-compose.yaml -d
 ```
-
+_____________________________________________________________________________________________________________________________________________
 ### Start a local Substrate Node (optional)
 
-The service needs to connect to a Substrate Blockchain. To run a local node use [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
+The service needs to connect to a Substrate Blockchain. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
+Run this command:
+```
+docker-compose up -f dev-docker-compose.yaml -d
+```
+
+Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
 
 **Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
-
+_____________________________________________________________________________________________________________________________________________
 ### Starting the project (DEV)
 
 * ### `pnpm start:dev`
@@ -93,14 +129,13 @@ The service needs to connect to a Substrate Blockchain. To run a local node use 
 Runs the service in the development mode.
 The service will reload if you make edits.
 
-**Note**: A postgresDB up and running is required.
-
-
+**Note**: A postgresDB up and running and a valid connection to a substrate node are required.
+_____________________________________________________________________________________________________________________________________________
 ### Starting the project (PROD)
 
 To start both the Back-end service container and the DB container run:
 * ### `docker-compose up -d`
-
+_____________________________________________________________________________________________________________________________________________
 ### Test
 
 Running the unit tests.
@@ -108,7 +143,7 @@ Running the unit tests.
 
 Running the test coverage.
 * ### `pnpm test:cov`
-
+_____________________________________________________________________________________________________________________________________________
 
 ## Running the Back-end service Docker image
 
@@ -140,7 +175,7 @@ With the service up and running an API is provided by using GraphQL queries.
 
 ### **Queries**
 
-<span style="color:#385499"> **Status**: Retrieves the status of the application</span>
+<span style="color:#2a98db"> **Status**: Retrieves the status of the application</span>
 
 ```graphql
 query {
@@ -156,7 +191,7 @@ query {
   }
 }
 ```
-<span style="color:#385499"> **getBlock**: Retrieves the block by hash </span>
+<span style="color:#2a98db"> **getBlock**: Retrieves the block by hash </span>
 
 ```graphql
 query {
@@ -192,7 +227,7 @@ query {
 }
 ```
 
-<span style="color:#385499"> **getBlocks**: Retrieves blocks (use skip and take to paginate) </span>
+<span style="color:#2a98db"> **getBlocks**: Retrieves blocks (use skip and take to paginate) </span>
 
 ```graphql
 query {
@@ -230,7 +265,7 @@ query {
 }
 ```
 
-<span style="color:#385499"> **getTransaction**: Retrieves a single transaction by hash </span>
+<span style="color:#2a98db"> **getTransaction**: Retrieves a single transaction by hash </span>
 
 ```graphql
 query {
@@ -265,7 +300,7 @@ query {
 }
 ```
 
-<span style="color:#385499"> **getTransactions**: Retrieves transactions by block hash (use skip and take to paginate)</span>
+<span style="color:#2a98db"> **getTransactions**: Retrieves transactions by block hash (use skip and take to paginate)</span>
 
 ```graphql
 query {
@@ -304,7 +339,7 @@ query {
 }
 ```
 
-<span style="color:#385499"> **getEvents**: Retrieves events by contract address or transaction hash (use skip and take to paginate)</span>
+<span style="color:#2a98db"> **getEvents**: Retrieves events by contract address or transaction hash (use skip and take to paginate)</span>
 
 ```graphql
 query {
@@ -325,7 +360,7 @@ query {
 
 ```
 
-<span style="color:#385499"> **decodeEvents**: Decodes the events data for a specefic contract. Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
+<span style="color:#2a98db"> **decodeEvents**: Decodes the events data for a specefic contract. Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
 
 ```graphql
 query {
@@ -337,7 +372,7 @@ query {
 ```graphql
 
 ```
-<span style="color:#385499"> **getContract**: Retrieves a contract by address</span>
+<span style="color:#2a98db"> **getContract**: Retrieves a contract by address</span>
 
 ```graphql
 query {
@@ -355,7 +390,7 @@ query {
 
 ### **Mutations**
 
-<span style="color:#385499"> **uploadMetadata**: To decode events it is necessary to upload the contract's ABI. Passing a base64 string ABI to this mutation will save that to DB. After that run a **decodeEvents** query to see the decoded data on the events.</span>
+<span style="color:#2a98db"> **uploadMetadata**: To decode events it is necessary to upload the contract's ABI. Passing a base64 string ABI to this mutation will save that to DB. After that run a **decodeEvents** query to see the decoded data on the events.</span>
 
 ```graphql
 query {

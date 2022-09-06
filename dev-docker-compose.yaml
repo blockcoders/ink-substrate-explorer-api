@@ -9,6 +9,12 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=ink
+  substrate:
+    image: parity/substrate
+    restart: on-failure
+    ports:
+      - 9944:9944
+    command: '--dev'
   pgadmin:
     image: dpage/pgadmin4
     environment:
