@@ -30,7 +30,7 @@ export class SubscriptionsService implements OnModuleInit {
     const lastDBBlockNumber = await (await this.blocksService.getLastBlock()).number
     const lastBlockNumber = await (await api.rpc.chain.getHeader()).number.toNumber()
     let loadFromBlockNumber: number
-    if(process.env.LOAD_ALL_BLOCKS === 'true') {
+    if (process.env.LOAD_ALL_BLOCKS === 'true') {
       loadFromBlockNumber = Number(process.env.FIRST_BLOCK_TO_LOAD)
     } else {
       loadFromBlockNumber = lastDBBlockNumber + 1
@@ -48,13 +48,17 @@ export class SubscriptionsService implements OnModuleInit {
 
     // Starts loading historic blocks
     if (loadFromBlockNumber >= lastBlockNumber) {
-      console.log(`\n\nNo blocks to load from block ${loadFromBlockNumber} to block ${lastBlockNumber}. Already synced.`)
+      console.log(`\n\nAlready synced.`)
     }
-    const blocksToLoad = Array.from(Array(lastBlockNumber-loadFromBlockNumber).keys(),(i) => i+1+loadFromBlockNumber)
-    console.log('blocks to load: %j', blocksToLoad.length)
+    const blocksToLoad = Array.from(
+      Array(lastBlockNumber - loadFromBlockNumber).keys(),
+      (i) => i + 1 + loadFromBlockNumber,
+    )
+    console.log('Blocks to load: %j', blocksToLoad.length)
     console.log('From: ', blocksToLoad[0])
-    console.log('To: ', blocksToLoad[blocksToLoad.length-1])
+    console.log('To: ', blocksToLoad[blocksToLoad.length - 1])
 
+    // TODO: Improve this. If high amount of queries, it will fail.
     const hashes = await Promise.all(blocksToLoad.map((i) => api.rpc.chain.getBlockHash(i)))
     const blockAndRecords: any[] = await Promise.all(
       hashes.map(async (h) => Promise.all([api.rpc.chain.getBlock(h), api.query.system.events.at(h)])),
