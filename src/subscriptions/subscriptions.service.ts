@@ -27,6 +27,15 @@ export class SubscriptionsService implements OnModuleInit {
   async subscribeAllHeads() {
     const api = await SubscriptionsService.connect()
 
+    const lastDBBlockNumber = await (await this.blocksService.getLastBlock()).number
+    const lastBlockNumber = await (await api.rpc.chain.getHeader()).number.toNumber()
+    let loadFromBlockNumber: number
+    if (process.env.LOAD_ALL_BLOCKS === 'true') {
+      loadFromBlockNumber = Number(process.env.FIRST_BLOCK_TO_LOAD)
+    } else {
+      loadFromBlockNumber = lastDBBlockNumber + 1
+    }
+    // Starts syncing blocks
     await api.rpc.chain.subscribeAllHeads(async (lastHeader: Header) => {
       const [
         {
@@ -34,50 +43,25 @@ export class SubscriptionsService implements OnModuleInit {
         },
         records,
       ] = await Promise.all([api.rpc.chain.getBlock(lastHeader.hash), api.query.system.events.at(lastHeader.hash)])
-      await this.registerAllBlockData(header, extrinsics, records)
+      await this.registerBlockData(header, extrinsics, records)
     })
 
-    if (process.env.LOAD_ALL_BLOCKS === 'true') {
-      await this.loadAllBlocks(api)
-      return
+    // Starts loading historic blocks
+    if (loadFromBlockNumber >= lastBlockNumber) {
+      console.log(`\n\nAlready synced.`)
     }
+    const blocksToLoad = Array.from(
+      Array(lastBlockNumber - loadFromBlockNumber).keys(),
+      (i) => i + 1 + loadFromBlockNumber,
+    )
+    console.log('Blocks to load: %j', blocksToLoad.length)
+    console.log('From: ', blocksToLoad[0])
+    console.log('To: ', blocksToLoad[blocksToLoad.length - 1])
 
-    const missingBlocks = await this.blocksService.getMissingBlocks()
-    if (missingBlocks.length > 0) {
-      await this.loadAllBlocks(api, missingBlocks[0].number)
-      return
-    }
-
-    const lastBlock = await this.blocksService.getLastBlock()
-
-    if (lastBlock) {
-      await this.loadAllBlocks(api, lastBlock.number)
-      return
-    }
-  }
-
-  async loadAllBlocks(api: ApiPromise, startBlock?: number) {
-    console.log('loading all blocks.....')
-    const lastBlock = await api.rpc.chain.getBlock()
-    const lastBlockNumber = lastBlock.block.header.number.toNumber()
-
-    let arrayWithBlockNumbers = Array.from(Array(lastBlockNumber + 1).keys())
-
-    const hashes = await Promise.all(arrayWithBlockNumbers.map((i) => api.rpc.chain.getBlockHash(i)))
-
-    const firstBlockToLoad = startBlock || Number(process.env.FIRST_BLOCK_TO_LOAD)
-
-    console.log(firstBlockToLoad)
-    console.log(lastBlockNumber)
-
-    if (!isNaN(firstBlockToLoad)) arrayWithBlockNumbers = arrayWithBlockNumbers.slice(Math.max(firstBlockToLoad, 0))
-
-    // load historic data
+    // TODO: Improve this. If high amount of queries, it will fail.
+    const hashes = await Promise.all(blocksToLoad.map((i) => api.rpc.chain.getBlockHash(i)))
     const blockAndRecords: any[] = await Promise.all(
-      hashes.map(async (h) => {
-        const resp = await Promise.all([api.rpc.chain.getBlock(h), api.query.system.events.at(h)])
-        return resp
-      }),
+      hashes.map(async (h) => Promise.all([api.rpc.chain.getBlock(h), api.query.system.events.at(h)])),
     )
 
     for (const register of blockAndRecords) {
@@ -87,16 +71,16 @@ export class SubscriptionsService implements OnModuleInit {
         },
         records,
       ] = register
-      const { block, transactions } = await this.registerAllBlockData(header, extrinsics, records)
+      const { block, transactions } = await this.registerBlockData(header, extrinsics, records)
       console.log('\n-----------------New block-----------------\n')
       console.log('\nBlock Hash: %j', block.hash, block.number)
       console.log('\nTransactions count: %j', transactions.length)
       console.log('\n-------------------------------------------\n')
     }
-    console.log('all block loaded!')
+    console.log('\n\nAll blocks loaded!')
   }
 
-  async registerAllBlockData(header: any, extrinsics: any, records: any) {
+  async registerBlockData(header: any, extrinsics: any, records: any) {
     const block = await this.blocksService.createFromHeader(header)
     const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
     transactions.forEach(async (transaction, index) => {
