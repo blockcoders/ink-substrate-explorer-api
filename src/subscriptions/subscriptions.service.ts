@@ -6,6 +6,9 @@ import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
 
+const LOAD_ALL_BLOCKS = Boolean(process.env.LOAD_ALL_BLOCKS)
+const FIRST_BLOCK_TO_LOAD = Number(process.env.FIRST_BLOCK_TO_LOAD) || 0
+
 @Injectable()
 export class SubscriptionsService implements OnModuleInit {
   constructor(
@@ -27,14 +30,9 @@ export class SubscriptionsService implements OnModuleInit {
   async subscribeAllHeads() {
     const api = await SubscriptionsService.connect()
 
-    const lastDBBlockNumber = await (await this.blocksService.getLastBlock()).number
-    const lastBlockNumber = await (await api.rpc.chain.getHeader()).number.toNumber()
-    let loadFromBlockNumber: number
-    if (process.env.LOAD_ALL_BLOCKS === 'true') {
-      loadFromBlockNumber = Number(process.env.FIRST_BLOCK_TO_LOAD)
-    } else {
-      loadFromBlockNumber = lastDBBlockNumber + 1
-    }
+    const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
+    const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
+    const loadFromBlockNumber = LOAD_ALL_BLOCKS ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber + 1
     // Starts syncing blocks
     await api.rpc.chain.subscribeAllHeads(async (lastHeader: Header) => {
       const [
