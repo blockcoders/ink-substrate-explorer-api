@@ -1,4 +1,4 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { FetchEventsInput } from './dtos/fetch-events.input'
 import { Event } from './entity/event.entity'
 import { EventsService } from './events.service'
@@ -16,5 +16,11 @@ export class EventsResolver {
     const events = await this.eventsService.fetchEvents({ contract: contractAddress as string })
     const response = await this.eventsService.decodeEvents(events, contractAddress as string)
     return JSON.stringify(response)
+  }
+  
+  @ResolveField('data', () => String)
+  async data(@Parent() event: Event) {
+    const { data } = event
+    return JSON.stringify(data)
   }
 }

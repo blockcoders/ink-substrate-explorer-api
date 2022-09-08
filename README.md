@@ -2,11 +2,11 @@
 
 ## **About the explorer**
 
-Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains. It subscribes to blockchain and Ink modules events and store the information on its own PostgreSQL database. The backend exposes an API that can interact with the DB and run fast queries to get specific information in a short time. 
+Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains. It subscribes to blockchain and Ink modules events and store the information on its own PostgreSQL database. The backend exposes an API that can interact with the DB and run fast queries to get specific information in a short time.
 
-The idea of this project is to have fast way to start a node that can be used as an explorer getting live and old data for specific contracts or addresses. 
+The idea of this project is to have fast way to start a node that can be used as an explorer getting live and old data for specific contracts or addresses.
 
-This project serves useful information that is not available anywhere else. Since the back end is in charge of obtaining information related to the balances, transactions and more, of the contracts that use Ink modules. Ink Explorer uses polkadot.js to communicate with the Substrate / Polkadot networks. It is safe to say that this project is a must. 
+This project serves useful information that is not available anywhere else. Since the back end is in charge of obtaining information related to the balances, transactions and more, of the contracts that use Ink modules. Ink Explorer uses polkadot.js to communicate with the Substrate / Polkadot networks. It is safe to say that this project is a must.
 
 Blockcoders is a team that is always contributing to blockchain projects to help the growth of the ecosystem.
 
@@ -51,69 +51,73 @@ Please also provide the GitHub accounts of all team members. If they contain no 
 
 ## **Get Started**
 
-## Running the serivce locally 
+## Running the serivce locally
 
 ### Environment setup
 
- - Install [Node.js](https://nodejs.org/)
-   - Recommended method is by using [NVM](https://github.com/creationix/nvm)
-   - Recommendeded Node.js version is v16.13
- - Install [Docker](https://docs.docker.com/get-docker/)
-_____________________________________________________________________________________________________________________________________________
+- Install [Node.js](https://nodejs.org/)
+  - Recommended method is by using [NVM](https://github.com/creationix/nvm)
+  - Recommendeded Node.js version is v16.13
+- Install [Docker](https://docs.docker.com/get-docker/)
+
 ### Install all the dependencies
 
 ```
 pnpm i --frozen-lockfile
 ```
-_____________________________________________________________________________________________________________________________________________
+
 ### Configure the environment variables
 
 **Note**: The .env file has the configuration for GraphQL, the PostgreSQL database, Node and the RPC url of the Substrate Blockchain.
+
 ```
 cp .env.sample .env
 ```
+
 <span style="color:#2a98db"> **Service configurations** </span>
 
-* **NODE_ENV**=development
-* **PORT**=8080
-* **LOG_NAME**=ink-substrate-explorer-api
-* **LOG_LEVEL**=debug
+- **NODE_ENV**=development
+- **PORT**=8080
+- **LOG_NAME**=ink-substrate-explorer-api
+- **LOG_LEVEL**=debug
 
 <span style="color:#2a98db"> **GraphQL configurations** </span>
 
-* **GRAPHQL_DEBUG**=true
-* **GRAPHQL_PLAYGROUND**=true
-* **GRAPHQL_SORT_SCHEMA**=true
-* **GRAPHQL_INTROSPECTION**=true
+- **GRAPHQL_DEBUG**=true
+- **GRAPHQL_PLAYGROUND**=true
+- **GRAPHQL_SORT_SCHEMA**=true
+- **GRAPHQL_INTROSPECTION**=true
 
 <span style="color:#2a98db"> **Database configurations** </span>
 
-* **DATABASE_HOST**=postgres
-* **DATABASE_NAME**=ink
-* **DATABASE_USERNAME**=root
-* **DATABASE_PASSWORD**=password
-* **DATABASE_RETRY_ATTEMPTS**=5
-* **DATABASE_RETRY_DELAY**=3000
+- **DATABASE_HOST**=postgres
+- **DATABASE_NAME**=ink
+- **DATABASE_USERNAME**=root
+- **DATABASE_PASSWORD**=password
+- **DATABASE_RETRY_ATTEMPTS**=5
+- **DATABASE_RETRY_DELAY**=3000
 
 <span style="color:#2a98db"> **Blockchain and Sync configurations** </span>
 
-* **WS_PROVIDER**=wss://rococo-contracts-rpc.polkadot.io
-* **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Set to *true* to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to *false* to only start processing current blocks.</span>
+- **WS_PROVIDER**=wss://rococo-contracts-rpc.polkadot.io
+- **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Set to _true_ to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to _false_ to only start processing current blocks.</span>
 
-* **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Block number from which the service will start to process blocks. (Can be genesis or some other block. i.e the first block supporting contracts) </span>
-_____________________________________________________________________________________________________________________________________________
+- **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Block number from which the service will start to process blocks. (Can be genesis or some other block. i.e the first block supporting contracts) </span>
+
 ### Start a Postgres DB using docker (optional)
 
 To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
 Running this command it will also start a container for pgAdmin:
+
 ```
 docker-compose up -f dev-docker-compose.yaml -d
 ```
-_____________________________________________________________________________________________________________________________________________
+
 ### Start a local Substrate Node (optional)
 
 The service needs to connect to a Substrate Blockchain. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
 Run this command:
+
 ```
 docker-compose up -f dev-docker-compose.yaml -d
 ```
@@ -121,29 +125,31 @@ docker-compose up -f dev-docker-compose.yaml -d
 Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
 
 **Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
-_____________________________________________________________________________________________________________________________________________
+
 ### Starting the project (DEV)
 
-* ### `pnpm start:dev`
+- ### `pnpm start:dev`
 
 Runs the service in the development mode.
 The service will reload if you make edits.
 
 **Note**: A postgresDB up and running and a valid connection to a substrate node are required.
-_____________________________________________________________________________________________________________________________________________
+
 ### Starting the project (PROD)
 
 To start both the Back-end service container and the DB container run:
-* ### `docker-compose up -d`
-_____________________________________________________________________________________________________________________________________________
+
+- ### `docker-compose up -d`
+
 ### Test
 
 Running the unit tests.
-* ### `pnpm test`
+
+- ### `pnpm test`
 
 Running the test coverage.
-* ### `pnpm test:cov`
-_____________________________________________________________________________________________________________________________________________
+
+- ### `pnpm test:cov`
 
 ## Running the Back-end service Docker image
 
@@ -155,13 +161,16 @@ docker pull {dockerImage}
 
 ### Run
 
-* ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} {dockerImage}`
+- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} {dockerImage}`
 
 Verify the image started running
+
 ```
 docker ps
 ```
+
 The result should look like this:
+
 ```
 CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS         PORTS                                       NAMES
 3a83e1efddf9   ink-explorer   "docker-entrypoint.s…"   20 hours ago   Up 8 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   ink-explorer-api_1
@@ -182,6 +191,7 @@ query {
   status
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
@@ -191,6 +201,7 @@ query {
   }
 }
 ```
+
 <span style="color:#2a98db"> **getBlock**: Retrieves the block by hash </span>
 
 ```graphql
@@ -200,11 +211,12 @@ query {
     number
     parentHash
     transactions {
-    	hash
+      hash
     }
   }
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
@@ -236,11 +248,12 @@ query {
     number
     parentHash
     transactions {
-    	hash
+      hash
     }
   }
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
@@ -281,6 +294,7 @@ query {
   }
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
@@ -316,6 +330,7 @@ query {
   }
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
@@ -343,49 +358,84 @@ query {
 
 ```graphql
 query {
-	getEvents(contract: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
+  getEvents(contract: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
     id
     index
     method
     section
     topics
     transactionHash
-    data
-  }  
+  }
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
-
+{
+  "data": {
+    "getEvents": [
+      {
+        "id": "c3250479-e53e-5a4d-ba0c-b688764cd81b",
+        "index": "0x0703",
+        "section": "contracts",
+        "method": "ContractEmitted",
+        "transactionHash": "0x1080eb1f8de1ee5b0c1bd584924951c38b998bc7596773ef5e1a92908409a17f",
+        "topics": "[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x33766995fd9b44bd45f351b3abd7e5041960638db0075c84ab7af1a734e20d1b, 0x5445726332303a3a5472616e736665723a3a66726f6d00000000000000000000]"
+      },
+      {
+        "id": "509f2fb6-ed61-5dc7-a567-3cfa55e1fa65",
+        "index": "0x0703",
+        "section": "contracts",
+        "method": "ContractEmitted",
+        "transactionHash": "0x2a009bf5fdc388f10953cba4661c3ca74e0252c1fcae6ba7f39f4eb7be707caa",
+        "topics": "[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]"
+      }
+    ]
+  }
+}
 ```
 
 <span style="color:#2a98db"> **decodeEvents**: Decodes the events data for a specefic contract. Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
 
 ```graphql
 query {
-	decodeEvents(contractAddress: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t")
+	decodeEvents(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc")
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
-
+{
+  "data": {
+    "decodeEvents": "[{\"args\":[null,\"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\",\"0x000000000000000000038d7ea4c68000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"to\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"identifier\":\"Transfer\",\"index\":0}},{\"args\":[\"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\",\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"0x00000000000000000001c6bf52634000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"to\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"identifier\":\"Transfer\",\"index\":0}}]"
+  }
+}
 ```
+
 <span style="color:#2a98db"> **getContract**: Retrieves a contract by address</span>
 
 ```graphql
 query {
-	getContract(address: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
+  getContract(address: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc") {
     address
     metadata
   }
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
-
+{
+  "data": {
+    "getContract": {
+      "address": "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc",
+      "metadata": "{\n  \"source\": {\n    \"hash\": ...   }\n}\n"
+    }
+  }
+}
 ```
 
 ### **Mutations**
@@ -393,17 +443,19 @@ query {
 <span style="color:#2a98db"> **uploadMetadata**: To decode events it is necessary to upload the contract's ABI. Passing a base64 string ABI to this mutation will save that to DB. After that run a **decodeEvents** query to see the decoded data on the events.</span>
 
 ```graphql
-query {
-	getContract(address: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
-    address
-    metadata
-  }
+mutation Upload {
+  uploadMetadata(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc", metadata: "ewogICJzb3VyY2UiOiB7CiAgICAiaGFzaCI6I...(base64)")
 }
 ```
+
 <span style="color:#5EBA7D"> Response: </span>
 
 ```graphql
-
+{
+  "data": {
+    "uploadMetadata": true
+  }
+}
 ```
 
 ### **About decoding events**
@@ -538,8 +590,8 @@ Example of an ERC20 contract metadata:
       ...
 ```
 
-Once it is uploaded the events can be decoded using the *decodeEvents* query that can be found on section **Queries**.
+Once it is uploaded the events can be decoded using the _decodeEvents_ query that can be found on section **Queries**.
 
 **Note**: The metadata should be uploaded as a **base64** string.
 
-For more on uploading the metadata go to the **Mutations** section a search for *uploadMetadata*.
+For more on uploading the metadata go to the **Mutations** section a search for _uploadMetadata_.
