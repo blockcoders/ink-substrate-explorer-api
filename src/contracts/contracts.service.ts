@@ -25,7 +25,7 @@ export class ContractsService {
       contract.metadata = abiJson
       await this.contractRepository.save(contract)
     } catch (error) {
-      console.error('Error: %j', error)
+      // console.error('Error: %j', error)
       return false
     }
     return true
