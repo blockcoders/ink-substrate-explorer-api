@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Header } from '@polkadot/types/interfaces'
+import PQueue from 'p-queue'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
@@ -48,42 +49,62 @@ export class SubscriptionsService implements OnModuleInit {
     if (loadFromBlockNumber >= lastBlockNumber) {
       console.log(`\n\nAlready synced.`)
     }
-    const blocksToLoad = Array.from(
-      Array(lastBlockNumber - loadFromBlockNumber).keys(),
-      (i) => i + 1 + loadFromBlockNumber,
-    )
+
+    const arrayLength = Math.max(lastBlockNumber - loadFromBlockNumber, 0)
+
+    const blocksToLoad = Array.from(Array(arrayLength).keys(), (i) => i + 1 + loadFromBlockNumber)
     console.log('Blocks to load: %j', blocksToLoad.length)
     console.log('From: ', blocksToLoad[0])
     console.log('To: ', blocksToLoad[blocksToLoad.length - 1])
 
-    // TODO: Improve this. If high amount of queries, it will fail.
-    const hashes = await Promise.all(blocksToLoad.map((i) => api.rpc.chain.getBlockHash(i)))
-    const blockAndRecords: any[] = await Promise.all(
-      hashes.map(async (h) => Promise.all([api.rpc.chain.getBlock(h), api.query.system.events.at(h)])),
-    )
+    const queue = new PQueue({ concurrency: 100 })
 
-    for (const register of blockAndRecords) {
-      const [
-        {
-          block: { header, extrinsics },
-        },
-        records,
-      ] = register
-      const { block, transactions } = await this.registerBlockData(header, extrinsics, records)
-      console.log('\n-----------------New block-----------------\n')
-      console.log('\nBlock Hash: %j', block.hash, block.number)
-      console.log('\nTransactions count: %j', transactions.length)
-      console.log('\n-------------------------------------------\n')
-    }
-    console.log('\n\nAll blocks loaded!')
+    console.time('All blocks loaded!')
+
+    const q = blocksToLoad.map((i) => {
+      return () =>
+        new Promise(async (res, rej) => {
+          try {
+            const hash = await api.rpc.chain.getBlockHash(i)
+
+            const blockAndRecords: any[] = await Promise.all(
+              [hash].map(async (h) => Promise.all([api.rpc.chain.getBlock(h), api.query.system.events.at(h)])),
+            )
+
+            for (const register of blockAndRecords) {
+              const [
+                {
+                  block: { header, extrinsics },
+                },
+                records,
+              ] = register
+              const { block } = await this.registerBlockData(header, extrinsics, records)
+              console.log('\n-----------------New block-----------------\n')
+              console.log('\nBlock Hash: %j', block.hash, block.number)
+              // console.log('\nTransactions count: %j', transactions.length)
+              // console.log('\n-------------------------------------------\n')
+            }
+            res(hash)
+          } catch (error) {
+            rej(error)
+          }
+        })
+    })
+
+    await queue.addAll(q as any)
+
+    console.timeEnd('All blocks loaded!')
+    // console.log('\n\nAll blocks loaded!')
+
+    return
   }
 
   async registerBlockData(header: any, extrinsics: any, records: any) {
     const block = await this.blocksService.createFromHeader(header)
     const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
-    transactions.forEach(async (transaction, index) => {
-      await this.eventsService.createEventsFromRecords(records, index, transaction.hash)
-    })
+    for (const [index, tx] of transactions.entries()) {
+      await this.eventsService.createEventsFromRecords(records, index, tx.hash)
+    }
     return { block, transactions }
   }
 }
