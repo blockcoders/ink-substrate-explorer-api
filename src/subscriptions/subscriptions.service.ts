@@ -7,8 +7,8 @@ import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
 
-const LOAD_ALL_BLOCKS = Boolean(process.env.LOAD_ALL_BLOCKS)
 const FIRST_BLOCK_TO_LOAD = Number(process.env.FIRST_BLOCK_TO_LOAD) || 0
+const BLOCKS_CONCURRENCY = Number(process.env.BLOCKS_CONCURRENCY) || 1000
 
 @Injectable()
 export class SubscriptionsService implements OnModuleInit {
@@ -33,7 +33,7 @@ export class SubscriptionsService implements OnModuleInit {
 
     const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
     const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
-    const loadFromBlockNumber = LOAD_ALL_BLOCKS ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber + 1
+    const loadFromBlockNumber = process.env.LOAD_ALL_BLOCKS === 'true' ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber + 1
     // Starts syncing blocks
     await api.rpc.chain.subscribeAllHeads(async (lastHeader: Header) => {
       const [
@@ -47,17 +47,17 @@ export class SubscriptionsService implements OnModuleInit {
 
     // Starts loading historic blocks
     if (loadFromBlockNumber >= lastBlockNumber) {
-      console.log(`\n\nAlready synced.`)
+      console.log(`\n\nAlready synced. loadFromBlockNumber: ${loadFromBlockNumber}, lastBlockNumber: ${lastBlockNumber}`)
+      return
     }
 
     const arrayLength = Math.max(lastBlockNumber - loadFromBlockNumber, 0)
-
     const blocksToLoad = Array.from(Array(arrayLength).keys(), (i) => i + 1 + loadFromBlockNumber)
     console.log('Blocks to load: %j', blocksToLoad.length)
     console.log('From: ', blocksToLoad[0])
     console.log('To: ', blocksToLoad[blocksToLoad.length - 1])
 
-    const queue = new PQueue({ concurrency: 100 })
+    const queue = new PQueue({ concurrency: BLOCKS_CONCURRENCY })
 
     console.time('All blocks loaded!')
 
@@ -81,8 +81,6 @@ export class SubscriptionsService implements OnModuleInit {
               const { block } = await this.registerBlockData(header, extrinsics, records)
               console.log('\n-----------------New block-----------------\n')
               console.log('\nBlock Hash: %j', block.hash, block.number)
-              // console.log('\nTransactions count: %j', transactions.length)
-              // console.log('\n-------------------------------------------\n')
             }
             res(hash)
           } catch (error) {
@@ -94,8 +92,6 @@ export class SubscriptionsService implements OnModuleInit {
     await queue.addAll(q as any)
 
     console.timeEnd('All blocks loaded!')
-    // console.log('\n\nAll blocks loaded!')
-
     return
   }
 

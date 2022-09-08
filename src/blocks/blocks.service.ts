@@ -27,11 +27,12 @@ export class BlocksService {
   async createFromHeader(header: Header): Promise<Block> {
     const { hash, parentHash, number } = header
     const block = this.blockRepository.create({
-      hash: hash.toString(),
-      parentHash: parentHash.toString(),
+      hash: hash.toString().toLowerCase(),
+      parentHash: parentHash.toString().toLowerCase(),
       number: parseInt(number.toHex()),
     })
-    return this.blockRepository.save(block)
+    const existing = await this.blockRepository.findOneBy({ hash: block.hash })
+    return existing || await this.blockRepository.save(block)
   }
 
   async getLastBlock(): Promise<Block> {

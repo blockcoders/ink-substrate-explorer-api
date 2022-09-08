@@ -36,16 +36,17 @@ export class TransactionsService {
         const { hash: transactionHash, nonce, signature, signer, tip } = extrinsic
         const { method, section } = extrinsic.method
         const tx = this.transactionRepository.create({
-          hash: transactionHash.toString(),
+          hash: transactionHash.toString().toLowerCase(),
           method: method,
           section: section,
           nonce: nonce.toNumber(),
           signature: signature.toString(),
           signer: signer.toString(),
           tip: tip.toNumber(),
-          blockHash,
+          blockHash: blockHash.toLowerCase(),
         })
-        return await this.transactionRepository.save(tx)
+        const existing = await this.transactionRepository.findOneBy({ hash: tx.hash })
+        return existing || await this.transactionRepository.save(tx)
       }),
     )
   }
