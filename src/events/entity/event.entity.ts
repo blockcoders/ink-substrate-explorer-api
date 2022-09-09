@@ -9,7 +9,7 @@ import { Transaction } from '../../transactions/entity/transaction.entity'
 @Entity({ name: 'events' })
 export class Event extends BaseEntity {
   @PrimaryColumn()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   id!: string
 
   @ManyToOne(() => Contract, (contract: Contract) => contract.events, {
@@ -20,23 +20,23 @@ export class Event extends BaseEntity {
   contract?: Contract
 
   @Column({ nullable: true })
-  @Field(() => String, { nullable: true })
+  @Field(/* istanbul ignore next */ () => String, { nullable: true })
   transactionHash?: string
 
   @Column()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   index!: string
 
   @Column()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   section!: string
 
   @Column()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   method!: string
 
   @Column()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   topics!: string
 
   @ManyToOne(() => Transaction, (transaction: Transaction) => transaction.events, {
@@ -47,7 +47,7 @@ export class Event extends BaseEntity {
   transaction!: Transaction
 
   @Column({ type: 'jsonb', nullable: true, default: {} })
-  @Field(() => String, { nullable: true })
+  @Field(/* istanbul ignore next */ () => String, { nullable: true })
   data?: Codec[] & IEventData
 
   @CreateDateColumn({

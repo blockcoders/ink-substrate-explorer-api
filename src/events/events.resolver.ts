@@ -6,12 +6,12 @@ import { EventsService } from './events.service'
 @Resolver(() => Event)
 export class EventsResolver {
   constructor(private eventsService: EventsService) {}
-  @Query(() => [Event])
+  @Query(/* istanbul ignore next */ () => [Event])
   async getEvents(@Args() args: FetchEventsInput) {
     return this.eventsService.fetchEvents(args)
   }
 
-  @Query(() => String)
+  @Query(/* istanbul ignore next */ () => String)
   async decodeEvents(@Args('contractAddress', { type: () => String }) contractAddress: string) {
     try {
       const events = await this.eventsService.fetchEvents({ contract: contractAddress as string })
@@ -22,7 +22,7 @@ export class EventsResolver {
     }
   }
 
-  @ResolveField('data', () => String)
+  @ResolveField('data', /* istanbul ignore next */ () => String)
   async data(@Parent() event: Event) {
     const { data } = event
     return JSON.stringify(data)

@@ -2,9 +2,9 @@ import { Field, Int, ArgsType } from '@nestjs/graphql'
 
 @ArgsType()
 export class FetchBlocksInput {
-  @Field(() => Int)
+  @Field(/* istanbul ignore next */ () => Int)
   skip = 0
 
-  @Field(() => Int)
+  @Field(/* istanbul ignore next */ () => Int)
   take = 10
 }

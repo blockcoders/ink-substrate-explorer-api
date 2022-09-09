@@ -9,17 +9,17 @@ import { TransactionsService } from './transactions.service'
 @Resolver(() => Transaction)
 export class TransactionsResolver {
   constructor(private transactionsService: TransactionsService, private eventsService: EventsService) {}
-  @Query(() => Transaction)
+  @Query(/* istanbul ignore next */ () => Transaction)
   async getTransaction(@Args('hash', { type: () => String }) hash: string) {
     return this.transactionsService.findOne(hash)
   }
 
-  @Query(() => [Transaction])
+  @Query(/* istanbul ignore next */ () => [Transaction])
   async getTransactions(@Args() args: FetchTransactionsInput) {
     return this.transactionsService.fetchTransactions(args)
   }
 
-  @ResolveField('events', () => [Event])
+  @ResolveField('events', /* istanbul ignore next */ () => [Event])
   async getEvents(@Parent() transaction: Transaction) {
     const { hash } = transaction
     const args: FetchEventsInput = {

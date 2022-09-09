@@ -9,15 +9,15 @@ import { Contract } from './entity/contract.entity'
 export class ContractsResolver {
   constructor(private contractsService: ContractsService, private eventsService: EventsService) {}
 
-  @Query(() => Contract)
+  @Query(/* istanbul ignore next */ () => Contract)
   async getContract(@Args('address', { type: () => String }) address: string) {
     return this.contractsService.findOne(address)
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(/* istanbul ignore next */ () => Boolean)
   async uploadMetadata(
-    @Args('metadata', { type: () => String }) metadata: string,
-    @Args('contractAddress', { type: () => String }) contractAddress: string,
+    @Args('metadata', { type: /* istanbul ignore next */ () => String }) metadata: string,
+    @Args('contractAddress', { type: /* istanbul ignore next */ () => String }) contractAddress: string,
   ): Promise<boolean> {
     if (Buffer.from(metadata, 'base64').toString('base64') !== metadata) {
       throw new Error('Invalid metadata')
@@ -27,7 +27,7 @@ export class ContractsResolver {
     return this.contractsService.uploadMetadata(contract, metadata)
   }
 
-  @ResolveField('events', () => [Event])
+  @ResolveField('events', /* istanbul ignore next */ () => [Event])
   async getEvents(@Parent() contract: Contract) {
     const { address } = contract
     const args: FetchEventsInput = {

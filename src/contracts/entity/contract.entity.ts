@@ -7,11 +7,11 @@ import { Event } from '../../events/entity/event.entity'
 @Index(['address'])
 export class Contract extends BaseEntity {
   @PrimaryColumn()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   address!: string
 
   @Column({ nullable: true })
-  @Field(() => String, { nullable: true })
+  @Field(/* istanbul ignore next */ () => String, { nullable: true })
   metadata?: string
 
   @OneToMany(() => Event, (event: Event) => event.contract, { nullable: true })

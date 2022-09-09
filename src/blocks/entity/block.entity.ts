@@ -9,15 +9,15 @@ export class Block extends BaseEntity {
   @PrimaryColumn({
     unique: true,
   })
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   hash!: string
 
   @Column()
-  @Field(() => String)
+  @Field(/* istanbul ignore next */ () => String)
   parentHash!: string
 
   @Column('int')
-  @Field(() => Int)
+  @Field(/* istanbul ignore next */ () => Int)
   number!: number
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.block)

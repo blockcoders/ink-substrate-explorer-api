@@ -9,17 +9,17 @@ import { Block } from './entity/block.entity'
 @Resolver(() => Block)
 export class BlocksResolver {
   constructor(private blocksService: BlocksService, private transactionsService: TransactionsService) {}
-  @Query(() => Block)
+  @Query(/* istanbul ignore next */ () => Block)
   async getBlock(@Args('hash', { type: () => String }) hash: string) {
     return this.blocksService.findOne(hash)
   }
 
-  @Query(() => [Block])
+  @Query(/* istanbul ignore next */ () => [Block])
   async getBlocks(@Args() args: FetchBlocksInput) {
     return this.blocksService.fetchBlocks(args)
   }
 
-  @ResolveField('transactions', () => [Transaction])
+  @ResolveField('transactions', /* istanbul ignore next */ () => [Transaction])
   async getTransactions(@Parent() block: Block) {
     const { hash } = block
     const args: FetchTransactionsInput = {
