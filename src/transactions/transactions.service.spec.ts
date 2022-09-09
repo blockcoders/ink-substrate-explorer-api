@@ -56,7 +56,7 @@ describe('TransactionsService', () => {
     })
   })
 
-  describe('createTransactionsFromExtrinsics', () => {
+  describe.skip('createTransactionsFromExtrinsics', () => {
     it('should create transactions', () => {
       const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
 

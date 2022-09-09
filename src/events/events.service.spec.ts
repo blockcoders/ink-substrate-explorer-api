@@ -62,13 +62,13 @@ describe('EventsService', () => {
     it.skip('should return decoded event', () => {
       jest.spyOn(contractRepo, 'findOneBy').mockResolvedValueOnce(mockContract as any)
 
-      expect(service.decodeEvents(mockEventHashes as any, mockContract.address)).resolves.toHaveLength(2)
+      expect(service.decodeEvents(mockEvents as any, mockContract.address)).resolves.toHaveLength(2)
     })
 
     it('should return not found error', () => {
       jest.spyOn(contractRepo, 'findOneBy').mockResolvedValueOnce(null as any)
 
-      expect(service.decodeEvents(mockEventHashes as any, mockContract.address)).rejects.toThrow(Error)
+      expect(service.decodeEvents(mockEvents as any, mockContract.address)).rejects.toThrow(Error)
     })
 
     it('should return an upload error message', () => {
@@ -77,7 +77,7 @@ describe('EventsService', () => {
         metadata: '',
       } as any)
 
-      expect(service.decodeEvents(mockEventHashes as any, mockContract.address)).rejects.toThrow(Error)
+      expect(service.decodeEvents(mockEvents as any, mockContract.address)).rejects.toThrow(Error)
     })
   })
 
@@ -87,5 +87,5 @@ describe('EventsService', () => {
     })
   })
 
-  // TODO: test createEventsFromRecords, decodeEvents, formatDecoded
+  // TODO: test createEventsFromRecords, formatDecoded
 })
