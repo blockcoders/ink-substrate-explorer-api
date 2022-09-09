@@ -78,9 +78,9 @@ export class SubscriptionsService implements OnModuleInit {
                 },
                 records,
               ] = register
-              const { block } = await this.registerBlockData(header, extrinsics, records)
+              const { block, transactions } = await this.registerBlockData(header, extrinsics, records)
               console.log('\n-----------------New block-----------------\n')
-              console.log('\nBlock Hash: %j', block.hash, block.number)
+              console.log(`\nBlock Hash: ${block.hash}\nBlock number: ${block.number}\nTransactions: ${transactions.length}\n`)
             }
             res(hash)
           } catch (error) {
