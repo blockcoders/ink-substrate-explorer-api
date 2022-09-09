@@ -104,6 +104,8 @@ cp .env.sample .env
 
 - **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Block number from which the service will start to process blocks. (Can be genesis or some other block. i.e the first block supporting contracts) </span>
 
+- **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Number of blocks to process concurrently. This can speed up or down the syning process.</span>
+
 ### Start a Postgres DB using docker (optional)
 
 To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
@@ -595,3 +597,27 @@ Once it is uploaded the events can be decoded using the _decodeEvents_ query tha
 **Note**: The metadata should be uploaded as a **base64** string.
 
 For more on uploading the metadata go to the **Mutations** section a search for _uploadMetadata_.
+
+## **Subscriptions**
+
+The first time the node is started, it may need to start from the block 0 and load all blocks (LOAD_ALL_BLOCKS env var should be set to true). If you want to start from a specific block, you can use the FIRST_BLOCK_TO_LOAD env var to start from another block.
+
+In case of a downtime of the node, the subscriptions will be reconnected automatically recovering all new blocks from the last block that was processed.
+
+**Note**: Load all blocks may take a long time depending on the number of blocks that need to be loaded. It is recommended to use a node with a fast internet connection. The node will be able to process all blocks in a few hours. 
+
+### Some benchmarks
+
+#### Using BLOCK_CONCURRENCY = 100
+- 100     blocks ~ 6 seconds
+- 1000    blocks ~ 30.5 seconds
+- 10000   blocks ~ 4:24 minutes
+- 100000  blocks ~ 39.57 minutes
+
+#### Using BLOCK_CONCURRENCY = 1000
+- 100     blocks ~ 0.5 seconds
+- 1000    blocks ~ 5 seconds
+- 10000   blocks ~ 3 minutes
+- 100000  blocks ~ 24 minutes
+
+

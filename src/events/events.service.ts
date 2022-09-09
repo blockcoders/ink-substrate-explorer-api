@@ -65,7 +65,7 @@ export class EventsService {
         method: method,
         topics: topics.toString(),
         data,
-        transactionHash: transactionHash.toString(),
+        transactionHash: transactionHash.toString().toLowerCase(),
       })
     })
     return Promise.all(eventsToSave.map((event) => this.eventRepository.save(event)))
