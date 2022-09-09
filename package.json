@@ -66,6 +66,7 @@
     "@substrate/txwrapper-core": "^3.1.7",
     "@substrate/txwrapper-registry": "^3.1.7",
     "apollo-server-fastify": "^3.10.0",
+    "async-await-retry": "^2.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",

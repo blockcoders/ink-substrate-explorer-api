@@ -4,6 +4,7 @@ import { Header } from '@polkadot/types/interfaces'
 import { Repository } from 'typeorm'
 import { FetchBlocksInput } from './dtos/fetch-blocks.input'
 import { Block } from './entity/block.entity'
+const retry = require('async-await-retry')
 
 @Injectable()
 export class BlocksService {
@@ -25,14 +26,30 @@ export class BlocksService {
   }
 
   async createFromHeader(header: Header): Promise<Block> {
-    const { hash, parentHash, number } = header
-    const block = this.blockRepository.create({
-      hash: hash.toString().toLowerCase(),
-      parentHash: parentHash.toString().toLowerCase(),
-      number: parseInt(number.toHex()),
-    })
-    const existing = await this.blockRepository.findOneBy({ hash: block.hash })
-    return existing || await this.blockRepository.save(block)
+    try {
+      const { hash, parentHash, number } = header
+      const block = this.blockRepository.create({
+        hash: hash.toString().toLowerCase(),
+        parentHash: parentHash.toString().toLowerCase(),
+        number: parseInt(number.toHex()),
+      })
+      const persistedBlock = await retry(
+        async () => {
+          const existing = await this.blockRepository.findOneBy({ hash: block.hash })
+          return existing || (await this.blockRepository.save(block))
+        },
+        undefined,
+        {
+          retriesMax: 3,
+          interval: 100,
+          exponential: true,
+        },
+      )
+      return persistedBlock
+    } catch (err) {
+      console.log('Error creating block: ', err)
+      throw err
+    }
   }
 
   async getLastBlock(): Promise<Block> {

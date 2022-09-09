@@ -6,6 +6,7 @@ import { AnyTuple } from '@polkadot/types-codec/types'
 import { Repository } from 'typeorm'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
+const retry = require('async-await-retry')
 
 @Injectable()
 export class TransactionsService {
@@ -33,20 +34,36 @@ export class TransactionsService {
   ): Promise<Transaction[]> {
     return Promise.all(
       extrinsics.map(async (extrinsic) => {
-        const { hash: transactionHash, nonce, signature, signer, tip } = extrinsic
-        const { method, section } = extrinsic.method
-        const tx = this.transactionRepository.create({
-          hash: transactionHash.toString().toLowerCase(),
-          method: method,
-          section: section,
-          nonce: nonce.toNumber(),
-          signature: signature.toString(),
-          signer: signer.toString(),
-          tip: tip.toNumber(),
-          blockHash: blockHash.toLowerCase(),
-        })
-        const existing = await this.transactionRepository.findOneBy({ hash: tx.hash })
-        return existing || await this.transactionRepository.save(tx)
+        try {
+          const { hash: transactionHash, nonce, signature, signer, tip } = extrinsic
+          const { method, section } = extrinsic.method
+          const tx = this.transactionRepository.create({
+            hash: transactionHash.toString().toLowerCase(),
+            method: method,
+            section: section,
+            nonce: nonce.toNumber(),
+            signature: signature.toString(),
+            signer: signer.toString(),
+            tip: tip.toNumber(),
+            blockHash: blockHash.toLowerCase(),
+          })
+          const transaction = await retry(
+            async () => {
+              const existing = await this.transactionRepository.findOneBy({ hash: tx.hash })
+              return existing || (await this.transactionRepository.save(tx))
+            },
+            undefined,
+            {
+              retriesMax: 3,
+              interval: 100,
+              exponential: true,
+            },
+          )
+          return transaction
+        } catch (err) {
+          console.log('Error creating transaction: ', err)
+          throw err
+        }
       }),
     )
   }

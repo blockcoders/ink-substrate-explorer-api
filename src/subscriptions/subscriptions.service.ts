@@ -84,7 +84,8 @@ export class SubscriptionsService implements OnModuleInit {
             }
             res(hash)
           } catch (error) {
-            rej(error)
+            console.log("Error loading block: ", i)
+            //rej(error)
           }
         })
     })
@@ -96,11 +97,11 @@ export class SubscriptionsService implements OnModuleInit {
   }
 
   async registerBlockData(header: any, extrinsics: any, records: any) {
-    const block = await this.blocksService.createFromHeader(header)
-    const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
-    for (const [index, tx] of transactions.entries()) {
-      await this.eventsService.createEventsFromRecords(records, index, tx.hash)
-    }
-    return { block, transactions }
+      const block = await this.blocksService.createFromHeader(header)
+      const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
+      for (const [index, tx] of transactions.entries()) {
+        await this.eventsService.createEventsFromRecords(records, index, tx.hash)
+      }
+      return { block, transactions }
   }
 }
