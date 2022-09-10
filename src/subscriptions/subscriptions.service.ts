@@ -33,7 +33,7 @@ export class SubscriptionsService implements OnModuleInit {
 
     const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
     const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
-    const loadFromBlockNumber = process.env.LOAD_ALL_BLOCKS === 'true' ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber + 1
+    const loadFromBlockNumber = process.env.LOAD_ALL_BLOCKS === 'true' ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber
     // Starts syncing blocks
     await api.rpc.chain.subscribeAllHeads(async (lastHeader: Header) => {
       const [
