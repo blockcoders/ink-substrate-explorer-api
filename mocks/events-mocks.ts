@@ -41,3 +41,23 @@ export const mockEventHashes = [
     '0x0001d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d01be5ddb1579b72e84524fc29e78609e3caf42e85aa118ebfe0b0ad404b5bdd25f00602f46021400000000000000000000' as any,
   ),
 ]
+
+export const mockRecords = [
+  {
+    phase: {
+      index: 1,
+      isApplyExtrinsic: true,
+      asApplyExtrinsic: {
+        eq: (index: unknown) => true,
+      },
+    },
+
+    event: {
+      method: 'ContractEmmited',
+      data: ['0x000'],
+      section: '1',
+      index: 1,
+    },
+    topics: '',
+  },
+]

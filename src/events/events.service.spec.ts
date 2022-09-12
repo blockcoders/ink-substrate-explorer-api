@@ -2,7 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { mockContract } from '../../mocks/contracts-mocks'
-import { mockEventHashes, mockEvents } from '../../mocks/events-mocks'
+import { mockEventHashes, mockEvents, mockRecords } from '../../mocks/events-mocks'
+import { mockTransaction } from '../../mocks/transactions-mock'
 import { ContractsService } from '../contracts/contracts.service'
 import { Contract } from '../contracts/entity/contract.entity'
 import { Event } from './entity/event.entity'
@@ -22,13 +23,14 @@ describe('EventsService', () => {
           useValue: {
             findOneBy: jest.fn().mockResolvedValue(mockEvents[0]),
             find: jest.fn().mockResolvedValue(mockEvents),
+            save: jest.fn().mockResolvedValue(mockEvents[0]),
           },
         },
         ContractsService,
         {
           provide: getRepositoryToken(Contract),
           useValue: {
-            findOneBy: jest.fn().mockResolvedValue({}),
+            findOneBy: jest.fn().mockResolvedValue(mockContract),
           },
         },
       ],
@@ -84,6 +86,12 @@ describe('EventsService', () => {
   describe('decodeContractEmittedEvent', () => {
     it('should return decoded event', () => {
       expect(service.decodeContractEmittedEvent(mockContract.metadata, mockEventHashes[0])).not.toBeFalsy()
+    })
+  })
+
+  describe('createEventsFromRecords', () => {
+    it('should return a promise array of events', () => {
+      expect(service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)).resolves.toEqual([])
     })
   })
 
