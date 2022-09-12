@@ -1,34 +1,34 @@
 # **Ink! Explorer**
 
-## **About the explorer**
+## **Acerca del explorador**
 
-Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains. It subscribes to blockchain and Ink modules events and store the information on its own PostgreSQL database. The backend exposes an API that can interact with the DB and run fast queries to get specific information in a short time.
+Ink Explorer es una aplicacion que provee informacion relativa a los contratos que utilizan Ink! en blockchains basadas en Substrate. Se suscribe a la blockchain y a los eventos emitidos por los modulos de Ink! y guarda la informacion en su propia base de datos PostgreSQL. El back-end expone una API que puede interactuar con la base de datos y ejecutar consultas rapidas para obtener informacion especifica en poco tiempo.
 
-The idea of this project is to provide a tool that allows developers of Ink! explore and analyze the contracts found on the blockchain. This tool can be used to analyze the contracts found on Substrate based blockchains that are using Ink! modules. It can also be used to analyze contracts that are on a local blockchain.
+La idea de este proyecto es brindar una herramienta que permita a los desarrolladores de Ink! explorar y analizar los contratos que se encuentran en blockchain. Esta herramienta se puede utilizar para analizar los contratos que se encuentran en blockchains basadas en Substrate que utilizan módulos Ink!. También se puede usar para analizar contratos que están en una blockchain local.
 
-This project serves useful information that is not available anywhere else. Since the back end is in charge of obtaining information related to the balances, transactions and more, of the contracts that use Ink modules. Ink Explorer uses polkadot.js to communicate with the Substrate / Polkadot networks. It is safe to say that this project is a must.
+Este proyecto ofrece información útil que no está disponible en ningún otro lugar. Ya que el back end se encarga de obtener información relacionada con los saldos, transacciones y más, de los contratos que utilizan módulos Ink!. El explorador utiliza polkadot.js para comunicarse con las redes Substrate/Polkadot. Es seguro decir que este proyecto es imprescindible.
 
-Blockcoders is a team that is always contributing to blockchain projects to help the growth of the ecosystem.
+Blockcoders es un equipo que siempre está contribuyendo a los proyectos de blockchain para ayudar al crecimiento del ecosistema.
 
-## **About us**
+## **Sobre nosotros**
 
-### Team members
+### Miembros del equipo
 
 - Jose Ramirez
 - Fernando Sirni
 - Ruben Gutierrez
 
-### Contact
+### Contacto
 
-- **Contact Name:** Jose Ramirez
-- **Contact Email:** jose@blockcoders.io
-- **Website:** http://blockcoders.io/
+- **Nombre de contacto:** Jose Ramirez
+- **Email de contacto:** jose@blockcoders.io
+- **Sitio web:** http://blockcoders.io/
 
-### Team's experience
+### Experiencia del equipo
 
-Our team has been contributing with different projects in blockchain for a few years, building APIs, SDKs and developer tools. Our goal is to continue to drive the crypto space forward by investing intellectual capital into projects, participating actively to help shape the ecosystems we believe in.
+Nuestro equipo ha estado contribuyendo con diferentes proyectos en blockchain durante algunos años, construyendo API, SDK y herramientas para desarrolladores. Nuestro objetivo es continuar impulsando el mundo crypto invirtiendo capital intelectual en proyectos, participando activamente para ayudar a dar forma a los ecosistemas en los que creemos.
 
-### Team Code Repos
+### Repositorios del equipo
 
 - https://github.com/blockcoders
 - https://github.com/blockcoders/nestjs-ethers
@@ -37,58 +37,58 @@ Our team has been contributing with different projects in blockchain for a few y
 - https://github.com/athenafarm/athena-vault-contracts
 - https://github.com/athenafarm/athena-sdk
 
-### Team personal Githubs
+### Githubs de los miembros del equipo
 
 - https://github.com/0xslipk
 - https://github.com/fersirni
 - https://github.com/RubenGutierrezC
 
-### Team LinkedIn Profiles
+### Perfiles de linkedIn de los miembros del equipo
 
 - https://www.linkedin.com/in/jarcodallo/
 - https://www.linkedin.com/in/fernando-sirni-1931ba122/
 - https://www.linkedin.com/in/rubengutierrezc/
 
-## **Get Started**
+## **Introduccion**
 
-## Running the service locally
+## Levantando el servicio localmente
 
-### Environment setup
+### Configuracion del entorno
 
-- Install [Node.js](https://nodejs.org/)
-  - Recommended method is by using [NVM](https://github.com/creationix/nvm)
-  - Recommendeded Node.js version is v16.13
-- Install [Docker](https://docs.docker.com/get-docker/)
+- Instalar [Node.js](https://nodejs.org/)
+  - El metodo recomentado es utilizando [NVM](https://github.com/creationix/nvm)
+  - La verision de Node.js recomendada es v16.13
+- Instalar [Docker](https://docs.docker.com/get-docker/)
 
-### Install all the dependencies
+### Instalar todas las dependencias
 
 ```
 pnpm i --frozen-lockfile
 ```
 
-### Configure the environment variables
+### Configurar las variables de entorno
 
-**Note**: The .env file has the configuration for GraphQL, the PostgreSQL database, Node and the RPC url of the Substrate Blockchain.
+**Nota**: El archivo .env tiene la configuracion para GraphQL, la base de datos PostgreSQL, Node y la url del RPC de la blockchain basada en Substrate.
 
 ```
 cp .env.sample .env
 ```
 
-<span style="color:#2a98db"> **Service configurations** </span>
+<span style="color:#2a98db"> **Configuraciones del servicio** </span>
 
 - **NODE_ENV**=development
 - **PORT**=8080
 - **LOG_NAME**=ink-substrate-explorer-api
 - **LOG_LEVEL**=debug
 
-<span style="color:#2a98db"> **GraphQL configurations** </span>
+<span style="color:#2a98db"> **Configuraciones de GraphQL** </span>
 
 - **GRAPHQL_DEBUG**=true
 - **GRAPHQL_PLAYGROUND**=true
 - **GRAPHQL_SORT_SCHEMA**=true
 - **GRAPHQL_INTROSPECTION**=true
 
-<span style="color:#2a98db"> **Database configurations** </span>
+<span style="color:#2a98db"> **Configuraciones de la base de datos** </span>
 
 - **DATABASE_HOST**=postgres
 - **DATABASE_NAME**=ink
@@ -97,65 +97,65 @@ cp .env.sample .env
 - **DATABASE_RETRY_ATTEMPTS**=5
 - **DATABASE_RETRY_DELAY**=3000
 
-<span style="color:#2a98db"> **Blockchain and Sync configurations** </span>
+<span style="color:#2a98db"> **Configuraciones de la blockchain y la sincronizacion de datos** </span>
 
 - **WS_PROVIDER**=wss://rococo-contracts-rpc.polkadot.io
-- **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Set to _true_ to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to _false_ to only start processing blocks from the last existing block in the database.</span>
+- **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Asignar el valor _true_ para procesar cada bloque desde FIRST_BLOCK_TO_LOAD hasta el ultimo bloque de la cadena. Asignar el valor _false_ para solo comenzar a procesar los bloques desde el ultimo bloque existente en la base de datos.</span>
 
-- **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Block number from which the service will start to process blocks. (Can be genesis or some other block. For example, the first block supporting contracts) </span>
+- **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Número de bloque a partir del cual el servicio comenzará a procesar bloques. (Puede ser génesis o algún otro bloque. Por ejemplo, el primer bloque admite contratos) </span>
 
-- **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Number of blocks to process concurrently. This can speed up or down the syncing process.</span>
+- **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Número de bloques a procesar simultáneamente. Esto puede acelerar o retrasar el proceso de sincronización.</span>
 
-### Start a Postgres DB using docker (optional)
+### Instanciar una BD Postgres utilizando docker (opcional)
 
-To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
-Running this command it will also start a container for pgAdmin:
-
-```
-docker-compose up -f dev-docker-compose.yaml -d
-```
-
-### Start a local Substrate Node (optional)
-
-The service needs to connect to a Substrate Blockchain. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
-Run this command:
+Para levantar el servicio es necesario contar con una **BD PostgreSQL**. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
+Ejecutando el siguiente comando tambien instanciara un contenedor para pgAdmin:
 
 ```
 docker-compose up -f dev-docker-compose.yaml -d
 ```
 
-Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
+### Instanciar un nodo local de Substrate (opcional)
 
-**Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
+El servicio necesita conectarse a una blockchain basada en Substrate. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
+Ejecute este comando:
 
-### Starting the project (DEV)
+```
+docker-compose up -f dev-docker-compose.yaml -d
+```
+
+Otra forma de ejecutar un nodo local es con [esta guía de paritytech](https://github.com/paritytech/substrate-contracts-node).
+
+**Nota**: Cambie la variable WS_PROVIDER en el archivo **.env** para que sea `ws://127.0.0.1:9944`
+
+### Levantando el servicio (DEV)
 
 - ### `pnpm start:dev`
 
-Runs the service in the development mode.
-The service will reload if you make edits.
+Ejecuta el servicio en el modo de desarrollo.
+El servicio se recargará si realiza ediciones.
 
-**Note**: A postgresDB up and running and a valid connection to a substrate node are required.
+**Nota**: Se requiere una base de datos postgres en funcionamiento y una conexión válida a un nodo de Substrate.
 
-### Starting the project (PROD)
+### Levantando el servicio (PROD)
 
-To start both the Back-end service container and the DB container run:
+Para iniciar tanto el contenedor del servicio de back-end como el contenedor de la base de datos, ejecute:
 
 - ### `docker-compose up -d`
 
 ### Test
 
-Running the unit tests.
+Ejecución de las pruebas unitarias.
 
 - ### `pnpm test`
 
-Running the test coverage.
+Ejecución de la cobertura de pruebas.
 
 - ### `pnpm test:cov`
 
-## Running the Back-end service Docker image
+## Ejecutar la imagen de Docker del servicio back-end
 
-### Download the image from DockerHub
+### Descarga la imagen de DockerHub
 
 ```
 docker pull {dockerImage}
@@ -165,13 +165,13 @@ docker pull {dockerImage}
 
 - ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} {dockerImage}`
 
-Verify the image started running
+Verifique que la imagen comenzó a ejecutarse
 
 ```
 docker ps
 ```
 
-The result should look like this:
+El resultado debería verse así:
 
 ```
 CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS         PORTS                                       NAMES
@@ -182,11 +182,11 @@ After the server started, the blocks should be being saved on the DB.
 
 ## **API**
 
-With the service up and running an API is provided by using GraphQL queries.
+Después de que se inició el servidor, los bloques deberían guardarse en la base de datos.
 
-### **Queries**
+### **Consultas**
 
-<span style="color:#2a98db"> **Status**: Retrieves the status of the application</span>
+<span style="color:#2a98db"> **Status**: Recupera el estado de la aplicación</span>
 
 ```graphql
 query {
@@ -194,7 +194,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -204,7 +204,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getBlock**: Retrieves the block by hash </span>
+<span style="color:#2a98db"> **getBlock**: Recupera el bloque por hash </span>
 
 ```graphql
 query {
@@ -219,7 +219,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -241,7 +241,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getBlocks**: Retrieves blocks (use skip and take to paginate) </span>
+<span style="color:#2a98db"> **getBlocks**: Recupera bloques (use skip and take para paginar)</span>
 
 ```graphql
 query {
@@ -256,7 +256,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -280,7 +280,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getTransaction**: Retrieves a single transaction by hash </span>
+<span style="color:#2a98db"> **getTransaction**: Recupera una sola transacción por hash</span>
 
 ```graphql
 query {
@@ -297,7 +297,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -316,7 +316,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getTransactions**: Retrieves transactions by block hash (use skip and take to paginate)</span>
+<span style="color:#2a98db"> **getTransactions**: Recupera transacciones por hash de bloque (use skip and take para paginar)</span>
 
 ```graphql
 query {
@@ -333,7 +333,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -356,7 +356,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getEvents**: Retrieves events by contract address or transaction hash (use skip and take to paginate)</span>
+<span style="color:#2a98db"> **getEvents**: Recupera eventos por dirección de contrato o hash de transacción (use skip and take para paginar)</span>
 
 ```graphql
 query {
@@ -371,7 +371,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -398,7 +398,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **decodeEvents**: Decodes the events data for a specific contract. Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
+<span style="color:#2a98db"> **decodeEvents**: Decodifica los datos de eventos para un contrato específico. Requiere que los metadatos del contrato ya se hayan subido usando la mutación **uploadMetadata**</span>
 
 ```graphql
 query {
@@ -406,7 +406,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -416,7 +416,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getContract**: Retrieves a contract by address</span>
+<span style="color:#2a98db"> **getContract**: Recupera un contrato por dirección</span>
 
 ```graphql
 query {
@@ -427,7 +427,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -440,9 +440,9 @@ query {
 }
 ```
 
-### **Mutations**
+### **Mutaciones**
 
-<span style="color:#2a98db"> **uploadMetadata**: To decode events it is necessary to upload the contract's ABI. Passing a base64 string ABI to this mutation will save that to DB. After that run a **decodeEvents** query to see the decoded data on the events.</span>
+<span style="color:#2a98db"> **uploadMetadata**: Para decodificar eventos es necesario cargar el ABI del contrato. Pasar un ABI en base64 a esta mutación lo guardará en la base de datos. Después de eso, ejecute una consulta **decodeEvents** para ver los datos decodificados en los eventos.</span>
 
 ```graphql
 mutation Upload {
@@ -450,7 +450,7 @@ mutation Upload {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -460,11 +460,11 @@ mutation Upload {
 }
 ```
 
-### **About decoding events**
+### **Acerca de la decodificación de eventos**
 
-To see the decoded data of the events there is one requirement, the contract metadata needs to uploaded at least once.
+Para ver los datos decodificados de los eventos, hay un requisito: los metadatos del contrato deben cargarse al menos una vez.
 
-Example of an ERC20 contract metadata:
+Ejemplo de metadatos de un contrato ERC20:
 
 ```json
 {
@@ -592,32 +592,32 @@ Example of an ERC20 contract metadata:
       ...
 ```
 
-Once it is uploaded the events can be decoded using the _decodeEvents_ query that can be found on section **Queries**.
+Una vez cargado, los eventos se pueden decodificar mediante la consulta _decodeEvents_ que se encuentra en la sección **Consultas**.
 
-**Note**: The metadata should be uploaded as a **base64** string.
+**Nota**: Los metadatos deben cargarse como un texto (string) en **base64**.
 
-For more on uploading the metadata go to the **Mutations** section a search for _uploadMetadata_.
+Para obtener más información sobre la carga de metadatos, vaya a la sección **Mutaciones** y busque _uploadMetadata_.
 
-## **Subscriptions**
+## **Suscripciones**
 
-The first time the node is started, it may need to start from the block 0 and load all blocks (LOAD_ALL_BLOCKS env var should be set to true). If you want to start from a specific block, you can use the FIRST_BLOCK_TO_LOAD env var to start from another block.
+La primera vez que se inicia el nodo, es posible que deba comenzar desde el bloque 0 y cargar todos los bloques (LOAD_ALL_BLOCKS env var debe establecerse en verdadero). Si desea comenzar desde un bloque específico, puede usar FIRST_BLOCK_TO_LOAD env var para comenzar desde otro bloque.
 
-In case of a downtime of the node, the subscriptions will be reconnected automatically recovering all new blocks from the last block that was processed.
+En caso de un tiempo de inactividad del nodo, las suscripciones se reconectarán automáticamente recuperando todos los bloques nuevos desde el último bloque que se procesó.
 
-**Note**: Load all blocks may take a long time depending on the number of blocks that need to be loaded. It is recommended to use a node with a fast internet connection. The node will be able to process all blocks in a few hours. 
+**Nota**: Cargar todos los bloques puede llevar mucho tiempo dependiendo de la cantidad de bloques que deban cargarse. Se recomienda utilizar un nodo con una conexión rápida a Internet. El nodo podrá procesar todos los bloques en unas pocas horas.
 
-### Some benchmarks
+### Algunos puntos de referencia
 
-#### Using BLOCK_CONCURRENCY = 100
-- 100     blocks ~ 6 seconds
-- 1000    blocks ~ 30.5 seconds
-- 10000   blocks ~ 4:24 minutes
-- 100000  blocks ~ 39.57 minutes
+#### Utilizando BLOCK_CONCURRENCY = 100
+- 100     bloques en ~ 6 segundos
+- 1000    bloques en ~ 30.5 segundos
+- 10000   bloques en ~ 4:24 minutos
+- 100000  bloques en ~ 39.57 minutos
 
-#### Using BLOCK_CONCURRENCY = 1000
-- 100     blocks ~ 0.5 seconds
-- 1000    blocks ~ 5 seconds
-- 10000   blocks ~ 3 minutes
-- 100000  blocks ~ 24 minutes
+#### Utilizando BLOCK_CONCURRENCY = 1000
+- 100     bloques en ~ 0.5 segundos
+- 1000    bloques en ~ 5 segundos
+- 10000   bloques en ~ 3 minutos
+- 100000  bloques en ~ 24 minutos
 
 
