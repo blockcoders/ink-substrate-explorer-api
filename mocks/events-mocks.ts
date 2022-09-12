@@ -53,11 +53,17 @@ export const mockRecords = [
     },
 
     event: {
-      method: 'ContractEmmited',
-      data: ['0x000'],
+      method: 'ContractEmitted',
+      data: [
+        '0x000',
+        '0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b',
+      ],
       section: '1',
-      index: 1,
+      index: {
+        toHex: () => '0x703',
+      },
     },
-    topics: '',
+    topics:
+      '[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]',
   },
 ]
