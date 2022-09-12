@@ -20,8 +20,13 @@ export class SubscriptionsService implements OnModuleInit {
   ) {}
 
   async onModuleInit(): Promise<void> {
-    console.log(`\n\nSubscribing to new heads...`)
-    await this.syncBlocks()
+    try {
+      console.log(`\n\nSubscribing to new heads...`)
+      await this.syncBlocks()
+    } catch (error) {
+      console.error("Error while processing blocks: ", error)
+      throw error
+    }
   }
 
   static async connect() {
@@ -64,9 +69,6 @@ export class SubscriptionsService implements OnModuleInit {
     console.log('To: ', blocksToLoad[blocksToLoad.length - 1])
 
     const queue = new PQueue({ concurrency: BLOCKS_CONCURRENCY })
-
-    console.time('All blocks loaded!')
-
     const q = blocksToLoad.map(
       (i) => () =>
         new Promise(async (res, rej) => {
@@ -78,10 +80,7 @@ export class SubscriptionsService implements OnModuleInit {
           }
         }),
     )
-    await queue.addAll(q as any)
-
-    console.timeEnd('All blocks loaded!')
-    return
+    return queue.addAll(q as any)
   }
 
   async processBlock(api: ApiPromise, blockNumber: number) {

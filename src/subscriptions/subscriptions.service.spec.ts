@@ -6,9 +6,19 @@ import { TransactionsService } from '../transactions/transactions.service'
 import { SubscriptionsService } from './subscriptions.service'
 import { EventsService } from '../events/events.service'
 import { mockEvents } from '../../mocks/events-mocks'
+import { ApiPromise } from '@polkadot/api'
+import { apiMock } from '../../mocks/api-mock'
+jest.mock('@polkadot/api')
 
 describe('subscriptionsService', () => {
   let service: SubscriptionsService
+  let api: ApiPromise
+
+  beforeAll(async () => {
+    const MockedApi = ApiPromise as jest.MockedClass<typeof ApiPromise>
+    MockedApi.create = jest.fn().mockResolvedValue(apiMock)
+    api = await MockedApi.create()
+  })
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,7 +53,7 @@ describe('subscriptionsService', () => {
   })
 
   describe('registerBlockData', () => {
-    it('should return an object with block and transactions attributes', () => {
+    it('should return the registered block', async () => {
       const number = {
         toHex: () => '27',
       }
@@ -53,11 +63,16 @@ describe('subscriptionsService', () => {
         parentHash: mockBlock.parentHash,
         number,
       }
+      const result = await service.registerBlockData(header, mockExtrinsics, [])
+      expect(result).toEqual(mockBlock)
+    })
+  })
 
-      expect(service.registerBlockData(header, mockExtrinsics, [])).resolves.toEqual({
-        block: mockBlock,
-        transactions: mockTransactions,
-      })
+  describe('processBlock', () => {
+    it('should return the block hash', async () => {
+      const number = 27
+      const result = await service.processBlock(api, number)
+      expect(result).toEqual(mockBlock.hash)
     })
   })
 })
