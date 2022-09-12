@@ -1,4 +1,5 @@
 import { stringToHex } from '@polkadot/util'
+import { Transaction } from 'src/transactions/entity/transaction.entity'
 
 export const mockTransaction = {
   hash: '0x055878018de242a21b7bd4b9512f4c24217da75ab2b9bf4eb93e95247b1a8f43',
@@ -77,27 +78,26 @@ export const mockExtrinsics = [
   },
 ]
 
-export const mockSavedTransactions = [
-  {
-    hash: '0x01c780fccc47dc4e9652180876a8267dc9f9dd501ed249f077e32c1653a89f2a',
-    blockHash: '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1',
-    nonce: 0,
-    signature:
-      '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    signer: '5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM',
-    tip: 0,
-    method: 'set',
-    section: 'timestamp',
-  },
-  {
-    hash: '0x3aa34206050aa5eca76715ba2a4d05ef5bbe91e173b202b2c7b657cb885b9d06',
-    blockHash: '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1',
-    nonce: 4,
-    signature:
-      '0x984c98e3d74fcc35ddc5397282d282dcfda496ae95cb98f4e7d6d22125ec1e7cf03dc3f6fab3add1763bec4b8ee01346b198804b4faaaa1b88d37c5dbc9ca98b',
-    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-    tip: 0,
-    method: 'call',
-    section: 'timestamp',
-  },
-]
+const mockTransaction1 = new Transaction()
+mockTransaction1.hash = '0x01c780fccc47dc4e9652180876a8267dc9f9dd501ed249f077e32c1653a89f2a'
+mockTransaction1.blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
+mockTransaction1.nonce = 0
+mockTransaction1.signature =
+  '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+mockTransaction1.signer = '5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM'
+mockTransaction1.tip = 0
+mockTransaction1.method = 'set'
+mockTransaction1.section = 'timestamp'
+
+const mockTransaction2 = new Transaction()
+mockTransaction2.hash = '0x3aa34206050aa5eca76715ba2a4d05ef5bbe91e173b202b2c7b657cb885b9d06'
+mockTransaction2.blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
+mockTransaction2.nonce = 4
+mockTransaction2.signature =
+  '0x984c98e3d74fcc35ddc5397282d282dcfda496ae95cb98f4e7d6d22125ec1e7cf03dc3f6fab3add1763bec4b8ee01346b198804b4faaaa1b88d37c5dbc9ca98b'
+mockTransaction2.signer = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+mockTransaction2.tip = 0
+mockTransaction2.method = 'call'
+mockTransaction2.section = 'timestamp'
+
+export const mockSavedTransactions = [mockTransaction1, mockTransaction2]

@@ -56,16 +56,60 @@ describe('TransactionsService', () => {
     })
   })
 
-  describe.skip('createTransactionsFromExtrinsics', () => {
-    it('should create transactions', () => {
+  describe('createTransactionsFromExtrinsics', () => {
+    it('should create transactions', async () => {
+      jest.spyOn(repo, 'findOneBy').mockResolvedValueOnce(null).mockResolvedValueOnce(null)
+      jest
+        .spyOn(repo, 'save')
+        .mockResolvedValueOnce(mockSavedTransactions[0])
+        .mockResolvedValueOnce(mockSavedTransactions[1])
       const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
-
-      expect(service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)).resolves.toEqual([
-        mockSavedTransactions,
-        mockSavedTransactions,
-      ])
+      const savedTxs = await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)
+      mockSavedTransactions.forEach((tx, i) => {
+        expect(savedTxs[i].hash).toEqual(tx.hash)
+        expect(savedTxs[i].blockHash).toEqual(tx.blockHash)
+        expect(savedTxs[i].nonce).toEqual(tx.nonce)
+        expect(savedTxs[i].signature).toEqual(tx.signature)
+        expect(savedTxs[i].signer).toEqual(tx.signer)
+        expect(savedTxs[i].tip).toEqual(tx.tip)
+        expect(savedTxs[i].method).toEqual(tx.method)
+        expect(savedTxs[i].section).toEqual(tx.section)
+      })
       expect(repo.create).toBeCalledTimes(2)
       expect(repo.save).toBeCalledTimes(2)
+    })
+
+    it('should skip creation of already existing transactions', async () => {
+      jest
+        .spyOn(repo, 'findOneBy')
+        .mockResolvedValueOnce(mockSavedTransactions[0])
+        .mockResolvedValueOnce(mockSavedTransactions[1])
+      const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
+      const savedTxs = await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)
+      mockSavedTransactions.forEach((tx, i) => {
+        expect(savedTxs[i].hash).toEqual(tx.hash)
+        expect(savedTxs[i].blockHash).toEqual(tx.blockHash)
+        expect(savedTxs[i].nonce).toEqual(tx.nonce)
+        expect(savedTxs[i].signature).toEqual(tx.signature)
+        expect(savedTxs[i].signer).toEqual(tx.signer)
+        expect(savedTxs[i].tip).toEqual(tx.tip)
+        expect(savedTxs[i].method).toEqual(tx.method)
+        expect(savedTxs[i].section).toEqual(tx.section)
+      })
+      expect(repo.create).toBeCalledTimes(2)
+      expect(repo.save).toBeCalledTimes(0)
+      expect(repo.findOneBy).toBeCalledTimes(2)
+    })
+
+    it('should fail if it cannot connect to database', async () => {
+      try {
+        jest.spyOn(repo, 'findOneBy').mockResolvedValue(Promise.reject("Can't connect to database"))
+        const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
+        await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)
+        fail("Shouldn't reach this point")
+      } catch (error) {
+        expect(error).toEqual("Can't connect to database")
+      }
     })
   })
 })
