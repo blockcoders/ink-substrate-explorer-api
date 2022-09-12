@@ -2,12 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { mockContract } from '../../mocks/contracts-mocks'
-import { mockEventHashes, mockEvents, mockRecords } from '../../mocks/events-mocks'
+import { mockDecodedEvent, mockEventHashes, mockEvents, mockRecords } from '../../mocks/events-mocks'
 import { mockTransaction } from '../../mocks/transactions-mock'
 import { ContractsService } from '../contracts/contracts.service'
 import { Contract } from '../contracts/entity/contract.entity'
 import { Event } from './entity/event.entity'
 import { EventsService } from './events.service'
+import { DecodedEvent } from '@polkadot/api-contract/types'
 
 describe('EventsService', () => {
   let service: EventsService
@@ -33,6 +34,10 @@ describe('EventsService', () => {
           useValue: {
             findOne: jest.fn().mockResolvedValue(mockContract),
             findOneBy: jest.fn().mockResolvedValue(mockContract),
+            create: jest.fn().mockImplementation(() => ({
+              save: () => mockContract,
+            })),
+            save: jest.fn().mockResolvedValue(mockContract),
           },
         },
       ],
@@ -92,11 +97,46 @@ describe('EventsService', () => {
   })
 
   describe('createEventsFromRecords', () => {
-    it('should return a promise array of events', () => {
-      //TODO: change toEqual
-      // expect(service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)).resolves.toEqual([])
+    it('should return a promise array of events', async () => {
+      jest
+        .spyOn(repo, 'create')
+        .mockResolvedValueOnce(mockEvents[0] as never)
+        .mockResolvedValueOnce(mockEvents[1] as never)
+      jest
+        .spyOn(repo, 'save')
+        .mockResolvedValueOnce(mockEvents[0] as never)
+        .mockResolvedValueOnce(mockEvents[1] as never)
+
+      const events = await service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)
+
+      expect(events).toStrictEqual(mockEvents)
+    })
+
+    it('should return a promise array of events with an existed contract', async () => {
+      jest.spyOn(contractRepo, 'findOne').mockReturnValueOnce(null as any)
+
+      jest
+        .spyOn(repo, 'create')
+        .mockResolvedValueOnce(mockEvents[0] as never)
+        .mockResolvedValueOnce(mockEvents[1] as never)
+      jest
+        .spyOn(repo, 'save')
+        .mockResolvedValueOnce(mockEvents[0] as never)
+        .mockResolvedValueOnce(mockEvents[1] as never)
+
+      const events = await service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)
+
+      expect(events).toStrictEqual(mockEvents)
+    })
+
+    describe('formatDecoded', () => {
+      it('should return format decoded event', () => {
+        expect(service.formatDecoded(mockDecodedEvent as DecodedEvent)).toEqual({
+          from: mockDecodedEvent.args[0],
+          to: mockDecodedEvent.args[1],
+          value: parseInt(mockDecodedEvent.args[2].toString()) / 1_000_000_000_000,
+        })
+      })
     })
   })
-
-  // TODO: test createEventsFromRecords, formatDecoded
 })

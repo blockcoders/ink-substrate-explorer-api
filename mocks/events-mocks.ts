@@ -54,16 +54,89 @@ export const mockRecords = [
 
     event: {
       method: 'ContractEmitted',
-      data: [
-        '0x000',
-        '0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b',
-      ],
+      data: `[
+        "5C9QorN8S8X2Cwpa98cRevWR7YHmKqDGUPMDM3rZnLzWnRj9",
+        "0x000001d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0000c52ebca2b1000000000000000000"
+      ]`,
       section: '1',
       index: {
         toHex: () => '0x703',
       },
     },
     topics:
-      '[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]',
+      '[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x33766995fd9b44bd45f351b3abd7e5041960638db0075c84ab7af1a734e20d1b, 0x5445726332303a3a5472616e736665723a3a66726f6d00000000000000000000]',
+  },
+  {
+    phase: {
+      index: 2,
+      isApplyExtrinsic: true,
+      asApplyExtrinsic: {
+        eq: (index: unknown) => true,
+      },
+    },
+
+    event: {
+      method: 'ContractEmitted',
+      data: `[
+        "5C9QorN8S8X2Cwpa98cRevWR7YHmKqDGUPMDM3rZnLzWnRj9",
+        "0x0001d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d01fe65717dad0447d715f660a0a58411de509b42e6efb8375f562f58a554d5860e0040e59c301200000000000000000000"
+      ]`,
+      section: '1',
+      index: {
+        toHex: () => '0x703',
+      },
+    },
+    topics:
+      '[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x63c87cd1c4007df77d6b16ae28c5393bee3a62fb8577e38243a6f6f5a82c457f, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]',
   },
 ]
+
+export const mockDecodedEvent = {
+  args: [
+    {
+      toString: () => '',
+    },
+    {
+      toString: () => '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    },
+    {
+      toString: () => '30000000',
+    },
+  ],
+  event: {
+    args: [
+      {
+        name: 'from',
+        type: {
+          info: 9,
+          lookupIndex: 11,
+          lookupName: undefined,
+          type: 'Option<AccountId>',
+          docs: [],
+          namespace: 'Option',
+        },
+        toString: () => '',
+      },
+      {
+        name: 'to',
+        type: {
+          info: 9,
+          lookupIndex: 11,
+          lookupName: undefined,
+          type: 'Option<AccountId>',
+          docs: [],
+          namespace: 'Option',
+        },
+        toString: () => '',
+      },
+      {
+        name: 'value',
+        type: {
+          info: 10,
+          type: 'Balance',
+        },
+        toString: () => '',
+      },
+    ],
+  },
+}
