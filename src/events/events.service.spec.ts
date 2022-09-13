@@ -10,6 +10,7 @@ import { ContractsService } from '../contracts/contracts.service'
 import { Contract } from '../contracts/entity/contract.entity'
 import { Event } from './entity/event.entity'
 import { EventsService } from './events.service'
+import { getLoggerToken } from 'nestjs-pino'
 
 describe('EventsService', () => {
   let service: EventsService
@@ -29,7 +30,14 @@ describe('EventsService', () => {
             save: jest.fn().mockResolvedValue(mockEvents[0]),
           },
         },
-        ContractsService,
+        mockPinoService(EventsService.name),
+        mockPinoService(ContractsService.name),
+
+        {
+          provide: ContractsService,
+          inject: [getLoggerToken(ContractsService.name)],
+          useClass: ContractsService,
+        },
         {
           provide: getRepositoryToken(Contract),
           useValue: {
@@ -41,7 +49,6 @@ describe('EventsService', () => {
             save: jest.fn().mockResolvedValue(mockContract),
           },
         },
-        mockPinoService(EventsService.name),
       ],
     }).compile()
 
