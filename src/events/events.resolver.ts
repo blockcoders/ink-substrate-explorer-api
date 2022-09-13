@@ -17,10 +17,6 @@ export class EventsResolver {
       const events = await this.eventsService.fetchEvents({ contract: contractAddress as string })
       const response = await this.eventsService.decodeEvents(events, contractAddress as string)
 
-      const decoded = this.eventsService.formatDecoded(response[1])
-
-      console.log(decoded)
-
       return JSON.stringify(response)
     } catch (error) {
       return error
