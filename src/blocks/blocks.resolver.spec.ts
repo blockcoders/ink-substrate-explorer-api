@@ -1,8 +1,6 @@
 import { TestingModule, Test } from '@nestjs/testing'
 import { mockBlock, mockBlocks } from '../../mocks/blocks-mocks'
-import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockTransactions } from '../../mocks/transactions-mock'
-import { TransactionsModule } from '../transactions/transactions.module'
 import { TransactionsService } from '../transactions/transactions.service'
 import { BlocksResolver } from './blocks.resolver'
 import { BlocksService } from './blocks.service'
@@ -13,11 +11,8 @@ describe('BlocksResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TransactionsModule],
       providers: [
         BlocksResolver,
-        mockPinoService(BlocksService.name),
-        mockPinoService(TransactionsService.name),
         {
           provide: BlocksService,
           useFactory: () => ({

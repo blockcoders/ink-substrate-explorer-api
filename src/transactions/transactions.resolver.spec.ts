@@ -3,7 +3,6 @@ import { mockEvents } from '../../mocks/events-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockTransaction, mockTransactions } from '../../mocks/transactions-mock'
 import { ContractsService } from '../contracts/contracts.service'
-import { EventsModule } from '../events/events.module'
 import { EventsService } from '../events/events.service'
 import { TransactionsResolver } from './transactions.resolver'
 import { TransactionsService } from './transactions.service'
@@ -13,7 +12,6 @@ describe('TransactionsResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [EventsModule],
       providers: [
         TransactionsResolver,
         {

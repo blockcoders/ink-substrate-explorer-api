@@ -20,11 +20,14 @@ export class Block extends BaseEntity {
   @Field(/* istanbul ignore next */ () => Int)
   number!: number
 
-  @OneToMany(() => Transaction, (transaction: Transaction) => transaction.block)
+  @OneToMany(
+    /* istanbul ignore next */ () => Transaction,
+    /* istanbul ignore next */ (transaction: Transaction) => transaction.block,
+  )
   transactions!: Transaction[]
 
   @CreateDateColumn({
-    default: () => 'NOW()',
+    default: /* istanbul ignore next */ () => 'NOW()',
   })
   createdDate!: Date
 }
