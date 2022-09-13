@@ -110,7 +110,6 @@ export class SubscriptionsService implements OnModuleInit {
         },
       )
     } catch (error) {
-      console.log('xxxxxxx ', error)
       this.logger.error({ error }, 'Error loading block: %d', blockNumber)
       throw error
     }

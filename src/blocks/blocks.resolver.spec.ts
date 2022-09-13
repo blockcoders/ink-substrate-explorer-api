@@ -16,7 +16,8 @@ describe('BlocksResolver', () => {
       imports: [TransactionsModule],
       providers: [
         BlocksResolver,
-        mockPinoService(BlocksResolver.name),
+        mockPinoService(BlocksService.name),
+        mockPinoService(TransactionsService.name),
         {
           provide: BlocksService,
           useFactory: () => ({
@@ -30,7 +31,6 @@ describe('BlocksResolver', () => {
             fetchTransactions: jest.fn(() => mockTransactions),
           }),
         },
-        mockPinoService(TransactionsService.name),
       ],
     }).compile()
 

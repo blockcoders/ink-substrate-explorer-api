@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { mockEvents } from '../../mocks/events-mocks'
+import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockTransaction, mockTransactions } from '../../mocks/transactions-mock'
+import { ContractsService } from '../contracts/contracts.service'
 import { EventsModule } from '../events/events.module'
 import { EventsService } from '../events/events.service'
 import { TransactionsResolver } from './transactions.resolver'
 import { TransactionsService } from './transactions.service'
-import { mockPinoService } from '../../mocks/pino-mocks'
-import { ContractsService } from '../contracts/contracts.service'
 
 describe('TransactionsResolver', () => {
   let resolver: TransactionsResolver
@@ -30,6 +30,7 @@ describe('TransactionsResolver', () => {
           })),
         },
         mockPinoService(ContractsService.name),
+        mockPinoService(TransactionsService.name),
       ],
     }).compile()
 
