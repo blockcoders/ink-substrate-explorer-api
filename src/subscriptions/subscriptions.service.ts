@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { BlockHash, Header } from '@polkadot/types/interfaces'
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import PQueue from 'p-queue'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 const retry = require('async-await-retry')
 
 const FIRST_BLOCK_TO_LOAD = Number(process.env.FIRST_BLOCK_TO_LOAD) || 0

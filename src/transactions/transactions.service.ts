@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { GenericExtrinsic } from '@polkadot/types'
 import { Vec } from '@polkadot/types-codec'
 import { AnyTuple } from '@polkadot/types-codec/types'
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
+import { SubscriptionsService } from 'src/subscriptions/subscriptions.service'
 import { Repository } from 'typeorm'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
@@ -11,6 +14,8 @@ const retry = require('async-await-retry')
 @Injectable()
 export class TransactionsService {
   constructor(
+    @InjectPinoLogger(SubscriptionsService.name)
+    private readonly logger: PinoLogger,
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
   ) {}
@@ -60,9 +65,9 @@ export class TransactionsService {
             },
           )
           return transaction
-        } catch (err) {
-          console.log('Error creating transaction: ', err)
-          throw err
+        } catch (error) {
+          this.logger.error({ error }, 'Error creating transaction.')
+          throw error
         }
       }),
     )

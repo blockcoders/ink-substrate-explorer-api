@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { mockBlock } from '../../mocks/blocks-mocks'
-import { mockExtrinsics, mockTransactions } from '../../mocks/transactions-mock'
-import { BlocksService } from '../blocks/blocks.service'
-import { TransactionsService } from '../transactions/transactions.service'
-import { SubscriptionsService } from './subscriptions.service'
-import { EventsService } from '../events/events.service'
-import { mockEvents } from '../../mocks/events-mocks'
 import { ApiPromise } from '@polkadot/api'
 import { apiMock } from '../../mocks/api-mock'
+import { mockBlock } from '../../mocks/blocks-mocks'
+import { mockEvents } from '../../mocks/events-mocks'
+import { mockExtrinsics, mockTransactions } from '../../mocks/transactions-mock'
+import { BlocksService } from '../blocks/blocks.service'
+import { EventsService } from '../events/events.service'
+import { TransactionsService } from '../transactions/transactions.service'
+import { SubscriptionsService } from './subscriptions.service'
 jest.mock('@polkadot/api')
 
 describe('subscriptionsService', () => {
