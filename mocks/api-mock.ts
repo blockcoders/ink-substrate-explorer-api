@@ -35,6 +35,11 @@ export const apiMock = {
               },
             })
       },
+      getHeader: () => ({
+        number: {
+          toNumber: () => 50,
+        },
+      }),
     },
   },
   query: {

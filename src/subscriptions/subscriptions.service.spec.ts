@@ -14,6 +14,7 @@ jest.mock('@polkadot/api')
 describe('subscriptionsService', () => {
   let service: SubscriptionsService
   let api: ApiPromise
+  let blockService: BlocksService
 
   beforeAll(async () => {
     const MockedApi = ApiPromise as jest.MockedClass<typeof ApiPromise>
@@ -29,6 +30,7 @@ describe('subscriptionsService', () => {
           provide: BlocksService,
           useValue: {
             createFromHeader: jest.fn().mockResolvedValue(mockBlock),
+            getLastBlock: jest.fn().mockResolvedValue(mockBlock),
           },
         },
         {
@@ -48,6 +50,7 @@ describe('subscriptionsService', () => {
     }).compile()
 
     service = module.get<SubscriptionsService>(SubscriptionsService)
+    blockService = module.get<BlocksService>(BlocksService)
   })
 
   it('should be defined', () => {
@@ -64,6 +67,19 @@ describe('subscriptionsService', () => {
       } catch (error) {
         expect(error).toBe('grcp error')
       }
+    })
+  })
+
+  describe('syncBlocks', () => {
+    it('should show already sync message', async () => {
+      jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
+      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 100 } as any)
+      jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
+
+      const result = await service.syncBlocks()
+
+      expect(result).toBe(undefined)
+      expect(blockService.getLastBlock).toBeCalledTimes(1)
     })
   })
 
