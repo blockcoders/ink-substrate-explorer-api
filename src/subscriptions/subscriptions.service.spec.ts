@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ApiPromise } from '@polkadot/api'
-import { getLoggerToken } from 'nestjs-pino'
 import { apiMock } from '../../mocks/api-mock'
 import { mockBlock } from '../../mocks/blocks-mocks'
 import { mockEvents } from '../../mocks/events-mocks'
+import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockExtrinsics, mockTransactions } from '../../mocks/transactions-mock'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
@@ -43,14 +43,7 @@ describe('subscriptionsService', () => {
             createEventsFromRecords: jest.fn().mockResolvedValue(mockEvents),
           },
         },
-        {
-          provide: getLoggerToken(SubscriptionsService.name),
-          useValue: {
-            info: (error: any) => console.log(error),
-            debug: (msg: any) => console.log(msg),
-            error: (error: any) => console.log(error),
-          },
-        },
+        mockPinoService(SubscriptionsService.name),
       ],
     }).compile()
 

@@ -4,6 +4,7 @@ import { DecodedEvent } from '@polkadot/api-contract/types'
 import { Repository } from 'typeorm'
 import { mockContract } from '../../mocks/contracts-mocks'
 import { mockDecodedEvent, mockEventHashes, mockEvents, mockRecords } from '../../mocks/events-mocks'
+import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockTransaction } from '../../mocks/transactions-mock'
 import { ContractsService } from '../contracts/contracts.service'
 import { Contract } from '../contracts/entity/contract.entity'
@@ -40,6 +41,7 @@ describe('EventsService', () => {
             save: jest.fn().mockResolvedValue(mockContract),
           },
         },
+        mockPinoService(EventsService.name),
       ],
     }).compile()
 

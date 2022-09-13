@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { SubscriptionsService } from 'src/subscriptions/subscriptions.service'
 import { Repository } from 'typeorm'
 import { Contract } from './entity/contract.entity'
 
 @Injectable()
 export class ContractsService {
   constructor(
-    @InjectPinoLogger(SubscriptionsService.name)
+    @InjectPinoLogger(ContractsService.name)
     private readonly logger: PinoLogger,
     @InjectRepository(Contract)
     private readonly contractRepository: Repository<Contract>,

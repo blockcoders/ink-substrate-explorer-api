@@ -2,6 +2,7 @@ import { NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockExtrinsics, mockSavedTransactions, mockTransaction, mockTransactions } from '../../mocks/transactions-mock'
 import { Transaction } from './entity/transaction.entity'
 import { TransactionsService } from './transactions.service'
@@ -24,6 +25,7 @@ describe('TransactionsService', () => {
             save: jest.fn().mockResolvedValue(mockSavedTransactions),
           },
         },
+        mockPinoService(TransactionsService.name),
       ],
     }).compile()
 

@@ -5,6 +5,8 @@ import { EventsModule } from '../events/events.module'
 import { EventsService } from '../events/events.service'
 import { TransactionsResolver } from './transactions.resolver'
 import { TransactionsService } from './transactions.service'
+import { mockPinoService } from '../../mocks/pino-mocks'
+import { ContractsService } from '../contracts/contracts.service'
 
 describe('TransactionsResolver', () => {
   let resolver: TransactionsResolver
@@ -27,6 +29,7 @@ describe('TransactionsResolver', () => {
             fetchEvents: () => mockEvents,
           })),
         },
+        mockPinoService(ContractsService.name),
       ],
     }).compile()
 

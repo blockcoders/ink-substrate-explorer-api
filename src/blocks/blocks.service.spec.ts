@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { mockBlock, mockBlocks } from '../../mocks/blocks-mocks'
+import { mockPinoService } from '../../mocks/pino-mocks'
 import { BlocksService } from './blocks.service'
 import { Block } from './entity/block.entity'
 
@@ -27,6 +28,7 @@ describe('BlocksService', () => {
             save: jest.fn().mockResolvedValue(mockBlock),
           },
         },
+        mockPinoService(BlocksService.name),
       ],
     }).compile()
 

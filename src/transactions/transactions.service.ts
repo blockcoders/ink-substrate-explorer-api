@@ -5,7 +5,6 @@ import { GenericExtrinsic } from '@polkadot/types'
 import { Vec } from '@polkadot/types-codec'
 import { AnyTuple } from '@polkadot/types-codec/types'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { SubscriptionsService } from 'src/subscriptions/subscriptions.service'
 import { Repository } from 'typeorm'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
@@ -14,7 +13,7 @@ const retry = require('async-await-retry')
 @Injectable()
 export class TransactionsService {
   constructor(
-    @InjectPinoLogger(SubscriptionsService.name)
+    @InjectPinoLogger(TransactionsService.name)
     private readonly logger: PinoLogger,
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,

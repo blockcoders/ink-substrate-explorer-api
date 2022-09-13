@@ -3,7 +3,6 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Header } from '@polkadot/types/interfaces'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { SubscriptionsService } from 'src/subscriptions/subscriptions.service'
 import { Repository } from 'typeorm'
 import { FetchBlocksInput } from './dtos/fetch-blocks.input'
 import { Block } from './entity/block.entity'
@@ -12,7 +11,7 @@ const retry = require('async-await-retry')
 @Injectable()
 export class BlocksService {
   constructor(
-    @InjectPinoLogger(SubscriptionsService.name)
+    @InjectPinoLogger(BlocksService.name)
     private readonly logger: PinoLogger,
     @InjectRepository(Block)
     private readonly blockRepository: Repository<Block>,
