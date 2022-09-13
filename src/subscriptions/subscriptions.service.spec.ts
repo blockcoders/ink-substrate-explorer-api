@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ApiPromise } from '@polkadot/api'
 import { apiMock } from '../../mocks/api-mock'
-import { mockBlock } from '../../mocks/blocks-mocks'
+import { mockBlock, mockBlocks } from '../../mocks/blocks-mocks'
 import { mockEvents } from '../../mocks/events-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockExtrinsics, mockTransactions } from '../../mocks/transactions-mock'
@@ -71,6 +71,22 @@ describe('subscriptionsService', () => {
   })
 
   describe('syncBlocks', () => {
+    it('should load all blocks', async () => {
+      jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
+      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
+      jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
+      jest
+        .spyOn(service, 'processBlock')
+        .mockResolvedValueOnce(mockBlocks[0].hash)
+        .mockResolvedValueOnce(mockBlocks[1].hash)
+
+      const result = await service.syncBlocks()
+
+      expect(result).toEqual([mockBlocks[0].hash, mockBlocks[1].hash])
+
+      expect(blockService.getLastBlock).toBeCalledTimes(1)
+    })
+
     it('should show already sync message', async () => {
       jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
       jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 100 } as any)
