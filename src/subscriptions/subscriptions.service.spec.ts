@@ -65,7 +65,7 @@ describe('subscriptionsService', () => {
         parentHash: mockBlock.parentHash,
         number,
       }
-      const result = await service.registerBlockData(header)
+      const result = await service.registerBlockData({ header, extrinsics: mockExtrinsics, records: [] })
       expect(result).toEqual(mockBlock)
     })
   })
