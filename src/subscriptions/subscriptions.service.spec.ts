@@ -8,6 +8,7 @@ import { EventsService } from '../events/events.service'
 import { mockEvents } from '../../mocks/events-mocks'
 import { ApiPromise } from '@polkadot/api'
 import { apiMock } from '../../mocks/api-mock'
+import { getLoggerToken } from 'nestjs-pino'
 jest.mock('@polkadot/api')
 
 describe('subscriptionsService', () => {
@@ -42,6 +43,14 @@ describe('subscriptionsService', () => {
             createEventsFromRecords: jest.fn().mockResolvedValue(mockEvents),
           },
         },
+        {
+          provide: getLoggerToken(SubscriptionsService.name),
+          useValue: {
+            info: (error: any) => console.log(error),
+            debug: (msg: any) => console.log(msg),
+            error: (error: any) => console.log(error),
+          },
+        },
       ],
     }).compile()
 
@@ -63,8 +72,35 @@ describe('subscriptionsService', () => {
         parentHash: mockBlock.parentHash,
         number,
       }
-      const result = await service.registerBlockData(header, mockExtrinsics, [])
+      const result = await service.registerBlockData(header)
       expect(result).toEqual(mockBlock)
+    })
+  })
+
+  describe('getBlockData', () => {
+    it('should return header, extrinics, records from a block hash', async () => {
+      const result = await service.getBlockData(api, mockBlock.hash as any)
+
+      expect(JSON.stringify(result)).toBe(
+        JSON.stringify({
+          header: {
+            hash: '0x03b26a67c6c7fda467f7b96d09b99d04ef9a8163043e72b5e5474358631afad2',
+            parentHash: '0x9b0f818b9cac7d9451819de6172e308d67c4b8ff8c2f1f6773cdb20c40573858',
+            number: {
+              toHex: () => '27',
+            },
+          },
+          extrinsics: mockExtrinsics,
+          records: [],
+        }),
+      )
+    })
+  })
+
+  describe('getBlocksToLoad', () => {
+    it('should return an array of number from 0 to 5', () => {
+      const result = service.getBlocksToLoad(0, 5)
+      expect(result).toEqual([1, 2, 3, 4, 5])
     })
   })
 
@@ -73,6 +109,19 @@ describe('subscriptionsService', () => {
       const number = 27
       const result = await service.processBlock(api, number)
       expect(result).toEqual(mockBlock.hash)
+    })
+
+    it('should return an error message', async () => {
+      try {
+        jest.spyOn(service, 'getBlockData').mockResolvedValue(Promise.reject("Can't connect to database"))
+
+        const number = 27
+        const result = await service.processBlock(api, number)
+        expect(result).rejects.toBe("Can't connect to database")
+        fail("Shouldn't reach this point")
+      } catch (error) {
+        expect(error).toEqual("Can't connect to database")
+      }
     })
   })
 })

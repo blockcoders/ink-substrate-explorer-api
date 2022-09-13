@@ -91,7 +91,7 @@ export class SubscriptionsService implements OnModuleInit {
 
   async processBlock(api: ApiPromise, blockNumber: number) {
     try {
-      await retry(
+      return await retry(
         async () => {
           const hash = await api.rpc.chain.getBlockHash(blockNumber)
           const blockData = await this.getBlockData(api, hash)
@@ -108,6 +108,7 @@ export class SubscriptionsService implements OnModuleInit {
         },
       )
     } catch (error) {
+      console.log('xxxxxxx ', error)
       this.logger.error({ error }, 'Error loading block: %d', blockNumber)
       throw error
     }
