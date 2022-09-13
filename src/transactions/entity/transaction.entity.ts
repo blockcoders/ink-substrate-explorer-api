@@ -35,11 +35,16 @@ export class Transaction extends BaseEntity {
   @Field(/* istanbul ignore next */ () => String)
   section!: string
 
-  @ManyToOne(() => Block, (block: Block) => block.transactions, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(/* istanbul ignore next */ () => Block, /* istanbul ignore next */ (block: Block) => block.transactions, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn()
   block!: Block
 
-  @OneToMany(() => Event, (event: Event) => event.transaction, { nullable: true })
+  @OneToMany(/* istanbul ignore next */ () => Event, /* istanbul ignore next */ (event: Event) => event.transaction, {
+    nullable: true,
+  })
   events!: Event[]
 
   @Column()
@@ -59,7 +64,7 @@ export class Transaction extends BaseEntity {
   tip?: number
 
   @CreateDateColumn({
-    default: () => 'NOW()',
+    default: /* istanbul ignore next */ () => 'NOW()',
   })
   createdDate!: Date
   // TODO: add this

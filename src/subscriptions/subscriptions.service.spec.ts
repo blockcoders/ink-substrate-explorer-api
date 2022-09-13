@@ -54,6 +54,19 @@ describe('subscriptionsService', () => {
     expect(service).toBeDefined()
   })
 
+  describe('onModuleInit', () => {
+    it('should show an error message', async () => {
+      try {
+        jest.spyOn(service, 'syncBlocks').mockResolvedValue(Promise.reject('grcp error'))
+
+        await service.onModuleInit()
+        fail("Shouldn't reach this point")
+      } catch (error) {
+        expect(error).toBe('grcp error')
+      }
+    })
+  })
+
   describe('registerBlockData', () => {
     it('should return the registered block', async () => {
       const number = {

@@ -12,7 +12,7 @@ export class Event extends BaseEntity {
   @Field(/* istanbul ignore next */ () => String)
   id!: string
 
-  @ManyToOne(() => Contract, (contract: Contract) => contract.events, {
+  @ManyToOne(/* istanbul ignore next */ () => Contract, (contract: Contract) => contract.events, {
     onDelete: 'SET NULL',
     nullable: true,
   })
@@ -39,10 +39,14 @@ export class Event extends BaseEntity {
   @Field(/* istanbul ignore next */ () => String)
   topics!: string
 
-  @ManyToOne(() => Transaction, (transaction: Transaction) => transaction.events, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
+  @ManyToOne(
+    /* istanbul ignore next */ () => Transaction,
+    /* istanbul ignore next */ (transaction: Transaction) => transaction.events,
+    {
+      onDelete: 'SET NULL',
+      nullable: true,
+    },
+  )
   @JoinColumn()
   transaction!: Transaction
 
@@ -51,7 +55,7 @@ export class Event extends BaseEntity {
   data?: Codec[] & IEventData
 
   @CreateDateColumn({
-    default: () => 'NOW()',
+    default: /* istanbul ignore next */ () => 'NOW()',
   })
   createdDate!: Date
 }

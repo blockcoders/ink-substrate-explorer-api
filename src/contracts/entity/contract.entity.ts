@@ -14,11 +14,13 @@ export class Contract extends BaseEntity {
   @Field(/* istanbul ignore next */ () => String, { nullable: true })
   metadata?: string
 
-  @OneToMany(() => Event, (event: Event) => event.contract, { nullable: true })
+  @OneToMany(/* istanbul ignore next */ () => Event, /* istanbul ignore next */ (event: Event) => event.contract, {
+    nullable: true,
+  })
   events!: Event[]
 
   @CreateDateColumn({
-    default: () => 'NOW()',
+    default: /* istanbul ignore next */ () => 'NOW()',
   })
   createdDate!: Date
 }
