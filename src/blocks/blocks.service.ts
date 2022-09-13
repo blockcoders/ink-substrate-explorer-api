@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Header } from '@polkadot/types/interfaces'
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
+import { SubscriptionsService } from 'src/subscriptions/subscriptions.service'
 import { Repository } from 'typeorm'
 import { FetchBlocksInput } from './dtos/fetch-blocks.input'
 import { Block } from './entity/block.entity'
@@ -9,6 +12,8 @@ const retry = require('async-await-retry')
 @Injectable()
 export class BlocksService {
   constructor(
+    @InjectPinoLogger(SubscriptionsService.name)
+    private readonly logger: PinoLogger,
     @InjectRepository(Block)
     private readonly blockRepository: Repository<Block>,
   ) {}
@@ -46,9 +51,9 @@ export class BlocksService {
         },
       )
       return persistedBlock
-    } catch (err) {
-      console.log('Error creating block: ', err)
-      throw err
+    } catch (error) {
+      this.logger.error({ error }, 'Error creating block.')
+      throw error
     }
   }
 

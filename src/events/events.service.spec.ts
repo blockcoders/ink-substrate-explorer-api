@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
+import { DecodedEvent } from '@polkadot/api-contract/types'
 import { Repository } from 'typeorm'
 import { mockContract } from '../../mocks/contracts-mocks'
 import { mockDecodedEvent, mockEventHashes, mockEvents, mockRecords } from '../../mocks/events-mocks'
@@ -8,7 +9,6 @@ import { ContractsService } from '../contracts/contracts.service'
 import { Contract } from '../contracts/entity/contract.entity'
 import { Event } from './entity/event.entity'
 import { EventsService } from './events.service'
-import { DecodedEvent } from '@polkadot/api-contract/types'
 
 describe('EventsService', () => {
   let service: EventsService
