@@ -6,7 +6,7 @@ services:
   backend:
     restart: on-failure
     depends_on:
-     - postgres
+      - postgres
     build:
       context: .
       dockerfile: Dockerfile
@@ -35,3 +35,16 @@ services:
       ink-explorer-network: 
         aliases:
           - "postgres"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "pgadmin"
