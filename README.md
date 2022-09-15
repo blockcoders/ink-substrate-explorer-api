@@ -121,7 +121,7 @@ The service needs to connect to a Substrate Blockchain. For that, the **dev-dock
 Run this command:
 
 ```
-docker-compose up -f dev-docker-compose.yaml -d
+docker-compose -f dev-docker-compose.yaml -d up
 ```
 
 Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
