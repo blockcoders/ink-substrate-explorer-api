@@ -112,7 +112,7 @@ To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-c
 Running this command it will also start a container for pgAdmin:
 
 ```
-docker-compose up -f dev-docker-compose.yaml -d
+docker-compose -f dev-docker-compose.yaml up -d
 ```
 
 ### Start a local Substrate Node (optional)
@@ -121,7 +121,7 @@ The service needs to connect to a Substrate Blockchain. For that, the **dev-dock
 Run this command:
 
 ```
-docker-compose -f dev-docker-compose.yaml -d up
+docker-compose -f dev-docker-compose.yaml up -d
 ```
 
 Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).

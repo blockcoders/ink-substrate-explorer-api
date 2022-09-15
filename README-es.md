@@ -112,7 +112,7 @@ Para levantar el servicio es necesario contar con una **BD PostgreSQL**. Para es
 Ejecutando el siguiente comando tambien instanciara un contenedor para pgAdmin:
 
 ```
-docker-compose up -f dev-docker-compose.yaml -d
+docker-compose -f dev-docker-compose.yaml up -d
 ```
 
 ### Instanciar un nodo local de Substrate (opcional)
@@ -121,7 +121,7 @@ El servicio necesita conectarse a una blockchain basada en Substrate. Para esto,
 Ejecute este comando:
 
 ```
-docker-compose up -f dev-docker-compose.yaml -d
+docker-compose -f dev-docker-compose.yaml up -d
 ```
 
 Otra forma de ejecutar un nodo local es con [esta guía de paritytech](https://github.com/paritytech/substrate-contracts-node).
