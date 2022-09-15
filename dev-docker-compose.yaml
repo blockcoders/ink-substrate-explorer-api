@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=ink
   substrate:
-    image: substrate-contracts-node
+    image: blockcoders/substrate-contracts-node
     restart: on-failure
     ports:
       - 9944:9944

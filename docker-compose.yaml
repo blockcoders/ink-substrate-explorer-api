@@ -4,6 +4,7 @@ networks:
     external: true
 services:
   backend:
+    #image: blockcoders/ink-substrate-explorer-api:latest
     restart: on-failure
     depends_on:
       - postgres

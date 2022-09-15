@@ -158,12 +158,12 @@ Running the test coverage.
 ### Download the image from DockerHub
 
 ```
-docker pull {dockerImage}
+docker pull blockcoders/ink-substrate-explorer-api:latest
 ```
 
 ### Run
 
-- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} {dockerImage}`
+- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest`
 
 Verify the image started running
 
@@ -174,8 +174,8 @@ docker ps
 The result should look like this:
 
 ```
-CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS         PORTS                                       NAMES
-3a83e1efddf9   ink-explorer   "docker-entrypoint.s…"   20 hours ago   Up 8 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   ink-explorer-api_1
+CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"   15 seconds ago   Up 14 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   funny_lumiere
 ```
 
 After the server started, the blocks should be being saved on the DB.

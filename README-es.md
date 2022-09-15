@@ -158,12 +158,12 @@ Ejecución de la cobertura de pruebas.
 ### Descarga la imagen de DockerHub
 
 ```
-docker pull {dockerImage}
+docker pull blockcoders/ink-substrate-explorer-api:latest
 ```
 
 ### Run
 
-- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} {dockerImage}`
+- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest`
 
 Verifique que la imagen comenzó a ejecutarse
 
@@ -174,15 +174,15 @@ docker ps
 El resultado debería verse así:
 
 ```
-CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS         PORTS                                       NAMES
-3a83e1efddf9   ink-explorer   "docker-entrypoint.s…"   20 hours ago   Up 8 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   ink-explorer-api_1
+CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"   15 seconds ago   Up 14 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   funny_lumiere
 ```
 
-After the server started, the blocks should be being saved on the DB.
+Después de que se inició el servidor, los bloques deberían guardarse en la base de datos.
 
 ## **API**
 
-Después de que se inició el servidor, los bloques deberían guardarse en la base de datos.
+Una vez que el servicio esta levantado y corriendo correctamente se provee una API que puede utilizarse enviado consultas de GraphQL.
 
 ### **Consultas**
 
