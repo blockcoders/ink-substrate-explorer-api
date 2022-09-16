@@ -1,7 +1,7 @@
 version: '3.7'
 networks:
   ink-explorer-network:
-    external: true
+
 services:
   backend:
     #image: blockcoders/ink-substrate-explorer-api:latest
@@ -10,7 +10,7 @@ services:
       - postgres
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dev.Dockerfile
     ports:
       - 8080:8080
     volumes:

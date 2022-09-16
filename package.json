@@ -1,9 +1,17 @@
 {
   "name": "ink-substrate-explorer-api",
   "version": "1.0.0-alpha.1",
-  "description": "",
-  "author": "",
-  "private": true,
+  "description": "Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains.",
+  "author": "Blockcoders <engineering@blockcoders.io>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "engineStrict": false,
+  "engines": {
+    "node": "^14.x || >=16.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -44,6 +52,36 @@
     "lint:ci",
     "test:cov"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blockcoders/ink-substrate-explorer-api.git"
+  },
+  "keywords": [
+    "substrate",
+    "polkadot",
+    "polkadot-js",
+    "kusama",
+    "blockchain",
+    "nft",
+    "token",
+    "erc20",
+    "trait-erc20",
+    "erc721",
+    "trait-erc721",
+    "erc1155",
+    "trait-erc1155",
+    "smart-contracts",
+    "dot",
+    "trait",
+    "ink!",
+    "ink",
+    "ink-contract",
+    "ink-event"
+  ],
+  "bugs": {
+    "url": "https://github.com/blockcoders/ink-substrate-explorer-api/issues"
+  },
+  "homepage": "https://github.com/blockcoders/ink-substrate-explorer-api#readme",
   "dependencies": {
     "@fastify/compress": "5.0.0",
     "@fastify/helmet": "8.1.0",
