@@ -3,10 +3,23 @@ import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { LoggerModule } from 'nestjs-pino'
 import { join } from 'path'
-// import { AnythingScalar } from './anything.scalar'
 import { AppResolver } from './app.resolver'
+import { BlocksModule } from './blocks/blocks.module'
+import { BlocksResolver } from './blocks/blocks.resolver'
+import { BlocksService } from './blocks/blocks.service'
+import { ContractsModule } from './contracts/contracts.module'
+import { ContractsResolver } from './contracts/contracts.resolver'
+import { ContractsService } from './contracts/contracts.service'
+import { DBModule } from './db/db.module'
 import { EnvModule } from './env/env.module'
 import { EnvService } from './env/env.service'
+import { EventsModule } from './events/events.module'
+import { EventsResolver } from './events/events.resolver'
+import { EventsService } from './events/events.service'
+import { SubscriptionsModule } from './subscriptions/subscriptions.module'
+import { TransactionsModule } from './transactions/transactions.module'
+import { TransactionsResolver } from './transactions/transactions.resolver'
+import { TransactionsService } from './transactions/transactions.service'
 
 @Module({
   imports: [
@@ -17,7 +30,7 @@ import { EnvService } from './env/env.service'
       useFactory: async (env: EnvService) => env.getPinoConfig(),
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      imports: [EnvModule],
+      imports: [EnvModule, BlocksModule, EventsModule, TransactionsModule],
       inject: [EnvService],
       driver: ApolloDriver,
       useFactory: (env: EnvService) => {
@@ -30,7 +43,23 @@ import { EnvService } from './env/env.service'
         }
       },
     }),
+    DBModule,
+    BlocksModule,
+    EventsModule,
+    TransactionsModule,
+    ContractsModule,
+    SubscriptionsModule,
   ],
-  providers: [AppResolver],
+  providers: [
+    AppResolver,
+    BlocksResolver,
+    BlocksService,
+    EventsResolver,
+    EventsService,
+    TransactionsResolver,
+    TransactionsService,
+    ContractsResolver,
+    ContractsService,
+  ],
 })
 export class AppModule {}

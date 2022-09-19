@@ -15,4 +15,10 @@ describe('AppResolver', () => {
   it('should be defined', () => {
     expect(resolver).toBeDefined()
   })
+
+  describe('status', () => {
+    it('should return "running"', () => {
+      expect(resolver.status()).toEqual('running')
+    })
+  })
 })

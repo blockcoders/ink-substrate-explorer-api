@@ -48,7 +48,6 @@ async function bootstrap() {
   })
 
   app.register(compress)
-
   await app.listen(env.PORT, '0.0.0.0', (err: Error, address: string) => {
     if (err) {
       NestLogger.error(err)

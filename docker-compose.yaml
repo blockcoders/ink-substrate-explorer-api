@@ -1,20 +1,51 @@
 version: '3.7'
+networks:
+  ink-explorer-network:
+
 services:
   backend:
+    #image: blockcoders/ink-substrate-explorer-api:latest
     restart: on-failure
     depends_on:
-     - mariadb
+      - postgres
     build:
       context: .
       dockerfile: dev.Dockerfile
-    networks:
-      - ink-substrate-explorer-api-network
     ports:
       - 8080:8080
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
-
-networks:
-  ink-substrate-explorer-api-network:
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "backend"
+    env_file:
+      - .env
+  postgres:
+    image: postgres:14.4
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=ink
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "postgres"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+    networks:
+      ink-explorer-network: 
+        aliases:
+          - "pgadmin"

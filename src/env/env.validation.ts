@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer'
-import { IsBooleanString, IsEnum, IsString, validateSync } from 'class-validator'
+import { IsBooleanString, IsEnum, IsNumberString, IsString, validateSync } from 'class-validator'
 import { Level as PinoLevel } from 'pino'
 
 export enum Environment {
@@ -33,6 +33,27 @@ export class EnvironmentVariables {
 
   @IsBooleanString()
   GRAPHQL_INTROSPECTION = false
+
+  @IsString()
+  DATABASE_HOST: string | undefined
+
+  @IsNumberString()
+  DATABASE_PORT = '5432'
+
+  @IsString()
+  DATABASE_NAME: string | undefined
+
+  @IsString()
+  DATABASE_USERNAME: string | undefined
+
+  @IsString()
+  DATABASE_PASSWORD: string | undefined
+
+  @IsNumberString()
+  DATABASE_RETRY_ATTEMPTS: string | undefined
+
+  @IsNumberString()
+  DATABASE_RETRY_DELAY: string | undefined
 }
 
 export function validate(config: Record<string, unknown>) {
