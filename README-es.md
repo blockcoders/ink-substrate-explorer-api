@@ -106,6 +106,8 @@ cp .env.sample .env
 
 - **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Número de bloques a procesar simultáneamente. Esto puede acelerar o retrasar el proceso de sincronización.</span>
 
+## **Levantando el servicio (DEV)**
+
 ### Instanciar una BD Postgres utilizando docker (opcional)
 
 Para levantar el servicio es necesario contar con una **BD PostgreSQL**. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
@@ -114,6 +116,29 @@ Ejecutando el siguiente comando tambien instanciara un contenedor para pgAdmin:
 ```
 docker-compose -f dev-docker-compose.yaml up -d
 ```
+
+Una vez que el servicio se está ejecutando, se puede acceder a pgAdmin siguiendo el enlace que se muestra en la terminal (en este caso localhost:80).
+
+![pgAdmin](/assets/pg_admin_up.png)
+
+Las credenciales para acceder a pgAdmin son (establecidas en el archivo dev-docker-compose):
+
+- PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+- PGADMIN_DEFAULT_PASSWORD: "admin"
+
+Registre un nuevo servidor en pgAdmin y establezca las credenciales para la base de datos PostgreSQL:
+
+Haga clic derecho en 'Servidores' y seleccione "Registrarse" -> "Servidor"
+
+![pgAdmin](/assets/pg_admin_select_server.png)
+
+Establezca un nombre para el servidor (en este ejemplo, "Docker")
+
+![pgAdmin](/assets/pg_admin_server_name.png)
+
+Establezca las credenciales para la base de datos PostgreSQL (esto se puede encontrar en el archivo dev-docker-compose):
+
+![pgAdmin](/assets/pg_admin_connection.png)
 
 ### Instanciar un nodo local de Substrate (opcional)
 
@@ -128,7 +153,7 @@ Otra forma de ejecutar un nodo local es con [esta guía de paritytech](https://g
 
 **Nota**: Cambie la variable WS_PROVIDER en el archivo **.env** para que sea `ws://127.0.0.1:9944`
 
-### Levantando el servicio (DEV)
+### Levantando el servicio
 
 - ### `pnpm start:dev`
 
@@ -137,21 +162,7 @@ El servicio se recargará si realiza ediciones.
 
 **Nota**: Se requiere una base de datos postgres en funcionamiento y una conexión válida a un nodo de Substrate.
 
-### Levantando el servicio (PROD)
-
-Para iniciar tanto el contenedor del servicio de back-end como el contenedor de la base de datos, ejecute:
-
-- ### `docker-compose up -d`
-
-### Test
-
-Ejecución de las pruebas unitarias.
-
-- ### `pnpm test`
-
-Ejecución de la cobertura de pruebas.
-
-- ### `pnpm test:cov`
+## **Levantando el servicio (PROD)**
 
 ## Ejecutar la imagen de Docker del servicio back-end
 
@@ -180,7 +191,31 @@ f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"
 
 Después de que se inició el servidor, los bloques deberían guardarse en la base de datos.
 
-## **API**
+Para iniciar tanto el contenedor del servicio de back-end como el contenedor de la base de datos, ejecute:
+
+- ### `docker-compose up -d`
+
+El servicio se conectará al contenedor DB y comenzará a procesar bloques.
+
+## **Testing**
+
+Ejecución de las pruebas unitarias.
+
+- ### `pnpm test`
+
+Ejecución de la cobertura de pruebas.
+
+- ### `pnpm test:cov`
+
+Probando las consultas de GraphQL.
+
+- ### `{"level":30,"time":1664298430389,"pid":1388770,"hostname":"username","name":"ink-substrate-explorer-api","msg":"App listening on http://0.0.0.0:5000"}`
+
+Una vez que el servicio back-end se está ejecutando, se puede acceder a GraphQL Playground en http://localhost:5000/graphql
+
+![backend](/assets/graphql_example.png)
+
+## **Definicion de la API**
 
 Una vez que el servicio esta levantado y corriendo correctamente se provee una API que puede utilizarse enviado consultas de GraphQL.
 
@@ -402,7 +437,7 @@ query {
 
 ```graphql
 query {
-	decodeEvents(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc")
+  decodeEvents(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc")
 }
 ```
 
@@ -446,7 +481,10 @@ query {
 
 ```graphql
 mutation Upload {
-  uploadMetadata(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc", metadata: "ewogICJzb3VyY2UiOiB7CiAgICAiaGFzaCI6I...(base64)")
+  uploadMetadata(
+    contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc"
+    metadata: "ewogICJzb3VyY2UiOiB7CiAgICAiaGFzaCI6I...(base64)"
+  )
 }
 ```
 
@@ -609,15 +647,15 @@ En caso de un tiempo de inactividad del nodo, las suscripciones se reconectarán
 ### Algunos puntos de referencia
 
 #### Utilizando BLOCK_CONCURRENCY = 100
-- 100     bloques en ~ 6 segundos
-- 1000    bloques en ~ 30.5 segundos
-- 10000   bloques en ~ 4:24 minutos
-- 100000  bloques en ~ 39.57 minutos
+
+- 100 bloques en ~ 6 segundos
+- 1000 bloques en ~ 30.5 segundos
+- 10000 bloques en ~ 4:24 minutos
+- 100000 bloques en ~ 39.57 minutos
 
 #### Utilizando BLOCK_CONCURRENCY = 1000
-- 100     bloques en ~ 0.5 segundos
-- 1000    bloques en ~ 5 segundos
-- 10000   bloques en ~ 3 minutos
-- 100000  bloques en ~ 24 minutos
 
-
+- 100 bloques en ~ 0.5 segundos
+- 1000 bloques en ~ 5 segundos
+- 10000 bloques en ~ 3 minutos
+- 100000 bloques en ~ 24 minutos

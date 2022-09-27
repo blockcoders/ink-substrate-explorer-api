@@ -106,6 +106,8 @@ cp .env.sample .env
 
 - **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Number of blocks to process concurrently. This can speed up or down the syncing process.</span>
 
+## **Starting the project (DEV)**
+
 ### Start a Postgres DB using docker (optional)
 
 To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
@@ -114,6 +116,29 @@ Running this command it will also start a container for pgAdmin:
 ```
 docker-compose -f dev-docker-compose.yaml up -d
 ```
+
+Once the service is running, pgAdmin can be accessed following the link that is shown in the terminal (In this case localhost:80).
+
+![pgAdmin](/assets/pg_admin_up.png)
+
+The credentials to access pgAdmin are (set in the dev-docker-compose file):
+
+- PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+- PGADMIN_DEFAULT_PASSWORD: "admin"
+
+Register a new server in pgAdmin and set the credentials for the PostgreSQL DB:
+
+Right click on 'Servers' and select "Register" -> "Server"
+
+![pgAdmin](/assets/pg_admin_select_server.png)
+
+Set a name for the server (In this example "Docker")
+
+![pgAdmin](/assets/pg_admin_server_name.png)
+
+Set the credentials for the PostgreSQL DB (this can be found in the dev-docker-compose file):
+
+![pgAdmin](/assets/pg_admin_connection.png)
 
 ### Start a local Substrate Node (optional)
 
@@ -128,7 +153,7 @@ Another way to run a local node is with [this paritytech guide](https://github.c
 
 **Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
 
-### Starting the project (DEV)
+### Start the service
 
 - ### `pnpm start:dev`
 
@@ -137,21 +162,7 @@ The service will reload if you make edits.
 
 **Note**: A postgresDB up and running and a valid connection to a substrate node are required.
 
-### Starting the project (PROD)
-
-To start both the Back-end service container and the DB container run:
-
-- ### `docker-compose up -d`
-
-### Test
-
-Running the unit tests.
-
-- ### `pnpm test`
-
-Running the test coverage.
-
-- ### `pnpm test:cov`
+## **Starting the project (PROD)**
 
 ## Running the Back-end service Docker image
 
@@ -180,7 +191,31 @@ f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"
 
 After the server started, the blocks should be being saved on the DB.
 
-## **API**
+To start both the Back-end service container and the DB container run:
+
+- ### `docker-compose up -d`
+
+The service will connect to the DB container and start processing blocks.
+
+## **Testing**
+
+Running the unit tests.
+
+- ### `pnpm test`
+
+Running the test coverage.
+
+- ### `pnpm test:cov`
+
+Testing the GraphQL queries.
+
+- ### `{"level":30,"time":1664298430389,"pid":1388770,"hostname":"username","name":"ink-substrate-explorer-api","msg":"App listening on http://0.0.0.0:5000"}`
+
+Once the back-end service is running, the GraphQL Playground can be accessed at http://localhost:5000/graphql
+
+![backend](/assets/graphql_example.png)
+
+## **API definition**
 
 With the service up and running an API is provided by using GraphQL queries.
 
@@ -402,7 +437,7 @@ query {
 
 ```graphql
 query {
-	decodeEvents(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc")
+  decodeEvents(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc")
 }
 ```
 
@@ -446,7 +481,10 @@ query {
 
 ```graphql
 mutation Upload {
-  uploadMetadata(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc", metadata: "ewogICJzb3VyY2UiOiB7CiAgICAiaGFzaCI6I...(base64)")
+  uploadMetadata(
+    contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc"
+    metadata: "ewogICJzb3VyY2UiOiB7CiAgICAiaGFzaCI6I...(base64)"
+  )
 }
 ```
 
@@ -604,20 +642,20 @@ The first time the node is started, it may need to start from the block 0 and lo
 
 In case of a downtime of the node, the subscriptions will be reconnected automatically recovering all new blocks from the last block that was processed.
 
-**Note**: Load all blocks may take a long time depending on the number of blocks that need to be loaded. It is recommended to use a node with a fast internet connection. The node will be able to process all blocks in a few hours. 
+**Note**: Load all blocks may take a long time depending on the number of blocks that need to be loaded. It is recommended to use a node with a fast internet connection. The node will be able to process all blocks in a few hours.
 
 ### Some benchmarks
 
 #### Using BLOCK_CONCURRENCY = 100
-- 100     blocks ~ 6 seconds
-- 1000    blocks ~ 30.5 seconds
-- 10000   blocks ~ 4:24 minutes
-- 100000  blocks ~ 39.57 minutes
+
+- 100 blocks ~ 6 seconds
+- 1000 blocks ~ 30.5 seconds
+- 10000 blocks ~ 4:24 minutes
+- 100000 blocks ~ 39.57 minutes
 
 #### Using BLOCK_CONCURRENCY = 1000
-- 100     blocks ~ 0.5 seconds
-- 1000    blocks ~ 5 seconds
-- 10000   blocks ~ 3 minutes
-- 100000  blocks ~ 24 minutes
 
-
+- 100 blocks ~ 0.5 seconds
+- 1000 blocks ~ 5 seconds
+- 10000 blocks ~ 3 minutes
+- 100000 blocks ~ 24 minutes
