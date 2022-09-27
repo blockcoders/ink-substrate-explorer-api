@@ -119,7 +119,7 @@ docker-compose -f dev-docker-compose.yaml up -d
 
 Once the service is running, pgAdmin can be accessed following the link that is shown in the terminal (In this case localhost:80).
 
-![pgAdmin](/assets/pg_admin_up.png)
+![pgAdmin](/.images/pg_admin_up.png)
 
 The credentials to access pgAdmin are (set in the dev-docker-compose file):
 
@@ -130,15 +130,15 @@ Register a new server in pgAdmin and set the credentials for the PostgreSQL DB:
 
 Right click on 'Servers' and select "Register" -> "Server"
 
-![pgAdmin](/assets/pg_admin_select_server.png)
+![pgAdmin](/.images/pg_admin_select_server.png)
 
 Set a name for the server (In this example "Docker")
 
-![pgAdmin](/assets/pg_admin_server_name.png)
+![pgAdmin](/.images/pg_admin_server_name.png)
 
 Set the credentials for the PostgreSQL DB (this can be found in the dev-docker-compose file):
 
-![pgAdmin](/assets/pg_admin_connection.png)
+![pgAdmin](/.images/pg_admin_connection.png)
 
 ### Start a local Substrate Node (optional)
 
@@ -213,7 +213,7 @@ Testing the GraphQL queries.
 
 Once the back-end service is running, the GraphQL Playground can be accessed at http://localhost:5000/graphql
 
-![backend](/assets/graphql_example.png)
+![backend](/.images/graphql_example.png)
 
 ## **API definition**
 
