@@ -77,15 +77,13 @@ describe('EventsService', () => {
   })
 
   describe('decodeEvents', () => {
-    it.skip('should return decoded event', () => {
+    it('should return decoded event', () => {
       jest.spyOn(contractRepo, 'findOneBy').mockResolvedValueOnce(mockContract as any)
-
       expect(service.decodeEvents(mockEvents as any, mockContract.address)).resolves.toHaveLength(2)
     })
 
     it('should return not found error', () => {
       jest.spyOn(contractRepo, 'findOneBy').mockResolvedValueOnce(null as any)
-
       expect(service.decodeEvents(mockEvents as any, mockContract.address)).rejects.toThrow(Error)
     })
 
