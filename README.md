@@ -1,4 +1,9 @@
-# **Ink! Explorer**
+Ink! Explorer API
+=================
+
+[![App Build](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml/badge.svg)](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/blockcoders/ink-substrate-explorer-api/badge.svg?branch=main)](https://coveralls.io/github/blockcoders/ink-substrate-explorer-api?branch=main)
+[![Known Vulnerabilities](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-api/badge.svg)](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-api)
 
 ## **About the explorer**
 
@@ -7,47 +12,6 @@ Ink Explorer is an application that provides Ink contracts related information o
 The idea of this project is to provide a tool that allows developers of Ink! explore and analyze the contracts found on the blockchain. This tool can be used to analyze the contracts found on Substrate based blockchains that are using Ink! modules. It can also be used to analyze contracts that are on a local blockchain.
 
 This project serves useful information that is not available anywhere else. Since the back end is in charge of obtaining information related to the balances, transactions and more, of the contracts that use Ink modules. Ink Explorer uses polkadot.js to communicate with the Substrate / Polkadot networks. It is safe to say that this project is a must.
-
-Blockcoders is a team that is always contributing to blockchain projects to help the growth of the ecosystem.
-
-## **About us**
-
-### Team members
-
-- Jose Ramirez
-- Fernando Sirni
-- Ruben Gutierrez
-
-### Contact
-
-- **Contact Name:** Jose Ramirez
-- **Contact Email:** jose@blockcoders.io
-- **Website:** http://blockcoders.io/
-
-### Team's experience
-
-Our team has been contributing with different projects in blockchain for a few years, building APIs, SDKs and developer tools. Our goal is to continue to drive the crypto space forward by investing intellectual capital into projects, participating actively to help shape the ecosystems we believe in.
-
-### Team Code Repos
-
-- https://github.com/blockcoders
-- https://github.com/blockcoders/nestjs-ethers
-- https://github.com/blockcoders/harmony-marketplace-sdk
-- https://github.com/blockcoders/near-rpc-providers
-- https://github.com/athenafarm/athena-vault-contracts
-- https://github.com/athenafarm/athena-sdk
-
-### Team personal Githubs
-
-- https://github.com/0xslipk
-- https://github.com/fersirni
-- https://github.com/RubenGutierrezC
-
-### Team LinkedIn Profiles
-
-- https://www.linkedin.com/in/jarcodallo/
-- https://www.linkedin.com/in/fernando-sirni-1931ba122/
-- https://www.linkedin.com/in/rubengutierrezc/
 
 ## **Get Started**
 
@@ -62,7 +26,7 @@ Our team has been contributing with different projects in blockchain for a few y
 
 ### Install all the dependencies
 
-```
+```sh
 pnpm i --frozen-lockfile
 ```
 
@@ -70,48 +34,57 @@ pnpm i --frozen-lockfile
 
 **Note**: The .env file has the configuration for GraphQL, the PostgreSQL database, Node and the RPC url of the Substrate Blockchain.
 
-```
+```sh
 cp .env.sample .env
 ```
 
-<span style="color:#2a98db"> **Service configurations** </span>
+#### Service configurations
 
-- **NODE_ENV**=development
-- **PORT**=8080
-- **LOG_NAME**=ink-substrate-explorer-api
-- **LOG_LEVEL**=debug
+```sh
+NODE_ENV=development
+PORT=8080
+LOG_NAME=ink-substrate-explorer-api
+LOG_LEVEL=debug
+```
 
-<span style="color:#2a98db"> **GraphQL configurations** </span>
+#### GraphQL configurations
 
-- **GRAPHQL_DEBUG**=true
-- **GRAPHQL_PLAYGROUND**=true
-- **GRAPHQL_SORT_SCHEMA**=true
-- **GRAPHQL_INTROSPECTION**=true
+```sh
+GRAPHQL_DEBUG=true
+GRAPHQL_PLAYGROUND=true
+GRAPHQL_SORT_SCHEMA=true
+GRAPHQL_INTROSPECTION=true
+```
 
-<span style="color:#2a98db"> **Database configurations** </span>
+#### Database configurations
 
-- **DATABASE_HOST**=postgres
-- **DATABASE_NAME**=ink
-- **DATABASE_USERNAME**=root
-- **DATABASE_PASSWORD**=password
-- **DATABASE_RETRY_ATTEMPTS**=5
-- **DATABASE_RETRY_DELAY**=3000
+```sh
+DATABASE_HOST=postgres
+DATABASE_NAME=ink
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=password
+DATABASE_RETRY_ATTEMPTS=5
+DATABASE_RETRY_DELAY=3000
+```
 
-<span style="color:#2a98db"> **Blockchain and Sync configurations** </span>
+#### Blockchain and Sync configurations
 
-- **WS_PROVIDER**=wss://rococo-contracts-rpc.polkadot.io
-- **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Set to _true_ to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to _false_ to only start processing blocks from the last existing block in the database.</span>
-
-- **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Block number from which the service will start to process blocks. (Can be genesis or some other block. For example, the first block supporting contracts) </span>
-
-- **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Number of blocks to process concurrently. This can speed up or down the syncing process.</span>
+```sh
+WS_PROVIDER=wss://rococo-contracts-rpc.polkadot.io
+# Set to true to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to false to only start processing blocks from the last existing block in the database.
+LOAD_ALL_BLOCKS=false
+# Block number from which the service will start to process blocks. (Can be genesis or some other block. For example, the first block supporting contracts)
+FIRST_BLOCK_TO_LOAD=0
+# Number of blocks to process concurrently. This can speed up or down the syncing process.
+BLOCK_CONCURRENCY=1000
+```
 
 ### Start a Postgres DB using docker (optional)
 
 To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
 Running this command it will also start a container for pgAdmin:
 
-```
+```sh
 docker-compose -f dev-docker-compose.yaml up -d
 ```
 
@@ -120,7 +93,7 @@ docker-compose -f dev-docker-compose.yaml up -d
 The service needs to connect to a Substrate Blockchain. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
 Run this command:
 
-```
+```sh
 docker-compose -f dev-docker-compose.yaml up -d
 ```
 
@@ -130,7 +103,9 @@ Another way to run a local node is with [this paritytech guide](https://github.c
 
 ### Starting the project (DEV)
 
-- ### `pnpm start:dev`
+```sh
+pnpm start:dev
+```
 
 Runs the service in the development mode.
 The service will reload if you make edits.
@@ -141,39 +116,51 @@ The service will reload if you make edits.
 
 To start both the Back-end service container and the DB container run:
 
-- ### `docker-compose up -d`
+```sh
+docker-compose up -d
+```
 
 ### Test
 
 Running the unit tests.
 
-- ### `pnpm test`
+```sh
+pnpm test
+```
 
 Running the test coverage.
 
-- ### `pnpm test:cov`
+```sh
+pnpm test:cov
+```
 
 ## Running the Back-end service Docker image
 
 ### Download the image from DockerHub
 
-```
+```sh
 docker pull blockcoders/ink-substrate-explorer-api:latest
 ```
 
 ### Run
 
-- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest`
+```sh
+# Create a docker network
+docker network create ink-explorer-network
 
-Verify the image started running
-
+# Run the service
+docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest
 ```
+
+#### Verify the image started running
+
+```sh
 docker ps
 ```
 
 The result should look like this:
 
-```
+```sh
 CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
 f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"   15 seconds ago   Up 14 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   funny_lumiere
 ```
@@ -620,4 +607,20 @@ In case of a downtime of the node, the subscriptions will be reconnected automat
 - 10000   blocks ~ 3 minutes
 - 100000  blocks ~ 24 minutes
 
+## Change Log
 
+See [Changelog](CHANGELOG.md) for more information.
+
+## Contributing
+
+Contributions welcome! See [Contributing](CONTRIBUTING.md).
+
+## Collaborators
+
+* [__Jose Ramirez__](https://github.com/0xslipk)
+* [__Fernando Sirni__](https://github.com/fersirni)
+* [__Ruben Gutierrez__](https://github.com/RubenGutierrezC)
+
+## License
+
+Licensed under the Apache 2.0 - see the [LICENSE](LICENSE) file for details.
