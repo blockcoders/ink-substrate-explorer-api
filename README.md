@@ -139,6 +139,14 @@ The service will reload if you make edits.
 
 ## **Starting the project (PROD)**
 
+To start the backend service, DB and pgAdmin containers run the following command:
+
+```sh
+docker-compose up -d
+```
+**Note**: A postgresDB up and running and a valid connection to a substrate node are required.
+Optionally comment the backend service in the docker-compose file if you want to run the image locally.
+
 ## Running the Back-end service Docker image
 
 ### Download the image from DockerHub
@@ -168,14 +176,6 @@ The result should look like this:
 ```sh
 CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
 f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"   15 seconds ago   Up 14 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   funny_lumiere
-```
-
-After the server started, the blocks should be being saved on the DB.
-
-To start both the Back-end service container and the DB container run:
-
-```sh
-docker-compose up -d
 ```
 
 The service will connect to the DB container and start processing blocks.

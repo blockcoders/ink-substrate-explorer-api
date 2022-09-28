@@ -139,6 +139,14 @@ El servicio se recargará si realiza ediciones.
 
 ## **Levantando el servicio (PROD)**
 
+Para iniciar los contenedores del servicio de backend, la BD y pgAdmin ejecutar el siguiente comando:
+
+```sh
+docker-compose up -d
+```
+**Nota**: Se requiere una base de datos postgres en funcionamiento y una conexión válida a un nodo de Substrate.
+Opcionalmente, comente el servicio de back-end en el archivo docker-compose si desea ejecutar la imagen localmente.
+
 ## Ejecutar la imagen de Docker del servicio back-end
 
 ### Descarga la imagen de DockerHub
@@ -157,7 +165,6 @@ docker network create ink-explorer-network
 docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest
 ```
 
-
 #### Verifique que la imagen comenzó a ejecutarse
 
 ```sh
@@ -169,14 +176,6 @@ El resultado debería verse así:
 ```sh
 CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
 f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"   15 seconds ago   Up 14 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   funny_lumiere
-```
-
-Después de que se inició el servidor, los bloques deberían guardarse en la base de datos.
-
-Para iniciar tanto el contenedor del servicio de back-end como el contenedor de la base de datos, ejecute:
-
-```sh
-docker-compose up -d
 ```
 
 El servicio se conectará al contenedor DB y comenzará a procesar bloques.
