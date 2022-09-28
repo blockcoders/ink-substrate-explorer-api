@@ -1,4 +1,4 @@
-FROM node:16.15-alpine AS builder
+FROM node:16.16.0-alpine AS builder
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -23,7 +23,7 @@ RUN pnpm prune --prod --no-optional
 
 # By using the FROM statement again, we are telling Docker that it should create a new,
 # fresh image without any connection to the previous one.
-FROM node:16.15-alpine AS build
+FROM node:16.16.0-alpine AS build
 
 # Create app directory
 WORKDIR /usr/src/app
