@@ -2,9 +2,12 @@ name: Pulll Request App Build
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow pull request events but only for the main and develop branch
+  # Triggers the workflow pull request events
   pull_request:
-    branches: [main, develop, staging]
+    branches: ['**']
+  # Triggers the workflow push events but only for the main
+  push:
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -60,3 +63,8 @@ jobs:
 
       - name: Build source code.
         run: pnpm build
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

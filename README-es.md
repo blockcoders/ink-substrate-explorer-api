@@ -1,4 +1,9 @@
-# **Ink! Explorer**
+Ink! Explorer API
+=================
+
+[![App Build](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml/badge.svg)](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/blockcoders/ink-substrate-explorer-api/badge.svg?branch=main)](https://coveralls.io/github/blockcoders/ink-substrate-explorer-api?branch=main)
+[![Known Vulnerabilities](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-api/badge.svg)](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-api)
 
 ## **Acerca del explorador**
 
@@ -7,47 +12,6 @@ Ink Explorer es una aplicacion que provee informacion relativa a los contratos q
 La idea de este proyecto es brindar una herramienta que permita a los desarrolladores de Ink! explorar y analizar los contratos que se encuentran en blockchain. Esta herramienta se puede utilizar para analizar los contratos que se encuentran en blockchains basadas en Substrate que utilizan módulos Ink!. También se puede usar para analizar contratos que están en una blockchain local.
 
 Este proyecto ofrece información útil que no está disponible en ningún otro lugar. Ya que el back end se encarga de obtener información relacionada con los saldos, transacciones y más, de los contratos que utilizan módulos Ink!. El explorador utiliza polkadot.js para comunicarse con las redes Substrate/Polkadot. Es seguro decir que este proyecto es imprescindible.
-
-Blockcoders es un equipo que siempre está contribuyendo a los proyectos de blockchain para ayudar al crecimiento del ecosistema.
-
-## **Sobre nosotros**
-
-### Miembros del equipo
-
-- Jose Ramirez
-- Fernando Sirni
-- Ruben Gutierrez
-
-### Contacto
-
-- **Nombre de contacto:** Jose Ramirez
-- **Email de contacto:** jose@blockcoders.io
-- **Sitio web:** http://blockcoders.io/
-
-### Experiencia del equipo
-
-Nuestro equipo ha estado contribuyendo con diferentes proyectos en blockchain durante algunos años, construyendo API, SDK y herramientas para desarrolladores. Nuestro objetivo es continuar impulsando el mundo crypto invirtiendo capital intelectual en proyectos, participando activamente para ayudar a dar forma a los ecosistemas en los que creemos.
-
-### Repositorios del equipo
-
-- https://github.com/blockcoders
-- https://github.com/blockcoders/nestjs-ethers
-- https://github.com/blockcoders/harmony-marketplace-sdk
-- https://github.com/blockcoders/near-rpc-providers
-- https://github.com/athenafarm/athena-vault-contracts
-- https://github.com/athenafarm/athena-sdk
-
-### Githubs de los miembros del equipo
-
-- https://github.com/0xslipk
-- https://github.com/fersirni
-- https://github.com/RubenGutierrezC
-
-### Perfiles de linkedIn de los miembros del equipo
-
-- https://www.linkedin.com/in/jarcodallo/
-- https://www.linkedin.com/in/fernando-sirni-1931ba122/
-- https://www.linkedin.com/in/rubengutierrezc/
 
 ## **Introduccion**
 
@@ -62,7 +26,7 @@ Nuestro equipo ha estado contribuyendo con diferentes proyectos en blockchain du
 
 ### Instalar todas las dependencias
 
-```
+```sh
 pnpm i --frozen-lockfile
 ```
 
@@ -70,41 +34,50 @@ pnpm i --frozen-lockfile
 
 **Nota**: El archivo .env tiene la configuracion para GraphQL, la base de datos PostgreSQL, Node y la url del RPC de la blockchain basada en Substrate.
 
-```
+```sh
 cp .env.sample .env
 ```
 
-<span style="color:#2a98db"> **Configuraciones del servicio** </span>
+#### Configuraciones del servicio
 
-- **NODE_ENV**=development
-- **PORT**=8080
-- **LOG_NAME**=ink-substrate-explorer-api
-- **LOG_LEVEL**=debug
+```sh
+NODE_ENV=development
+PORT=8080
+LOG_NAME=ink-substrate-explorer-api
+LOG_LEVEL=debug
+```
 
-<span style="color:#2a98db"> **Configuraciones de GraphQL** </span>
+#### Configuraciones de GraphQL
 
-- **GRAPHQL_DEBUG**=true
-- **GRAPHQL_PLAYGROUND**=true
-- **GRAPHQL_SORT_SCHEMA**=true
-- **GRAPHQL_INTROSPECTION**=true
+```sh
+GRAPHQL_DEBUG=true
+GRAPHQL_PLAYGROUND=true
+GRAPHQL_SORT_SCHEMA=true
+GRAPHQL_INTROSPECTION=true
+```
 
-<span style="color:#2a98db"> **Configuraciones de la base de datos** </span>
+#### Configuraciones de la base de datos
 
-- **DATABASE_HOST**=postgres
-- **DATABASE_NAME**=ink
-- **DATABASE_USERNAME**=root
-- **DATABASE_PASSWORD**=password
-- **DATABASE_RETRY_ATTEMPTS**=5
-- **DATABASE_RETRY_DELAY**=3000
+```sh
+DATABASE_HOST=postgres
+DATABASE_NAME=ink
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=password
+DATABASE_RETRY_ATTEMPTS=5
+DATABASE_RETRY_DELAY=3000
+```
 
-<span style="color:#2a98db"> **Configuraciones de la blockchain y la sincronizacion de datos** </span>
+#### Configuraciones de la blockchain y la sincronizacion de datos
 
-- **WS_PROVIDER**=wss://rococo-contracts-rpc.polkadot.io
-- **LOAD_ALL_BLOCKS**=false - <span style="color:#2a98db"> Asignar el valor _true_ para procesar cada bloque desde FIRST_BLOCK_TO_LOAD hasta el ultimo bloque de la cadena. Asignar el valor _false_ para solo comenzar a procesar los bloques desde el ultimo bloque existente en la base de datos.</span>
-
-- **FIRST_BLOCK_TO_LOAD**=0 - <span style="color:#2a98db"> Número de bloque a partir del cual el servicio comenzará a procesar bloques. (Puede ser génesis o algún otro bloque. Por ejemplo, el primer bloque admite contratos) </span>
-
-- **BLOCK_CONCURRENCY**=1000 - <span style="color:#2a98db"> Número de bloques a procesar simultáneamente. Esto puede acelerar o retrasar el proceso de sincronización.</span>
+```sh
+WS_PROVIDER=wss://rococo-contracts-rpc.polkadot.io
+# Asignar el valor _true_ para procesar cada bloque desde FIRST_BLOCK_TO_LOAD hasta el ultimo bloque de la cadena. Asignar el valor _false_ para solo comenzar a procesar los bloques desde el ultimo bloque existente en la base de datos.
+LOAD_ALL_BLOCKS=false
+# Número de bloque a partir del cual el servicio comenzará a procesar bloques. (Puede ser génesis o algún otro bloque. Por ejemplo, el primer bloque admite contratos)
+FIRST_BLOCK_TO_LOAD=0
+# Número de bloques a procesar simultáneamente. Esto puede acelerar o retrasar el proceso de sincronización.
+BLOCK_CONCURRENCY=1000
+```
 
 ## **Levantando el servicio (DEV)**
 
@@ -113,7 +86,7 @@ cp .env.sample .env
 Para levantar el servicio es necesario contar con una **BD PostgreSQL**. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
 Ejecutando el siguiente comando tambien instanciara un contenedor para pgAdmin:
 
-```
+```sh
 docker-compose -f dev-docker-compose.yaml up -d
 ```
 
@@ -145,7 +118,7 @@ Establezca las credenciales para la base de datos PostgreSQL (esto se puede enco
 El servicio necesita conectarse a una blockchain basada en Substrate. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
 Ejecute este comando:
 
-```
+```sh
 docker-compose -f dev-docker-compose.yaml up -d
 ```
 
@@ -155,7 +128,9 @@ Otra forma de ejecutar un nodo local es con [esta guía de paritytech](https://g
 
 ### Levantando el servicio
 
-- ### `pnpm start:dev`
+```sh
+pnpm start:dev
+```
 
 Ejecuta el servicio en el modo de desarrollo.
 El servicio se recargará si realiza ediciones.
@@ -168,23 +143,30 @@ El servicio se recargará si realiza ediciones.
 
 ### Descarga la imagen de DockerHub
 
-```
+```sh
 docker pull blockcoders/ink-substrate-explorer-api:latest
 ```
 
 ### Run
 
-- ### `docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest`
+```sh
+# Crear la red de docker
+docker network create ink-explorer-network
 
-Verifique que la imagen comenzó a ejecutarse
-
+# Correr servicio
+docker run -it -p 5000:5000 --network ink-explorer-network --env-file {pathToEnvFile} blockcoders/ink-substrate-explorer-api:latest
 ```
+
+
+#### Verifique que la imagen comenzó a ejecutarse
+
+```sh
 docker ps
 ```
 
 El resultado debería verse así:
 
-```
+```sh
 CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
 f31a7d0fd6c8   blockcoders/ink-substrate-explorer-api   "docker-entrypoint.s…"   15 seconds ago   Up 14 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   funny_lumiere
 ```
@@ -193,7 +175,9 @@ Después de que se inició el servidor, los bloques deberían guardarse en la ba
 
 Para iniciar tanto el contenedor del servicio de back-end como el contenedor de la base de datos, ejecute:
 
-- ### `docker-compose up -d`
+```sh
+docker-compose up -d
+```
 
 El servicio se conectará al contenedor DB y comenzará a procesar bloques.
 
@@ -201,15 +185,21 @@ El servicio se conectará al contenedor DB y comenzará a procesar bloques.
 
 Ejecución de las pruebas unitarias.
 
-- ### `pnpm test`
+```sh
+pnpm test
+```
 
 Ejecución de la cobertura de pruebas.
 
-- ### `pnpm test:cov`
+```sh
+pnpm test:cov
+```
 
 Probando las consultas de GraphQL.
 
-- ### `{"level":30,"time":1664298430389,"pid":1388770,"hostname":"username","name":"ink-substrate-explorer-api","msg":"App listening on http://0.0.0.0:5000"}`
+```sh
+{"level":30,"time":1664298430389,"pid":1388770,"hostname":"username","name":"ink-substrate-explorer-api","msg":"App listening on http://0.0.0.0:5000"}
+```
 
 Una vez que el servicio back-end se está ejecutando, se puede acceder a GraphQL Playground en http://localhost:5000/graphql
 
@@ -659,3 +649,21 @@ En caso de un tiempo de inactividad del nodo, las suscripciones se reconectarán
 - 1000 bloques en ~ 5 segundos
 - 10000 bloques en ~ 3 minutos
 - 100000 bloques en ~ 24 minutos
+
+## Registro de cambios
+
+Consulte [Changelog](CHANGELOG.md) para más información.
+
+## Contribuye
+
+¡Las contribuciones son bienvenidas! Consulte [Contributing](CONTRIBUTING.md).
+
+## Colaboradores
+
+* [__Jose Ramirez__](https://github.com/0xslipk)
+* [__Fernando Sirni__](https://github.com/fersirni)
+* [__Ruben Gutierrez__](https://github.com/RubenGutierrezC)
+
+## Licencia
+
+Con licencia de Apache 2.0 - consulte el archivo [LICENSE](LICENSE) para obtener más información.
