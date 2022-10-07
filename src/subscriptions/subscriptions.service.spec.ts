@@ -58,14 +58,17 @@ describe('subscriptionsService', () => {
   })
 
   describe('onModuleInit', () => {
-    it('should show an error message', async () => {
+    it('should show an error message', () => {
       try {
-        jest.spyOn(service, 'syncBlocks').mockResolvedValue(Promise.reject('grcp error'))
+        jest.spyOn(service, 'syncBlocks').mockImplementation(() => {
+          throw new Error('grcp error')
+        })
 
-        await service.onModuleInit()
+        service.onModuleInit()
         fail("Shouldn't reach this point")
       } catch (error) {
-        expect(error).toBe('grcp error')
+        console.log(error)
+        expect((error as Error).message).toBe('grcp error')
       }
     })
   })

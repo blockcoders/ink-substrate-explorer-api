@@ -26,10 +26,10 @@ export class SubscriptionsService implements OnModuleInit {
     private readonly eventsService: EventsService,
   ) {}
 
-  async onModuleInit(): Promise<void> {
+  onModuleInit(): void {
     try {
       this.logger.info('Subscribing to new heads...')
-      await this.syncBlocks()
+      this.syncBlocks()
     } catch (error) {
       this.logger.error({ error }, 'Error while processing blocks.')
       throw error
