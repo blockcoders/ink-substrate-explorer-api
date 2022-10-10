@@ -20,12 +20,12 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
+    env_file:
+      - .env
     networks:
       ink-explorer-network:
         aliases:
           - "backend"
-    env_file:
-      - .env
   postgres:
     image: postgres:14.4
     restart: always
