@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql'
 import {
   BaseEntity,
   Column,
@@ -34,6 +34,10 @@ export class Transaction extends BaseEntity {
   @Column()
   @Field(/* istanbul ignore next */ () => String)
   section!: string
+
+  @Column('bigint')
+  @Field(/* istanbul ignore next */ () => Float)
+  timestamp!: number
 
   @ManyToOne(/* istanbul ignore next */ () => Block, /* istanbul ignore next */ (block: Block) => block.transactions, {
     onDelete: 'SET NULL',

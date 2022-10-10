@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, Float, ObjectType } from '@nestjs/graphql'
 import { Codec } from '@polkadot/types-codec/types'
 import { IEventData } from '@polkadot/types/types'
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm'
@@ -38,6 +38,10 @@ export class Event extends BaseEntity {
   @Column()
   @Field(/* istanbul ignore next */ () => String)
   topics!: string
+
+  @Column('bigint')
+  @Field(/* istanbul ignore next */ () => Float)
+  timestamp!: number
 
   @ManyToOne(
     /* istanbul ignore next */ () => Transaction,

@@ -114,7 +114,12 @@ describe('EventsService', () => {
         .mockResolvedValueOnce(mockEvents[0] as never)
         .mockResolvedValueOnce(mockEvents[1] as never)
 
-      const events = await service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)
+      const events = await service.createEventsFromRecords(
+        mockRecords as any,
+        1,
+        mockTransaction.hash,
+        mockTransaction.timestamp,
+      )
 
       expect(events).toStrictEqual(mockEvents)
     })
@@ -131,7 +136,12 @@ describe('EventsService', () => {
         .mockResolvedValueOnce(mockEvents[0] as never)
         .mockResolvedValueOnce(mockEvents[1] as never)
 
-      const events = await service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)
+      const events = await service.createEventsFromRecords(
+        mockRecords as any,
+        1,
+        mockTransaction.hash,
+        mockTransaction.timestamp,
+      )
 
       expect(events).toStrictEqual(mockEvents)
     })

@@ -3,7 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { mockPinoService } from '../../mocks/pino-mocks'
-import { mockExtrinsics, mockSavedTransactions, mockTransaction, mockTransactions } from '../../mocks/transactions-mock'
+import {
+  mockExtrinsics,
+  mockSavedTransactions,
+  mockTimestamp,
+  mockTransaction,
+  mockTransactions,
+} from '../../mocks/transactions-mock'
 import { Transaction } from './entity/transaction.entity'
 import { TransactionsService } from './transactions.service'
 
@@ -66,7 +72,7 @@ describe('TransactionsService', () => {
         .mockResolvedValueOnce(mockSavedTransactions[0])
         .mockResolvedValueOnce(mockSavedTransactions[1])
       const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
-      const savedTxs = await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)
+      const savedTxs = await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash, mockTimestamp)
       mockSavedTransactions.forEach((tx, i) => {
         expect(savedTxs[i].hash).toEqual(tx.hash)
         expect(savedTxs[i].blockHash).toEqual(tx.blockHash)
@@ -87,7 +93,7 @@ describe('TransactionsService', () => {
         .mockResolvedValueOnce(mockSavedTransactions[0])
         .mockResolvedValueOnce(mockSavedTransactions[1])
       const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
-      const savedTxs = await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)
+      const savedTxs = await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash, mockTimestamp)
       mockSavedTransactions.forEach((tx, i) => {
         expect(savedTxs[i].hash).toEqual(tx.hash)
         expect(savedTxs[i].blockHash).toEqual(tx.blockHash)
@@ -107,7 +113,7 @@ describe('TransactionsService', () => {
       try {
         jest.spyOn(repo, 'findOneBy').mockResolvedValue(Promise.reject("Can't connect to database"))
         const blockHash = '0xffcfae3ecc9ab7b79fc0cd451dad35477a32219b219b29584b968826ac04c1a1'
-        await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash)
+        await service.createTransactionsFromExtrinsics(mockExtrinsics as any, blockHash, mockTimestamp)
         fail("Shouldn't reach this point")
       } catch (error) {
         expect(error).toEqual("Can't connect to database")
