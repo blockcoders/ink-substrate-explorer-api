@@ -35,6 +35,7 @@ export class TransactionsService {
   async createTransactionsFromExtrinsics(
     extrinsics: Vec<GenericExtrinsic<AnyTuple>>,
     blockHash: string,
+    timestamp: number,
   ): Promise<Transaction[]> {
     return Promise.all(
       extrinsics.map(async (extrinsic) => {
@@ -50,6 +51,7 @@ export class TransactionsService {
             signer: signer.toString(),
             tip: tip.toNumber(),
             blockHash: blockHash.toLowerCase(),
+            timestamp,
           })
           const transaction = await retry(
             async () => {

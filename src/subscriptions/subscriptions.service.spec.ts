@@ -4,7 +4,7 @@ import { apiMock } from '../../mocks/api-mock'
 import { mockBlock, mockBlocks } from '../../mocks/blocks-mocks'
 import { mockEvents } from '../../mocks/events-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
-import { mockExtrinsics, mockTransactions } from '../../mocks/transactions-mock'
+import { mockExtrinsics, mockTimestamp, mockTransactions } from '../../mocks/transactions-mock'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
@@ -133,6 +133,7 @@ describe('subscriptionsService', () => {
           },
           extrinsics: mockExtrinsics,
           records: [],
+          timestamp: mockTimestamp,
         }),
       )
     })

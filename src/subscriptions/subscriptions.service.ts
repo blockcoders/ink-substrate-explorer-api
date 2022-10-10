@@ -84,7 +84,9 @@ export class SubscriptionsService implements OnModuleInit {
   async getBlockData(api: ApiPromise, hash: BlockHash) {
     const [block, records] = await Promise.all([api.rpc.chain.getBlock(hash), api.query.system.events.at(hash)])
     const { header, extrinsics } = block.block || {}
-    return { header, extrinsics, records }
+    const timestampArgs = extrinsics.map((e) => e.method).find((m) => m.section === 'timestamp' && m.method === 'set')
+    const timestamp = Number(timestampArgs?.args[0].toString())
+    return { header, extrinsics, records, timestamp }
   }
 
   getBlocksToLoad(from: number, to: number): number[] {
@@ -116,11 +118,15 @@ export class SubscriptionsService implements OnModuleInit {
   }
 
   async registerBlockData(blockData: any) {
-    const { header, extrinsics, records } = blockData
-    const block = await this.blocksService.createFromHeader(header)
-    const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
+    const { header, extrinsics, records, timestamp } = blockData
+    const block = await this.blocksService.createFromHeader(header, timestamp)
+    const transactions = await this.transactionsService.createTransactionsFromExtrinsics(
+      extrinsics,
+      block.hash,
+      timestamp,
+    )
     for (const [index, tx] of transactions.entries()) {
-      await this.eventsService.createEventsFromRecords(records, index, tx.hash)
+      await this.eventsService.createEventsFromRecords(records, index, tx.hash, timestamp)
     }
     return block
   }
