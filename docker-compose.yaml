@@ -13,7 +13,7 @@ services:
       - postgres
     build:
       context: .
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile #dev.Dockefile
     ports:
       - 8080:8080
     volumes:
