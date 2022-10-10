@@ -33,6 +33,7 @@ export class EventsService {
     records: Vec<FrameSystemEventRecord>,
     extrinsicIndex: number,
     transactionHash: string,
+    timestamp: number,
   ): Promise<Event[]> {
     const events = records.filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(extrinsicIndex))
     const contractEmittedEvents = events.filter((record) => record?.event?.method === 'ContractEmitted')
@@ -66,6 +67,7 @@ export class EventsService {
         topics: topics.toString(),
         data,
         transactionHash: transactionHash.toString().toLowerCase(),
+        timestamp,
       })
     })
     return Promise.all(eventsToSave.map((event) => this.eventRepository.save(event)))

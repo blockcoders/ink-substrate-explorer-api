@@ -77,15 +77,13 @@ describe('EventsService', () => {
   })
 
   describe('decodeEvents', () => {
-    it.skip('should return decoded event', () => {
+    it('should return decoded event', () => {
       jest.spyOn(contractRepo, 'findOneBy').mockResolvedValueOnce(mockContract as any)
-
       expect(service.decodeEvents(mockEvents as any, mockContract.address)).resolves.toHaveLength(2)
     })
 
     it('should return not found error', () => {
       jest.spyOn(contractRepo, 'findOneBy').mockResolvedValueOnce(null as any)
-
       expect(service.decodeEvents(mockEvents as any, mockContract.address)).rejects.toThrow(Error)
     })
 
@@ -116,7 +114,12 @@ describe('EventsService', () => {
         .mockResolvedValueOnce(mockEvents[0] as never)
         .mockResolvedValueOnce(mockEvents[1] as never)
 
-      const events = await service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)
+      const events = await service.createEventsFromRecords(
+        mockRecords as any,
+        1,
+        mockTransaction.hash,
+        mockTransaction.timestamp,
+      )
 
       expect(events).toStrictEqual(mockEvents)
     })
@@ -133,7 +136,12 @@ describe('EventsService', () => {
         .mockResolvedValueOnce(mockEvents[0] as never)
         .mockResolvedValueOnce(mockEvents[1] as never)
 
-      const events = await service.createEventsFromRecords(mockRecords as any, 1, mockTransaction.hash)
+      const events = await service.createEventsFromRecords(
+        mockRecords as any,
+        1,
+        mockTransaction.hash,
+        mockTransaction.timestamp,
+      )
 
       expect(events).toStrictEqual(mockEvents)
     })
