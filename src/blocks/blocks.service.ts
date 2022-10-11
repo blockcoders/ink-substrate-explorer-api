@@ -26,7 +26,11 @@ export class BlocksService {
   }
 
   async fetchBlocks(args: FetchBlocksInput): Promise<Block[]> {
-    return this.blockRepository.find(args)
+    const { skip, take, orderByNumber, orderAsc } = args
+    const order: any = {}
+    const by = orderByNumber ? 'number' : 'timestamp'
+    order[by] = orderAsc ? 'ASC' : 'DESC'
+    return this.blockRepository.find({ skip, take, order })
   }
 
   async createFromHeader(header: Header, timestamp: number): Promise<Block> {

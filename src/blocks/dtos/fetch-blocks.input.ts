@@ -7,4 +7,10 @@ export class FetchBlocksInput {
 
   @Field(/* istanbul ignore next */ () => Int)
   take = 10
+
+  @Field(/* istanbul ignore next */ () => Boolean)
+  orderByNumber?: boolean = false
+
+  @Field(/* istanbul ignore next */ () => Boolean)
+  orderAsc?: boolean = false
 }
