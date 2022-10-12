@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { GenericExtrinsic } from '@polkadot/types'
 import { Vec } from '@polkadot/types-codec'
-import { AnyTuple } from '@polkadot/types-codec/types'
+import { AnyTuple, ArgsDef } from '@polkadot/types-codec/types'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import { Repository } from 'typeorm'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
@@ -40,18 +40,40 @@ export class TransactionsService {
     return Promise.all(
       extrinsics.map(async (extrinsic) => {
         try {
-          const { hash: transactionHash, nonce, signature, signer, tip } = extrinsic
-          const { method, section } = extrinsic.method
+          const {
+            hash: transactionHash,
+            nonce,
+            signature,
+            signer,
+            encodedLength,
+            registry,
+            tip,
+            era,
+            version,
+            type,
+            callIndex,
+          } = extrinsic
+          const { method, section, args, argsDef } = extrinsic.method
+          const formattedArgs = this.formatArgs(args, argsDef)
           const tx = this.transactionRepository.create({
             hash: transactionHash.toString().toLowerCase(),
-            method: method,
+            blockHash: blockHash.toLowerCase(),
             section: section,
-            nonce: nonce.toNumber(),
+            method: method,
             signature: signature.toString(),
             signer: signer.toString(),
+            nonce: nonce.toNumber(),
             tip: tip.toNumber(),
-            blockHash: blockHash.toLowerCase(),
             timestamp,
+            version: version,
+            type: type,
+            encodedLength: encodedLength,
+            callIndex: callIndex.toString(),
+            decimals: registry.chainDecimals.toString(),
+            ss58: registry.chainSS58?.toString(),
+            tokens: registry.chainTokens.toString(),
+            era: JSON.stringify(era),
+            args: JSON.stringify(formattedArgs),
           })
           const transaction = await retry(
             async () => {
@@ -72,5 +94,14 @@ export class TransactionsService {
         }
       }),
     )
+  }
+
+  // This function creates a new object with the same keys as the argsDef object and the values from the args object
+  formatArgs(args: AnyTuple, argsDef: ArgsDef) {
+    const formattedArgs: any = {}
+    Object.keys(argsDef).forEach((key: any, index) => {
+      formattedArgs[key] = args[index]
+    })
+    return formattedArgs
   }
 }
