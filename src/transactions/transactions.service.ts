@@ -6,6 +6,7 @@ import { Vec } from '@polkadot/types-codec'
 import { AnyTuple, ArgsDef } from '@polkadot/types-codec/types'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import { Repository } from 'typeorm'
+import { FetchTransactionsByContractInput } from './dtos/fetch-transactions-by-contract.input'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
 const retry = require('async-await-retry')
@@ -29,7 +30,7 @@ export class TransactionsService {
 
   async fetchTransactions(args: FetchTransactionsInput): Promise<Transaction[]> {
     const { skip, take, blockHash } = args
-    return this.transactionRepository.find({ skip, take, where: { blockHash } })
+    return this.transactionRepository.find({ skip, take, where: { blockHash }, order: { timestamp: 'DESC' } })
   }
 
   async createTransactionsFromExtrinsics(
@@ -103,5 +104,17 @@ export class TransactionsService {
       formattedArgs[key] = args[index]
     })
     return formattedArgs
+  }
+
+  async getTransactionsByContractAddress(args: FetchTransactionsByContractInput): Promise<Transaction[]> {
+    const { skip = 0, take = 10, address, order = 'DESC' } = args
+    return this.transactionRepository
+      .createQueryBuilder('transaction')
+      .leftJoin('transaction.events', 'event')
+      .where('event.contractAddress = :address', { address })
+      .skip(skip)
+      .take(take)
+      .orderBy('transaction.timestamp', order)
+      .getMany()
   }
 }

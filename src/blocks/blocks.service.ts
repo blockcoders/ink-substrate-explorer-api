@@ -33,7 +33,7 @@ export class BlocksService {
     return this.blockRepository.find({ skip, take, order })
   }
 
-  async createFromHeader(header: Header, timestamp: number): Promise<Block> {
+  async createFromHeader(header: Header, timestamp: number, encodedLength: number): Promise<Block> {
     try {
       const { hash, parentHash, number } = header
       const block = this.blockRepository.create({
@@ -41,6 +41,7 @@ export class BlocksService {
         parentHash: parentHash.toString().toLowerCase(),
         number: parseInt(number.toHex()),
         timestamp,
+        encodedLength,
       })
       const persistedBlock = await retry(
         async () => {

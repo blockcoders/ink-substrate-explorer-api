@@ -24,6 +24,10 @@ export class Block extends BaseEntity {
   @Field(/* istanbul ignore next */ () => Float)
   timestamp!: number
 
+  @Column('bigint')
+  @Field(/* istanbul ignore next */ () => Float)
+  encodedLength!: number
+
   @OneToMany(
     /* istanbul ignore next */ () => Transaction,
     /* istanbul ignore next */ (transaction: Transaction) => transaction.block,

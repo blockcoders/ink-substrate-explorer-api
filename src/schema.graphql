@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type Block {
+  encodedLength: Float!
   hash: String!
   number: Int!
   parentHash: String!
@@ -39,6 +40,7 @@ type Query {
   getEvents(contract: String, skip: Int = 0, take: Int = 20, transactionHash: String): [Event!]!
   getTransaction(hash: String!): Transaction!
   getTransactions(blockHash: String, skip: Int = 0, take: Int = 20): [Transaction!]!
+  getTransactionsByAddress(address: String!, order: String = "DESC", skip: Int = 0, take: Int = 10): [Transaction!]!
   status: String!
 }
 
