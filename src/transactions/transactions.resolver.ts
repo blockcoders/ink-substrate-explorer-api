@@ -21,7 +21,7 @@ export class TransactionsResolver {
   }
 
   @Query(/* istanbul ignore next */ () => [Transaction])
-  async getTransactionsByAddress(@Args() args: FetchTransactionsByContractInput) {
+  async getTransactionsByContract(@Args() args: FetchTransactionsByContractInput) {
     return this.transactionsService.getTransactionsByContractAddress(args)
   }
 
