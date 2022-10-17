@@ -107,14 +107,14 @@ export class TransactionsService {
   }
 
   async getTransactionsByContractAddress(args: FetchTransactionsByContractInput): Promise<Transaction[]> {
-    const { skip = 0, take = 10, address, order = 'DESC' } = args
+    const { skip = 0, take = 10, address, orderAsc = false } = args
     return this.transactionRepository
       .createQueryBuilder('transaction')
       .leftJoin('transaction.events', 'event')
       .where('event.contractAddress = :address', { address })
       .skip(skip)
       .take(take)
-      .orderBy('transaction.timestamp', order)
+      .orderBy('transaction.timestamp', orderAsc ? 'ASC' : 'DESC')
       .getMany()
   }
 }

@@ -11,6 +11,6 @@ export class FetchTransactionsByContractInput {
   @Field(/* istanbul ignore next */ () => Int)
   take? = 10
 
-  @Field(/* istanbul ignore next */ () => String)
-  order?: 'ASC' | 'DESC' = 'DESC'
+  @Field(/* istanbul ignore next */ () => Boolean)
+  orderAsc?: boolean = false
 }
