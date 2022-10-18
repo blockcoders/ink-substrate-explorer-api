@@ -29,8 +29,13 @@ export class TransactionsService {
   }
 
   async fetchTransactions(args: FetchTransactionsInput): Promise<Transaction[]> {
-    const { skip, take, blockHash } = args
-    return this.transactionRepository.find({ skip, take, where: { blockHash }, order: { timestamp: 'DESC' } })
+    const { skip, take, blockHash, orderAsc } = args
+    return this.transactionRepository.find({
+      skip,
+      take,
+      where: { blockHash },
+      order: { timestamp: orderAsc ? 'ASC' : 'DESC' },
+    })
   }
 
   async createTransactionsFromExtrinsics(

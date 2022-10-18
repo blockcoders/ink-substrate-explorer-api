@@ -21,8 +21,13 @@ export class EventsService {
   ) {}
 
   async fetchEvents(args: FetchEventsInput): Promise<Event[]> {
-    const { skip, take, contract, transactionHash } = args
-    return this.eventRepository.find({ skip, take, where: { contract: { address: contract }, transactionHash } })
+    const { skip, take, contract, transactionHash, orderAsc } = args
+    return this.eventRepository.find({
+      skip,
+      take,
+      where: { contract: { address: contract }, transactionHash },
+      order: { timestamp: orderAsc ? 'ASC' : 'DESC' },
+    })
   }
 
   async findById(id: string): Promise<Event | null> {

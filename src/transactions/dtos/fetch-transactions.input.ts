@@ -10,4 +10,7 @@ export class FetchTransactionsInput {
 
   @Field(/* istanbul ignore next */ () => String, { nullable: true })
   blockHash?: string
+
+  @Field(/* istanbul ignore next */ () => Boolean)
+  orderAsc?: boolean = false
 }
