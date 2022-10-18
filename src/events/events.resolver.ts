@@ -11,6 +11,11 @@ export class EventsResolver {
     return this.eventsService.fetchEvents(args)
   }
 
+  @Query(/* istanbul ignore next */ () => Event)
+  async getEvent(@Args('id', { type: () => String }) id: string) {
+    return this.eventsService.findById(id)
+  }
+
   @Query(/* istanbul ignore next */ () => String)
   async decodeEvents(@Args('contractAddress', { type: () => String }) contractAddress: string) {
     try {

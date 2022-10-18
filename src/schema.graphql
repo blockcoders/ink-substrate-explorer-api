@@ -37,6 +37,7 @@ type Query {
   getBlock(hash: String!): Block!
   getBlocks(orderAsc: Boolean = false, orderByNumber: Boolean = false, skip: Int = 0, take: Int = 10): [Block!]!
   getContract(address: String!): Contract!
+  getEvent(id: String!): Event!
   getEvents(contract: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20, transactionHash: String): [Event!]!
   getTransaction(hash: String!): Transaction!
   getTransactions(blockHash: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20): [Transaction!]!
