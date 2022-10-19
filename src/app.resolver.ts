@@ -6,4 +6,9 @@ export class AppResolver {
   status(): string {
     return 'running'
   }
+
+  @Query(/* istanbul ignore next */ () => String)
+  version(): string {
+    return 'v1.0.1'
+  }
 }

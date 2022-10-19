@@ -46,6 +46,7 @@ type Query {
   getTransactions(blockHash: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20): [Transaction!]!
   getTransactionsByContract(address: String!, orderAsc: Boolean = false, skip: Int = 0, take: Int = 10): [Transaction!]!
   status: String!
+  version: String!
 }
 
 type Transaction {
