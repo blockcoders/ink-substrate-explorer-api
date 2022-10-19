@@ -19,6 +19,8 @@ type Contract {
 
 type Event {
   data: String
+  decodedData: String
+  formattedData: String!
   id: String!
   index: String!
   method: String!
@@ -33,7 +35,8 @@ type Mutation {
 }
 
 type Query {
-  decodeEvents(contractAddress: String!): String!
+  decodeEvent(contractAddress: String!, id: String!): String!
+  decodeEvents(contract: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20, transactionHash: String): String!
   getBlock(hash: String!): Block!
   getBlocks(orderAsc: Boolean = false, orderByNumber: Boolean = false, skip: Int = 0, take: Int = 10): [Block!]!
   getContract(address: String!): Contract!

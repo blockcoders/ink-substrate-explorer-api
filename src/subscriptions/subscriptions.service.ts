@@ -85,7 +85,7 @@ export class SubscriptionsService implements OnModuleInit {
     const encodedLength = block.encodedLength
     const { header, extrinsics } = block.block || {}
     const timestampArgs = extrinsics.map((e) => e.method).find((m) => m.section === 'timestamp' && m.method === 'set')
-    const timestamp = Number(timestampArgs?.args[0].toString())
+    const timestamp = Number(timestampArgs?.args[0].toString()) || Date.now()
     return { header, extrinsics, records, timestamp, encodedLength }
   }
 

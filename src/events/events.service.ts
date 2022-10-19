@@ -5,6 +5,7 @@ import { DecodedEvent } from '@polkadot/api-contract/types'
 import { Vec } from '@polkadot/types-codec'
 import { FrameSystemEventRecord } from '@polkadot/types/lookup'
 import { numberToU8a } from '@polkadot/util'
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import { Repository } from 'typeorm'
 import { fromString } from 'uuidv4'
 import { Contract } from '../contracts/entity/contract.entity'
@@ -14,6 +15,8 @@ import { Event } from './entity/event.entity'
 @Injectable()
 export class EventsService {
   constructor(
+    @InjectPinoLogger(EventsService.name)
+    private readonly logger: PinoLogger,
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(Contract)
@@ -82,7 +85,19 @@ export class EventsService {
     const contract = await this.contractRespository.findOneBy({ address: contractAddress })
     if (!contract) throw new Error('Contract not found')
     if (!contract.metadata) throw new Error('Upload the metadata first')
-    return events.map((event) => this.decodeContractEmittedEvent(contract.metadata as string, event.data))
+    return Promise.all(
+      events.map(async (event) => {
+        try {
+          const decodedEvent = this.decodeContractEmittedEvent(contract.metadata as string, event.data)
+          event.decodedData = decodedEvent
+          await this.eventRepository.update(event.id, event)
+          return decodedEvent
+        } catch (error) {
+          this.logger.error(error)
+          return { message: "Can't decode event", error }
+        }
+      }),
+    )
   }
 
   decodeContractEmittedEvent(abi: string | Record<string, unknown>, data: any): DecodedEvent {
