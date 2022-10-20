@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { AbiParam } from '@polkadot/api-contract/types'
 import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
 import { Event } from '../../events/entity/event.entity'
 
@@ -19,8 +20,26 @@ export class Contract extends BaseEntity {
   })
   events!: Event[]
 
+  @Field(/* istanbul ignore next */ () => [ContractQuery])
+  queries?: ContractQuery[]
+
   @CreateDateColumn({
     default: /* istanbul ignore next */ () => 'NOW()',
   })
   createdDate!: Date
+}
+
+@ObjectType()
+export class ContractQuery {
+  @Field(/* istanbul ignore next */ () => String)
+  name!: string
+
+  @Field(/* istanbul ignore next */ () => String)
+  method!: string
+
+  @Field(/* istanbul ignore next */ () => [String])
+  args!: AbiParam[] | string[]
+
+  @Field(/* istanbul ignore next */ () => [String])
+  docs!: string[]
 }

@@ -15,6 +15,14 @@ type Contract {
   address: String!
   events: [Event!]!
   metadata: String
+  queries: [ContractQuery!]!
+}
+
+type ContractQuery {
+  args: [String!]!
+  docs: [String!]!
+  method: String!
+  name: String!
 }
 
 type Event {
@@ -40,6 +48,7 @@ type Query {
   getBlock(hash: String!): Block!
   getBlocks(orderAsc: Boolean = false, orderByNumber: Boolean = false, skip: Int = 0, take: Int = 10): [Block!]!
   getContract(address: String!): Contract!
+  getContractQueries(address: String!): Contract!
   getEvent(id: String!): Event!
   getEvents(contract: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20, transactionHash: String): [Event!]!
   getTransaction(hash: String!): Transaction!
