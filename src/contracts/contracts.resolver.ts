@@ -3,7 +3,8 @@ import { FetchEventsInput } from '../events/dtos/fetch-events.input'
 import { Event } from '../events/entity/event.entity'
 import { EventsService } from '../events/events.service'
 import { ContractsService } from './contracts.service'
-import { Contract, ContractQuery } from './entity/contract.entity'
+import { ExecuteQueryInput } from './dtos/execute-query.input'
+import { Contract, ContractQuery, QueryResult } from './entity/contract.entity'
 
 @Resolver(() => Contract)
 export class ContractsResolver {
@@ -17,6 +18,11 @@ export class ContractsResolver {
   @Query(/* istanbul ignore next */ () => Contract)
   async getContractQueries(@Args('address', { type: () => String }) address: string) {
     return this.contractsService.getContractQueries(address)
+  }
+
+  @Query(/* istanbul ignore next */ () => QueryResult)
+  async executeQuery(@Args() parameters: ExecuteQueryInput) {
+    return this.contractsService.executeQuery(parameters)
   }
 
   @Mutation(/* istanbul ignore next */ () => Boolean)
