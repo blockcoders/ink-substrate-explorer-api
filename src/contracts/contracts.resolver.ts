@@ -4,6 +4,7 @@ import { Event } from '../events/entity/event.entity'
 import { EventsService } from '../events/events.service'
 import { ContractsService } from './contracts.service'
 import { ExecuteQueryInput } from './dtos/execute-query.input'
+import { FetchContractsInput } from './dtos/fetch-contracts.input'
 import { Contract, ContractQuery, QueryResult } from './entity/contract.entity'
 
 @Resolver(() => Contract)
@@ -13,6 +14,11 @@ export class ContractsResolver {
   @Query(/* istanbul ignore next */ () => Contract)
   async getContract(@Args('address', { type: () => String }) address: string) {
     return this.contractsService.findOne(address)
+  }
+
+  @Query(/* istanbul ignore next */ () => [Contract])
+  async getContracts(@Args() args: FetchContractsInput) {
+    return this.contractsService.fetchContracts(args)
   }
 
   @Query(/* istanbul ignore next */ () => Contract)
@@ -57,5 +63,11 @@ export class ContractsResolver {
       query.args = query.args.map((arg) => JSON.stringify(arg))
     })
     return queries
+  }
+
+  @ResolveField('hasMetadata', /* istanbul ignore next */ () => Boolean)
+  async hasMetadata(@Parent() contract: Contract) {
+    const { metadata } = contract
+    return !!metadata
   }
 }

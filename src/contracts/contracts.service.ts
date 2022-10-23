@@ -6,6 +6,7 @@ import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import { Repository } from 'typeorm'
 import { connect } from '../utils'
 import { ExecuteQueryInput } from './dtos/execute-query.input'
+import { FetchContractsInput } from './dtos/fetch-contracts.input'
 import { Contract, ContractQuery, QueryResult } from './entity/contract.entity'
 const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
 
@@ -24,6 +25,14 @@ export class ContractsService {
       throw new NotFoundException(`Contract with address: ${address} not found`)
     }
     return contract
+  }
+
+  async fetchContracts(args: FetchContractsInput): Promise<Contract[]> {
+    const { skip, take } = args
+    return this.contractRepository.find({
+      skip,
+      take,
+    })
   }
 
   async uploadMetadata(contract: Contract, metadata: string): Promise<boolean> {
