@@ -39,13 +39,13 @@ type Event {
 }
 
 type Mutation {
+  executeQuery(address: String!, args: QueryArgs = {options: {}, sender: "", values: []}, method: String!): QueryResult!
   uploadMetadata(contractAddress: String!, metadata: String!): Boolean!
 }
 
 type Query {
   decodeEvent(contractAddress: String!, id: String!): String!
   decodeEvents(contract: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20, transactionHash: String): String!
-  executeQuery(address: String!, args: QueryArgs = {options: {}, sender: "", values: []}, method: String!): QueryResult!
   getBlock(hash: String!): Block!
   getBlocks(orderAsc: Boolean = false, orderByNumber: Boolean = false, skip: Int = 0, take: Int = 10): [Block!]!
   getContract(address: String!): Contract!

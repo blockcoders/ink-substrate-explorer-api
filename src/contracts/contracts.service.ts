@@ -44,7 +44,9 @@ export class ContractsService {
     const contract = await this.findOne(contractAddress)
     const { address, metadata } = contract
     if (!address || !metadata) {
-      throw new Error('Contract address or metadata not found')
+      this.logger.warn('Contract address or metadata not found')
+      contract.queries = []
+      return contract
     }
     const abi = new Abi(metadata)
     const contractPromise = new ContractPromise(api, abi, address)
@@ -82,12 +84,12 @@ export class ContractsService {
       ...(values || []),
     )
     return {
-      debugMessage: debugMessage.toHuman(),
-      gasConsumed: gasConsumed.toString(),
-      gasRequired: gasRequired.toString(),
-      output: output?.toString(),
-      result: result.toString(),
-      storageDeposit: storageDeposit.toString(),
+      debugMessage: debugMessage.toHuman() || '',
+      gasConsumed: gasConsumed.toString() || '',
+      gasRequired: gasRequired.toString() || '',
+      output: output?.toString() || '',
+      result: result.toString() || '',
+      storageDeposit: storageDeposit.toString() || '',
     }
   }
 }

@@ -20,7 +20,7 @@ export class ContractsResolver {
     return this.contractsService.getContractQueries(address)
   }
 
-  @Query(/* istanbul ignore next */ () => QueryResult)
+  @Mutation(/* istanbul ignore next */ () => QueryResult)
   async executeQuery(@Args() parameters: ExecuteQueryInput) {
     return this.contractsService.executeQuery(parameters)
   }
