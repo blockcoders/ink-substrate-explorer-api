@@ -1,4 +1,4 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { FetchEventsInput } from './dtos/fetch-events.input'
 import { Event } from './entity/event.entity'
 import { EventsService } from './events.service'
@@ -16,7 +16,7 @@ export class EventsResolver {
     return this.eventsService.findById(id)
   }
 
-  @Query(/* istanbul ignore next */ () => String)
+  @Mutation(/* istanbul ignore next */ () => String)
   async decodeEvents(@Args() args: FetchEventsInput) {
     try {
       const events = await this.eventsService.fetchEvents(args)
@@ -27,7 +27,7 @@ export class EventsResolver {
     }
   }
 
-  @Query(/* istanbul ignore next */ () => String)
+  @Mutation(/* istanbul ignore next */ () => String)
   async decodeEvent(
     @Args('contractAddress', { type: () => String }) contractAddress: string,
     @Args('id', { type: () => String }) id: string,
