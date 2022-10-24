@@ -42,7 +42,6 @@ type Event {
 type Mutation {
   decodeEvent(contractAddress: String!, id: String!): String!
   decodeEvents(contract: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20, transactionHash: String): String!
-  executeQuery(address: String!, args: QueryArgs = {options: {}, sender: "", values: []}, method: String!): QueryResult!
   uploadMetadata(contractAddress: String!, metadata: String!): Boolean!
 }
 
@@ -59,27 +58,6 @@ type Query {
   getTransactionsByContract(address: String!, orderAsc: Boolean = false, skip: Int = 0, take: Int = 10): [Transaction!]!
   status: String!
   version: String!
-}
-
-input QueryArgs {
-  options: QueryOptions!
-  sender: String!
-  values: [String!] = []
-}
-
-input QueryOptions {
-  gasLimit: String!
-  storageLimit: String
-  value: String
-}
-
-type QueryResult {
-  debugMessage: String!
-  gasConsumed: String!
-  gasRequired: String!
-  output: String!
-  result: String!
-  storageDeposit: String!
 }
 
 type Transaction {

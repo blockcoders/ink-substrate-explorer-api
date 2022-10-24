@@ -91,7 +91,7 @@ export class EventsService {
           const decodedEvent = this.decodeContractEmittedEvent(contract.metadata as string, event.data)
           event.decodedData = decodedEvent
           await this.eventRepository.update(event.id, event)
-          return decodedEvent
+          return { decodedData: decodedEvent, formattedData: this.formatDecoded(decodedEvent) }
         } catch (error) {
           this.logger.error(error)
           return { message: "Can't decode event", error }
