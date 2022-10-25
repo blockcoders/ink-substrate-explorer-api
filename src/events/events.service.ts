@@ -78,7 +78,15 @@ export class EventsService {
         timestamp,
       })
     })
-    return Promise.all(eventsToSave.map((event) => this.eventRepository.save(event)))
+    return Promise.all(
+      eventsToSave.map(async (e) => {
+        let event = (await this.eventRepository.findOne({ where: { id: e.id } })) as Event
+        if (!event) {
+          event = (await this.eventRepository.save(e)) as Event
+        }
+        return event
+      }),
+    )
   }
 
   async decodeEvents(events: Event[], contractAddress: string) {
