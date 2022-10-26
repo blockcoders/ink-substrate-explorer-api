@@ -3,6 +3,7 @@ export const mockBlock = {
   parentHash: '0x9b0f818b9cac7d9451819de6172e308d67c4b8ff8c2f1f6773cdb20c40573858',
   number: 27,
   timestamp: 1590000000,
+  encodedLength: 100,
   createdDate: '2022-08-25 22:49:21.843575',
 }
 

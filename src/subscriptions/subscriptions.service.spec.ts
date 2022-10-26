@@ -8,8 +8,10 @@ import { mockExtrinsics, mockTimestamp, mockTransactions } from '../../mocks/tra
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
+import { connect } from '../utils'
 import { SubscriptionsService } from './subscriptions.service'
 jest.mock('@polkadot/api')
+jest.mock('../utils')
 
 describe('subscriptionsService', () => {
   let service: SubscriptionsService
@@ -20,6 +22,9 @@ describe('subscriptionsService', () => {
     const MockedApi = ApiPromise as jest.MockedClass<typeof ApiPromise>
     MockedApi.create = jest.fn().mockResolvedValue(apiMock)
     api = await MockedApi.create()
+
+    const mockedConnect = connect as jest.MockedFunction<typeof connect>
+    mockedConnect.mockResolvedValue(api)
   })
 
   beforeEach(async () => {
@@ -75,7 +80,6 @@ describe('subscriptionsService', () => {
 
   describe('syncBlocks', () => {
     it('should load all blocks', async () => {
-      jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
       jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
       jest
@@ -91,7 +95,6 @@ describe('subscriptionsService', () => {
     })
 
     it('should show already sync message', async () => {
-      jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
       jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 100 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
 

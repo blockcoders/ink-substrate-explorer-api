@@ -84,6 +84,7 @@ describe('BlocksService', () => {
             number,
           } as any) || {},
           mockBlock.timestamp,
+          mockBlock.encodedLength,
         ),
       ).resolves.toBe(mockBlock)
       expect(repo.create).toBeCalledTimes(1)
@@ -92,9 +93,8 @@ describe('BlocksService', () => {
         parentHash: mockBlock.parentHash,
         number: mockBlock.number,
         timestamp: mockBlock.timestamp,
+        encodedLength: mockBlock.encodedLength,
       })
-      // TODO: fix repo.save called
-      // expect(repo.save).toBeCalledTimes(1)
     })
 
     it('should return an existing block', () => {
@@ -112,6 +112,7 @@ describe('BlocksService', () => {
             number,
           } as any) || {},
           mockBlock.timestamp,
+          mockBlock.encodedLength,
         ),
       ).resolves.toBe(mockBlock)
       expect(repo.create).toBeCalledTimes(1)
@@ -119,6 +120,7 @@ describe('BlocksService', () => {
         hash: mockBlock.hash,
         parentHash: mockBlock.parentHash,
         number: mockBlock.number,
+        encodedLength: mockBlock.encodedLength,
         timestamp: mockBlock.timestamp,
       })
       expect(repo.save).toBeCalledTimes(0)

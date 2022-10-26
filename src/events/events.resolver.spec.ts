@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { mockDecodedEvent, mockEvents } from '../../mocks/events-mocks'
 import { EventsService } from '../events/events.service'
+import { FetchEventsInput } from './dtos/fetch-events.input'
 import { EventsResolver } from './events.resolver'
 
 describe('EventsResolver', () => {
@@ -42,13 +43,22 @@ describe('EventsResolver', () => {
 
   describe('decodeEvents', () => {
     it('should return decoded events for a contract address', () => {
-      expect(resolver.decodeEvents(mockEvents[0].contractAddress)).resolves.toEqual(JSON.stringify(mockDecodedEvent))
+      const args: FetchEventsInput = {
+        skip: 0,
+        take: 10,
+        contract: mockEvents[0].contractAddress,
+      }
+      expect(resolver.decodeEvents(args)).resolves.toEqual(JSON.stringify(mockDecodedEvent))
     })
 
     it('should return an error message', () => {
+      const args: FetchEventsInput = {
+        skip: 0,
+        take: 10,
+        contract: mockEvents[0].contractAddress,
+      }
       jest.spyOn(eventService, 'decodeEvents').mockRejectedValue(Promise.reject('Contract not found'))
-
-      expect(resolver.decodeEvents(mockEvents[0].contractAddress)).rejects.toBe('Contract not found')
+      expect(resolver.decodeEvents(args)).rejects.toBe('Contract not found')
     })
   })
 

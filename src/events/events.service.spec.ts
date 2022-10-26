@@ -24,6 +24,7 @@ describe('EventsService', () => {
         {
           provide: getRepositoryToken(Event),
           useValue: {
+            findOne: jest.fn().mockResolvedValue(null),
             findOneBy: jest.fn().mockResolvedValue(mockEvents[0]),
             find: jest.fn().mockResolvedValue(mockEvents),
             create: jest.fn().mockResolvedValue(mockEvents[0]),
@@ -113,7 +114,8 @@ describe('EventsService', () => {
         .spyOn(repo, 'save')
         .mockResolvedValueOnce(mockEvents[0] as never)
         .mockResolvedValueOnce(mockEvents[1] as never)
-
+      jest.spyOn(repo, 'findOne').mockResolvedValueOnce(null).mockResolvedValueOnce(null)
+      console.log(repo.findOne)
       const events = await service.createEventsFromRecords(
         mockRecords as any,
         1,
