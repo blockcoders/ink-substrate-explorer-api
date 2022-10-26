@@ -64,20 +64,20 @@ export class TransactionsService {
           const tx = this.transactionRepository.create({
             hash: transactionHash.toString().toLowerCase(),
             blockHash: blockHash.toLowerCase(),
-            section: section,
-            method: method,
+            section,
+            method,
             signature: signature.toString(),
             signer: signer.toString(),
             nonce: nonce.toNumber(),
             tip: tip.toNumber(),
             timestamp,
-            version: version,
+            version,
             type: type,
-            encodedLength: encodedLength,
-            callIndex: callIndex.toString(),
-            decimals: registry.chainDecimals.toString(),
-            ss58: registry.chainSS58?.toString(),
-            tokens: registry.chainTokens.toString(),
+            encodedLength,
+            callIndex: callIndex?.toString(),
+            decimals: registry?.chainDecimals?.toString(),
+            ss58: registry?.chainSS58?.toString(),
+            tokens: registry?.chainTokens?.toString(),
             era: JSON.stringify(era),
             args: JSON.stringify(formattedArgs),
           })
@@ -104,6 +104,7 @@ export class TransactionsService {
 
   // This function creates a new object with the same keys as the argsDef object and the values from the args object
   formatArgs(args: AnyTuple, argsDef: ArgsDef) {
+    if (!argsDef) return args
     const formattedArgs: any = {}
     Object.keys(argsDef).forEach((key: any, index) => {
       formattedArgs[key] = args[index]

@@ -15,6 +15,7 @@ describe('EventsResolver', () => {
         {
           provide: EventsService,
           useFactory: jest.fn(() => ({
+            findById: () => mockEvents[0],
             fetchEvents: () => mockEvents,
             decodeEvents: () => mockDecodedEvent,
           })),
@@ -31,7 +32,7 @@ describe('EventsResolver', () => {
   })
 
   describe('getEvents', () => {
-    it('should get a transaction by hash', async () => {
+    it('should get events by contract address', async () => {
       const events = await resolver.getEvents({
         skip: 0,
         take: 10,
@@ -59,6 +60,19 @@ describe('EventsResolver', () => {
       }
       jest.spyOn(eventService, 'decodeEvents').mockRejectedValue(Promise.reject('Contract not found'))
       expect(resolver.decodeEvents(args)).rejects.toBe('Contract not found')
+    })
+  })
+
+  describe('decodeEvent', () => {
+    it('should return a decoded event', () => {
+      const { contractAddress, id } = mockEvents[0]
+      expect(resolver.decodeEvent(contractAddress, id)).resolves.toEqual(JSON.stringify(mockDecodedEvent))
+    })
+
+    it('should return an error message', () => {
+      const { contractAddress, id } = mockEvents[0]
+      jest.spyOn(eventService, 'findById').mockRejectedValue(Promise.reject('Event not found'))
+      expect(resolver.decodeEvent(contractAddress, id)).rejects.toBe('Event not found')
     })
   })
 

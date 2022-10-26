@@ -62,6 +62,21 @@ export const mockExtrinsics = [
       section: 'timestamp',
       args: [mockTimestamp],
     },
+    encodedLength: 0,
+    registry: {
+      chainDecimals: {
+        toString: () => '12',
+      },
+      chainSS58: {
+        toString: () => '42',
+      },
+    },
+    era: {},
+    version: 0,
+    type: 0,
+    callIndex: {
+      toString: () => '0x0000',
+    },
   },
   {
     hash: stringToHex('0x3aa34206050aa5eca76715ba2a4d05ef5bbe91e173b202b2c7b657cb885b9d06'),

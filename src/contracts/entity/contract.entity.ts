@@ -43,19 +43,3 @@ export class ContractQuery {
   @Field(/* istanbul ignore next */ () => [String])
   docs!: string[]
 }
-
-@ObjectType()
-export class QueryResult {
-  @Field(/* istanbul ignore next */ () => String)
-  debugMessage?: string
-  @Field(/* istanbul ignore next */ () => String)
-  gasConsumed?: string
-  @Field(/* istanbul ignore next */ () => String)
-  gasRequired?: string
-  @Field(/* istanbul ignore next */ () => String)
-  output?: string
-  @Field(/* istanbul ignore next */ () => String)
-  result?: string
-  @Field(/* istanbul ignore next */ () => String)
-  storageDeposit?: string
-}

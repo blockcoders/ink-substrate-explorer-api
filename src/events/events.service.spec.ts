@@ -115,7 +115,6 @@ describe('EventsService', () => {
         .mockResolvedValueOnce(mockEvents[0] as never)
         .mockResolvedValueOnce(mockEvents[1] as never)
       jest.spyOn(repo, 'findOne').mockResolvedValueOnce(null).mockResolvedValueOnce(null)
-      console.log(repo.findOne)
       const events = await service.createEventsFromRecords(
         mockRecords as any,
         1,

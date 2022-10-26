@@ -10,3 +10,10 @@ export const mockContract = {
   address: '5GRYcveXcsy8Y6jpHc19xE9wm6xSfzKbzZPFKZvGwzBms4hz',
   metadata: JSON.stringify(abi),
 }
+
+export const mockContracts = [mockContract]
+
+export const mockContractQueries = {
+  ...mockContract,
+  queries: [],
+}

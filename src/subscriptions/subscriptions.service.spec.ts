@@ -72,7 +72,6 @@ describe('subscriptionsService', () => {
         service.onModuleInit()
         fail("Shouldn't reach this point")
       } catch (error) {
-        console.log(error)
         expect((error as Error).message).toBe('grcp error')
       }
     })

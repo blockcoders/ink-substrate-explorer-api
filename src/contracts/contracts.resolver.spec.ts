@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
-import { mockContract, generateAbiInBase64 } from '../../mocks/contracts-mocks'
+import { mockContract, mockContracts, mockContractQueries, generateAbiInBase64 } from '../../mocks/contracts-mocks'
 import { mockEvents } from '../../mocks/events-mocks'
 import { EventsService } from '../events/events.service'
 import { ContractsResolver } from './contracts.resolver'
@@ -20,6 +20,8 @@ describe('ContractsResolver', () => {
         {
           provide: ContractsService,
           useFactory: () => ({
+            getContractQueries: jest.fn(() => mockContractQueries),
+            fetchContracts: jest.fn(() => mockContracts),
             findOne: jest.fn(() => mockContract),
             uploadMetadata: jest.fn(() => true),
           }),
@@ -45,6 +47,24 @@ describe('ContractsResolver', () => {
     it('should get a contract by hash', async () => {
       const contract = await resolver.getContract(mockContract.address)
       expect(contract).toEqual(mockContract)
+    })
+  })
+
+  describe('getContracts', () => {
+    it('should get a list of contracts', async () => {
+      const args = {
+        skip: 0,
+        take: 10,
+      }
+      const contracts = await resolver.getContracts(args)
+      expect(contracts).toEqual(mockContracts)
+    })
+  })
+
+  describe('getContractQueries', () => {
+    it('should get contractQueries by address', async () => {
+      const contractQueries = await resolver.getContractQueries(mockContract.address)
+      expect(contractQueries).toEqual(mockContractQueries)
     })
   })
 
