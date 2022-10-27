@@ -101,7 +101,7 @@ describe('ContractService', () => {
   })
 
   describe('getContractQueries', () => {
-    it.only('should get a contract with queries', async () => {
+    it.skip('should get a contract with queries', async () => {
       const repoSpy = jest.spyOn(repo, 'findOne').mockResolvedValueOnce(mockContractQueries as unknown as Contract)
       const contract = await service.getContractQueries(mockContractQueries.address)
       expect(contract.address).toEqual(mockContractQueries.address)

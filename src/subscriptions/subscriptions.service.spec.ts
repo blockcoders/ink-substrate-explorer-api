@@ -102,6 +102,18 @@ describe('subscriptionsService', () => {
       expect(result).toBe(undefined)
       expect(blockService.getLastBlock).toBeCalledTimes(1)
     })
+
+    it('should show fail', async () => {
+      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
+      jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
+      jest.spyOn(service, 'processBlock').mockRejectedValueOnce(new Error('Failed to process block'))
+      try {
+        await service.syncBlocks()
+      } catch (error) {
+        expect(blockService.getLastBlock).toBeCalledTimes(1)
+        expect((error as Error).message).toBe('Failed to process block')
+      }
+    })
   })
 
   describe('registerBlockData', () => {

@@ -55,7 +55,6 @@ export class ContractsService {
       contract.queries = []
       return contract
     }
-    console.error('METADATA', metadata)
     const abi = new Abi(metadata)
     const contractPromise = new ContractPromise(api, abi, address)
     const contractQueries: ContractQuery[] = []

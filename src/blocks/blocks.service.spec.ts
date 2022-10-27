@@ -125,5 +125,28 @@ describe('BlocksService', () => {
       })
       expect(repo.save).toBeCalledTimes(0)
     })
+
+    it('should fail', async () => {
+      jest.spyOn(repo, 'findOneBy').mockRejectedValue(new Error('Failed'))
+
+      const number = {
+        toHex: () => '27',
+      }
+
+      try {
+        await service.createFromHeader(
+          ({
+            hash: mockBlock.hash,
+            parentHash: mockBlock.parentHash,
+            number,
+          } as any) || {},
+          mockBlock.timestamp,
+          mockBlock.encodedLength,
+        )
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        expect((error as Error).message).toBe('Failed')
+      }
+    })
   })
 })

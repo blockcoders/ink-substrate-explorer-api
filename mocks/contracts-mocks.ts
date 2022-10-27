@@ -15,5 +15,7 @@ export const mockContracts = [mockContract]
 
 export const mockContractQueries = {
   ...mockContract,
-  queries: [],
+  queries: [{ args: [{ fake: 'arg' }] }],
 }
+
+export const mockQueryString = [{ args: ['{"fake":"arg"}'] }]
