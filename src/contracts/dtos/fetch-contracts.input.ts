@@ -7,5 +7,4 @@ export class FetchContractsInput {
 
   @Field(/* istanbul ignore next */ () => Int)
   take? = 20
-
 }

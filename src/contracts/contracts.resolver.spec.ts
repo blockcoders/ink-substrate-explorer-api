@@ -1,6 +1,12 @@
 import { NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
-import { mockContract, mockContracts, mockContractQueries, generateAbiInBase64, mockQueryString } from '../../mocks/contracts-mocks'
+import {
+  mockContract,
+  mockContracts,
+  mockContractQueries,
+  generateAbiInBase64,
+  mockQueryString,
+} from '../../mocks/contracts-mocks'
 import { mockEvents } from '../../mocks/events-mocks'
 import { EventsService } from '../events/events.service'
 import { ContractsResolver } from './contracts.resolver'
