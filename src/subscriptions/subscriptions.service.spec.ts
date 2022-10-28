@@ -4,12 +4,14 @@ import { apiMock } from '../../mocks/api-mock'
 import { mockBlock, mockBlocks } from '../../mocks/blocks-mocks'
 import { mockEvents } from '../../mocks/events-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
-import { mockExtrinsics, mockTransactions } from '../../mocks/transactions-mock'
+import { mockExtrinsics, mockTimestamp, mockTransactions } from '../../mocks/transactions-mock'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
+import { connect } from '../utils'
 import { SubscriptionsService } from './subscriptions.service'
 jest.mock('@polkadot/api')
+jest.mock('../utils')
 
 describe('subscriptionsService', () => {
   let service: SubscriptionsService
@@ -20,6 +22,9 @@ describe('subscriptionsService', () => {
     const MockedApi = ApiPromise as jest.MockedClass<typeof ApiPromise>
     MockedApi.create = jest.fn().mockResolvedValue(apiMock)
     api = await MockedApi.create()
+
+    const mockedConnect = connect as jest.MockedFunction<typeof connect>
+    mockedConnect.mockResolvedValue(api)
   })
 
   beforeEach(async () => {
@@ -58,21 +63,22 @@ describe('subscriptionsService', () => {
   })
 
   describe('onModuleInit', () => {
-    it('should show an error message', async () => {
+    it('should show an error message', () => {
       try {
-        jest.spyOn(service, 'syncBlocks').mockResolvedValue(Promise.reject('grcp error'))
+        jest.spyOn(service, 'syncBlocks').mockImplementation(() => {
+          throw new Error('grcp error')
+        })
 
-        await service.onModuleInit()
+        service.onModuleInit()
         fail("Shouldn't reach this point")
       } catch (error) {
-        expect(error).toBe('grcp error')
+        expect((error as Error).message).toBe('grcp error')
       }
     })
   })
 
   describe('syncBlocks', () => {
     it('should load all blocks', async () => {
-      jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
       jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
       jest
@@ -88,7 +94,6 @@ describe('subscriptionsService', () => {
     })
 
     it('should show already sync message', async () => {
-      jest.spyOn(SubscriptionsService, 'connect').mockImplementation(() => Promise.resolve(api))
       jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 100 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
 
@@ -96,6 +101,18 @@ describe('subscriptionsService', () => {
 
       expect(result).toBe(undefined)
       expect(blockService.getLastBlock).toBeCalledTimes(1)
+    })
+
+    it('should show fail', async () => {
+      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
+      jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
+      jest.spyOn(service, 'processBlock').mockRejectedValueOnce(new Error('Failed to process block'))
+      try {
+        await service.syncBlocks()
+      } catch (error) {
+        expect(blockService.getLastBlock).toBeCalledTimes(1)
+        expect((error as Error).message).toBe('Failed to process block')
+      }
     })
   })
 
@@ -130,6 +147,7 @@ describe('subscriptionsService', () => {
           },
           extrinsics: mockExtrinsics,
           records: [],
+          timestamp: mockTimestamp,
         }),
       )
     })

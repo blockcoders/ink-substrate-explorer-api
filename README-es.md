@@ -1,5 +1,4 @@
-Ink! Explorer API
-=================
+# Ink! Explorer API
 
 [![App Build](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml/badge.svg)](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/blockcoders/ink-substrate-explorer-api/badge.svg?branch=main)](https://coveralls.io/github/blockcoders/ink-substrate-explorer-api?branch=main)
@@ -144,6 +143,7 @@ Para iniciar los contenedores del servicio de backend, la BD y pgAdmin ejecutar 
 ```sh
 docker-compose up -d
 ```
+
 **Nota**: Se requiere una base de datos postgres en funcionamiento y una conexión válida a un nodo de Substrate.
 Opcionalmente, comente el servicio de back-end en el archivo docker-compose si desea ejecutar la imagen localmente.
 
@@ -228,14 +228,34 @@ query {
 }
 ```
 
+<span style="color:#2a98db"> **Version**: Recupera la version de la aplicación</span>
+
+```graphql
+query {
+  status
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "version": "v1.0.1"
+  }
+}
+```
+
 <span style="color:#2a98db"> **getBlock**: Recupera el bloque por hash </span>
 
 ```graphql
 query {
-  getBlock(hash: "0x05815b7f1706f46d101b6073ebfa6d47ae9089b5ce5db9deb80382198689466a") {
+  getBlock(hash: "0x0f615cf7edf8a1e8591893a594fe0ef67d5d56c4d9b1a89d8d120c5f821127fe") {
     hash
     number
     parentHash
+    timestamp
+    encodedLength
     transactions {
       hash
     }
@@ -249,15 +269,17 @@ query {
 {
   "data": {
     "getBlock": {
-      "hash": "0x05815b7f1706f46d101b6073ebfa6d47ae9089b5ce5db9deb80382198689466a",
-      "number": 934059,
-      "parentHash": "0x31c5025aa86e3af7d77991c8ad3442b01be768399d22af004d9ea5fa771e3827",
+      "hash": "0x0f615cf7edf8a1e8591893a594fe0ef67d5d56c4d9b1a89d8d120c5f821127fe",
+      "number": 7,
+      "parentHash": "0xd8ecc752f280a3786c5cdd4d441d71488414fd6132ace481dd6ddb23fd8000b0",
+      "timestamp": 1666888006111,
+      "encodedLength": 312,
       "transactions": [
         {
-          "hash": "0x9bb5a80b80305b4b1acc93214e3a703e2c3c879b3fae91bfc809ad91753195da"
+          "hash": "0xdb561ee4432e07a959292acf9895ce379e2474a52160b93fd62496806fdf26cd"
         },
         {
-          "hash": "0xc49a19fe985222ca0b9b2f8b2f83c65e00efd57552ac245a4c362f882b999040"
+          "hash": "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b"
         }
       ]
     }
@@ -265,14 +287,16 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getBlocks**: Recupera bloques (use skip and take para paginar)</span>
+<span style="color:#2a98db"> **getBlocks**: Recupera bloques. Use 'skip' y 'take' para paginar. Use 'orderByNumber: false' para ordenar por tiempo y 'orderAsc: true' para ver primero los bloques más antiguos.</span>
 
 ```graphql
 query {
-  getBlocks(skip: 0, take: 10) {
+  getBlocks(skip: 0, take: 1, orderByNumber: false, orderAsc: false) {
     hash
     number
     parentHash
+    timestamp
+    encodedLength
     transactions {
       hash
     }
@@ -287,19 +311,21 @@ query {
   "data": {
     "getBlocks": [
       {
-        "hash": "0xec403717319c75ad80f6c5a43446dac41a44c2ddf086eedad622d8d784f90d46",
-        "number": 934057,
-        "parentHash": "0x0b3e49c138c74f0afc9034a325a25c90433990e0dfdf6f6c9697c591f7c8e7b3",
+        "hash": "0x0f615cf7edf8a1e8591893a594fe0ef67d5d56c4d9b1a89d8d120c5f821127fe",
+        "number": 7,
+        "parentHash": "0xd8ecc752f280a3786c5cdd4d441d71488414fd6132ace481dd6ddb23fd8000b0",
+        "timestamp": 1666888006111,
+        "encodedLength": 312,
         "transactions": [
           {
-            "hash": "0x20be54758f8645bfd1b1f38d798271471edef3deadee1d7a4cd74e628120292a"
+            "hash": "0xdb561ee4432e07a959292acf9895ce379e2474a52160b93fd62496806fdf26cd"
           },
           {
-            "hash": "0xf9e94bd8286080340a48dd105eb5d4ab7bbf7aa92869b5537c2b3c5fa8c58ba5"
+            "hash": "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b"
           }
         ]
-      },
-    ...]
+      }
+    ]
   }
 }
 ```
@@ -308,15 +334,28 @@ query {
 
 ```graphql
 query {
-  getTransaction(hash: "0xfaed625a9948f88aac7b1ff353492cd5834108cfecb1ede82d7bc2f763fcbd28") {
-    hash
+  getTransaction(hash: "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b") {
+    args
     blockHash
+    callIndex
+    decimals
+    encodedLength
+    era
+    events {
+      method
+    }
+    hash
     method
     nonce
     section
     signature
     signer
+    ss58
+    timestamp
     tip
+    tokens
+    type
+    version
   }
 }
 ```
@@ -327,32 +366,131 @@ query {
 {
   "data": {
     "getTransaction": {
-      "hash": "0xfaed625a9948f88aac7b1ff353492cd5834108cfecb1ede82d7bc2f763fcbd28",
-      "blockHash": "0xe138e4b9db53b1a552c26d3f4c3e7573d369512bfb402632d48d6c90521c9922",
-      "method": "setValidationData",
-      "nonce": 0,
-      "section": "parachainSystem",
-      "signature": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "signer": "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM",
-      "tip": 0
+      "args": "{\"dest\":{\"id\":\"5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8\"},\"value\":0,\"gas_limit\":75000000000,\"storage_deposit_limit\":null,\"data\":\"0x84a15da18eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48005039278c0400000000000000000000\"}",
+      "blockHash": "0x0f615cf7edf8a1e8591893a594fe0ef67d5d56c4d9b1a89d8d120c5f821127fe",
+      "callIndex": "7,0",
+      "decimals": "12",
+      "encodedLength": 201,
+      "era": "{\"mortalEra\":\"0x0b00\"}",
+      "events": [
+        {
+          "method": "ContractEmitted"
+        }
+      ],
+      "hash": "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b",
+      "method": "call",
+      "nonce": 3,
+      "section": "contracts",
+      "signature": "0x78582786706e947a6d77ac5b49ba140b4c88ebc644421136bbfa8b66577e1e3efdbc1d981948546fff41600be9a716e4c38a8531a867853f26ba11ee21128f82",
+      "signer": "5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc",
+      "ss58": "42",
+      "timestamp": 1666888006111,
+      "tip": 0,
+      "tokens": "Unit",
+      "type": 4,
+      "version": 132
     }
   }
 }
 ```
 
-<span style="color:#2a98db"> **getTransactions**: Recupera transacciones por hash de bloque (use skip and take para paginar)</span>
+<span style="color:#2a98db"> **getTransactionsByContract**: Recupera una lista de transacciones de un contrato.</span>
 
 ```graphql
 query {
-  getTransactions(blockHash: "0xa7ef8085bfad2354e5191e012bd412c0d76c213f43a68187194b7696a0822b93") {
-    hash
+  getTransactionsByContract(
+    address: "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8"
+    skip: 0
+    take: 1
+    orderAsc: false
+  ) {
+    args
     blockHash
+    callIndex
+    decimals
+    encodedLength
+    era
+    events {
+      method
+    }
+    hash
     method
     nonce
     section
     signature
     signer
+    ss58
+    timestamp
     tip
+    tokens
+    type
+    version
+  }
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "getTransactionsByContract": [
+      {
+        "args": "{\"dest\":{\"id\":\"5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8\"},\"value\":0,\"gas_limit\":75000000000,\"storage_deposit_limit\":null,\"data\":\"0x84a15da18eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48005039278c0400000000000000000000\"}",
+        "blockHash": "0x0f615cf7edf8a1e8591893a594fe0ef67d5d56c4d9b1a89d8d120c5f821127fe",
+        "callIndex": "7,0",
+        "decimals": "12",
+        "encodedLength": 201,
+        "era": "{\"mortalEra\":\"0x0b00\"}",
+        "events": [
+          {
+            "method": "ContractEmitted"
+          }
+        ],
+        "hash": "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b",
+        "method": "call",
+        "nonce": 3,
+        "section": "contracts",
+        "signature": "0x78582786706e947a6d77ac5b49ba140b4c88ebc644421136bbfa8b66577e1e3efdbc1d981948546fff41600be9a716e4c38a8531a867853f26ba11ee21128f82",
+        "signer": "5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc",
+        "ss58": "42",
+        "timestamp": 1666888006111,
+        "tip": 0,
+        "tokens": "Unit",
+        "type": 4,
+        "version": 132
+      }
+    ]
+  }
+}
+```
+
+<span style="color:#2a98db"> **getTransactions**: Recupera transacciones por hash de bloque (use 'skip' y 'take' para paginar. use 'orderAsc' para ver primero las más antiguas o las más nuevas)</span>
+
+```graphql
+query {
+  getTransactions(skip: 0, take: 1, orderAsc: false) {
+    args
+    blockHash
+    callIndex
+    decimals
+    encodedLength
+    era
+    events {
+      method
+    }
+    hash
+    method
+    nonce
+    section
+    signature
+    signer
+    ss58
+    timestamp
+    tip
+    tokens
+    type
+    version
   }
 }
 ```
@@ -364,33 +502,86 @@ query {
   "data": {
     "getTransactions": [
       {
-        "hash": "0xf715221f0e46c5a666e65e99af70631cc32a46cf6121ed3be56768ff303eda36",
-        "blockHash": "0xa7ef8085bfad2354e5191e012bd412c0d76c213f43a68187194b7696a0822b93",
-        "method": "setValidationData",
+        "args": "{\"now\":1666888006111}",
+        "blockHash": "0x0f615cf7edf8a1e8591893a594fe0ef67d5d56c4d9b1a89d8d120c5f821127fe",
+        "callIndex": "2,0",
+        "decimals": "12",
+        "encodedLength": 11,
+        "era": "{\"immortalEra\":\"0x00\"}",
+        "events": [],
+        "hash": "0xdb561ee4432e07a959292acf9895ce379e2474a52160b93fd62496806fdf26cd",
+        "method": "set",
         "nonce": 0,
-        "section": "parachainSystem",
+        "section": "timestamp",
         "signature": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         "signer": "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM",
+        "ss58": "42",
+        "timestamp": 1666888006111,
         "tip": 0,
-        "events": []
-      },
-      ...
+        "tokens": "Unit",
+        "type": 4,
+        "version": 4
+      }
     ]
   }
 }
 ```
 
-<span style="color:#2a98db"> **getEvents**: Recupera eventos por dirección de contrato o hash de transacción (use skip and take para paginar)</span>
+<span style="color:#2a98db"> **getEvent**: Recupera un evento por su id</span>
 
 ```graphql
 query {
-  getEvents(contract: "5F7FvAUyB6ok4Sj3j82x315F3pDCZSiGovxWcnjadnpSMi7t") {
+  getEvent(id: "81735cc9-76d3-5984-83af-5872bc9eaeb7") {
     id
     index
     method
     section
+    timestamp
     topics
     transactionHash
+    data
+    decodedData
+    formattedData
+  }
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "getEvent": {
+      "id": "81735cc9-76d3-5984-83af-5872bc9eaeb7",
+      "index": "0x0703",
+      "method": "ContractEmitted",
+      "section": "contracts",
+      "timestamp": 1666888006111,
+      "topics": "[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x08be862c40d599dc6f4f28076712bb324c0cd2197c30f07459887b41fadff2c8, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564]",
+      "transactionHash": "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b",
+      "data": "[\"5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8\",\"0x0001c40e2006bbebf9022c317f9337ad376e56d392917e5ac1397fe09b07c765c050018eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48005039278c0400000000000000000000\"]",
+      "decodedData": "{\"args\":[\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"0x00000000000000000000048c27395000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"sub\":{\"docs\":[],\"info\":10,\"type\":\"AccountId\",\"namespace\":\"ink_env::types::AccountId\",\"lookupIndex\":2,\"lookupNameRoot\":\"InkEnvAccountId\"},\"docs\":[],\"info\":9,\"type\":\"Option<AccountId>\",\"namespace\":\"Option\",\"lookupIndex\":11}},{\"name\":\"to\",\"type\":{\"sub\":{\"docs\":[],\"info\":10,\"type\":\"AccountId\",\"namespace\":\"ink_env::types::AccountId\",\"lookupIndex\":2,\"lookupNameRoot\":\"InkEnvAccountId\"},\"docs\":[],\"info\":9,\"type\":\"Option<AccountId>\",\"namespace\":\"Option\",\"lookupIndex\":11}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"index\":0,\"identifier\":\"Transfer\"}}",
+      "formattedData": "{\"from\":\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"to\":\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"value\":5}"
+    }
+  }
+}
+```
+
+<span style="color:#2a98db"> **getEvents**: Recupera eventos por dirección de contrato o hash de transacción (use 'skip' y 'take' para paginar, 'orderAsc' para ver primero los más antiguos o los más nuevos)</span>
+
+```graphql
+query {
+  getEvents(contract: "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8", skip: 0, take: 1, orderAsc: false) {
+    id
+    index
+    method
+    section
+    timestamp
+    topics
+    transactionHash
+    data
+    decodedData
+    formattedData
   }
 }
 ```
@@ -402,51 +593,30 @@ query {
   "data": {
     "getEvents": [
       {
-        "id": "c3250479-e53e-5a4d-ba0c-b688764cd81b",
+        "id": "81735cc9-76d3-5984-83af-5872bc9eaeb7",
         "index": "0x0703",
-        "section": "contracts",
         "method": "ContractEmitted",
-        "transactionHash": "0x1080eb1f8de1ee5b0c1bd584924951c38b998bc7596773ef5e1a92908409a17f",
-        "topics": "[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x33766995fd9b44bd45f351b3abd7e5041960638db0075c84ab7af1a734e20d1b, 0x5445726332303a3a5472616e736665723a3a66726f6d00000000000000000000]"
-      },
-      {
-        "id": "509f2fb6-ed61-5dc7-a567-3cfa55e1fa65",
-        "index": "0x0703",
         "section": "contracts",
-        "method": "ContractEmitted",
-        "transactionHash": "0x2a009bf5fdc388f10953cba4661c3ca74e0252c1fcae6ba7f39f4eb7be707caa",
-        "topics": "[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564, 0xda2d695d3b5a304e0039e7fc4419c34fa0c1f239189c99bb72a6484f1634782b]"
+        "timestamp": 1666888006111,
+        "topics": "[0x0045726332303a3a5472616e7366657200000000000000000000000000000000, 0x08be862c40d599dc6f4f28076712bb324c0cd2197c30f07459887b41fadff2c8, 0x2b00c7d40fe6d84d660f3e6bed90f218e022a0909f7e1a7ea35ada8b6e003564]",
+        "transactionHash": "0x33831da6b804e82cd7613e0d780823c7455c773546ea5e76c945ed10a6f6554b",
+        "data": "[\"5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8\",\"0x0001c40e2006bbebf9022c317f9337ad376e56d392917e5ac1397fe09b07c765c050018eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48005039278c0400000000000000000000\"]",
+        "decodedData": "{\"args\":[\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"0x00000000000000000000048c27395000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"sub\":{\"docs\":[],\"info\":10,\"type\":\"AccountId\",\"namespace\":\"ink_env::types::AccountId\",\"lookupIndex\":2,\"lookupNameRoot\":\"InkEnvAccountId\"},\"docs\":[],\"info\":9,\"type\":\"Option<AccountId>\",\"namespace\":\"Option\",\"lookupIndex\":11}},{\"name\":\"to\",\"type\":{\"sub\":{\"docs\":[],\"info\":10,\"type\":\"AccountId\",\"namespace\":\"ink_env::types::AccountId\",\"lookupIndex\":2,\"lookupNameRoot\":\"InkEnvAccountId\"},\"docs\":[],\"info\":9,\"type\":\"Option<AccountId>\",\"namespace\":\"Option\",\"lookupIndex\":11}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"index\":0,\"identifier\":\"Transfer\"}}",
+        "formattedData": "{\"from\":\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"to\":\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"value\":5}"
       }
     ]
   }
 }
 ```
 
-<span style="color:#2a98db"> **decodeEvents**: Decodifica los datos de eventos para un contrato específico. Requiere que los metadatos del contrato ya se hayan subido usando la mutación **uploadMetadata**</span>
-
-```graphql
-query {
-  decodeEvents(contractAddress: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc")
-}
-```
-
-<span style="color:#5EBA7D"> Respuesta: </span>
-
-```graphql
-{
-  "data": {
-    "decodeEvents": "[{\"args\":[null,\"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\",\"0x000000000000000000038d7ea4c68000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"to\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"identifier\":\"Transfer\",\"index\":0}},{\"args\":[\"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\",\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"0x00000000000000000001c6bf52634000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"to\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"identifier\":\"Transfer\",\"index\":0}}]"
-  }
-}
-```
-
-<span style="color:#2a98db"> **getContract**: Recupera un contrato por dirección</span>
+<span style="color:#2a98db"> **getContract**: Recupera un contrato por address</span>
 
 ```graphql
 query {
   getContract(address: "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc") {
     address
     metadata
+    hasMetadata
   }
 }
 ```
@@ -458,13 +628,147 @@ query {
   "data": {
     "getContract": {
       "address": "5G24svh2w4QXNhsHU5XBxf8N3Sw2MPu7sAemofv1bCuyxAzc",
-      "metadata": "{\n  \"source\": {\n    \"hash\": ...   }\n}\n"
+      "metadata": "{\n  \"source\": {\n    \"hash\": ...   }\n}\n",
+      "hasMetadata": true
+    }
+  }
+}
+```
+
+<span style="color:#2a98db"> **getContracts**: Recupera una lista de contratos</span>
+
+```graphql
+query {
+  getContracts(skip: 0, take: 10) {
+    address
+    metadata
+    hasMetadata
+    events {
+      method
+    }
+  }
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "getContracts": [
+      {
+        "address": "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8",
+        "hasMetadata": true,
+        "metadata": "{ ... }",
+        "events": [
+          {
+            "method": "ContractEmitted"
+          },
+        ]
+      }
+    ]
+  }
+}
+```
+
+<span style="color:#2a98db"> **getContractQueries**: Recupera un contrato. Si este contrato ha cargado metadatos, también recuperará las consultas y los métodos de transacción que se pueden ejecutar.</span>
+
+```graphql
+query {
+  getContractQueries(address: "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8") {
+    address
+    hasMetadata
+    queries {
+      args
+      docs
+      method
+      name
+    }
+  }
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "getContractQueries": {
+      "address": "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8",
+      "hasMetadata": true,
+      "queries": [
+        {
+          "args": [],
+          "docs": [
+            " Returns the total token supply."
+          ],
+          "method": "totalSupply",
+          "name": "Total supply"
+        },
+        {
+          "args": [
+            "{\"name\":\"to\",\"type\":{\"info\":10,\"type\":\"AccountId\"}}",
+            "{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}"
+          ],
+          "docs": [
+            " Transfers `value` amount of tokens from the caller's account to account `to`.",
+            "",
+            " On success a `Transfer` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns `InsufficientBalance` error if there are not enough tokens on",
+            " the caller's account balance."
+          ],
+          "method": "transfer",
+          "name": "Transfer"
+        }
+      ]
     }
   }
 }
 ```
 
 ### **Mutaciones**
+
+<span style="color:#2a98db"> **decodeEvent**: Decodifica los datos del evento para un evento específico. Requiere que los metadatos del contrato ya se hayan subido usando la mutación **uploadMetadata**</span>
+
+```graphql
+mutation {
+  decodeEvent(
+    contractAddress: "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8"
+    id: "81735cc9-76d3-5984-83af-5872bc9eaeb7"
+  )
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "decodeEvent": "[{\"decodedData\":{\"args\":[\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"0x00000000000000000000048c27395000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"to\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"identifier\":\"Transfer\",\"index\":0}},\"formattedData\":{\"from\":\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"to\":\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"value\":5}}]"
+  }
+}
+```
+
+<span style="color:#2a98db"> **decodeEvents**: Decodifica los datos de eventos para un contrato específico (use 'skip' y 'take' para seleccionar los eventos y 'orderAsc' para ordenar por tiempo). Requiere que los metadatos del contrato ya se hayan subido usando la mutación **uploadMetadata**</span>
+
+```graphql
+mutation {
+  decodeEvents(contract: "5DfG5TyaffuJ78rHP71cvkYEtktRkpeMiJNJyxd8Q5924GR8", skip: 0, take: 1, orderAsc: false)
+}
+```
+
+<span style="color:#5EBA7D"> Respuesta: </span>
+
+```graphql
+{
+  "data": {
+    "decodeEvents": "[{\"decodedData\":{\"args\":[\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"0x00000000000000000000048c27395000\"],\"event\":{\"args\":[{\"name\":\"from\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"to\",\"type\":{\"info\":9,\"lookupIndex\":11,\"type\":\"Option<AccountId>\",\"docs\":[],\"namespace\":\"Option\",\"sub\":{\"info\":10,\"lookupIndex\":2,\"type\":\"AccountId\",\"docs\":[],\"namespace\":\"ink_env::types::AccountId\",\"lookupNameRoot\":\"InkEnvAccountId\"}}},{\"name\":\"value\",\"type\":{\"info\":10,\"type\":\"Balance\"}}],\"docs\":[\" Event emitted when a token transfer occurs.\"],\"identifier\":\"Transfer\",\"index\":0}},\"formattedData\":{\"from\":\"5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc\",\"to\":\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\",\"value\":5}}]"
+  }
+}
+```
 
 <span style="color:#2a98db"> **uploadMetadata**: Para decodificar eventos es necesario cargar el ABI del contrato. Pasar un ABI en base64 a esta mutación lo guardará en la base de datos. Después de eso, ejecute una consulta **decodeEvents** para ver los datos decodificados en los eventos.</span>
 
@@ -619,7 +923,7 @@ Ejemplo de metadatos de un contrato ERC20:
       ...
 ```
 
-Una vez cargado, los eventos se pueden decodificar mediante la consulta _decodeEvents_ que se encuentra en la sección **Consultas**.
+Una vez cargado, los eventos se pueden decodificar mediante las mutaciones _decodeEvent_ o _decodeEvents_ que se encuentran en la sección **Mutaciones**.
 
 **Nota**: Los metadatos deben cargarse como un texto (string) en **base64**.
 
@@ -659,9 +963,9 @@ Consulte [Changelog](CHANGELOG.md) para más información.
 
 ## Colaboradores
 
-* [__Jose Ramirez__](https://github.com/0xslipk)
-* [__Fernando Sirni__](https://github.com/fersirni)
-* [__Ruben Gutierrez__](https://github.com/RubenGutierrezC)
+- [**Jose Ramirez**](https://github.com/0xslipk)
+- [**Fernando Sirni**](https://github.com/fersirni)
+- [**Ruben Gutierrez**](https://github.com/RubenGutierrezC)
 
 ## Licencia
 

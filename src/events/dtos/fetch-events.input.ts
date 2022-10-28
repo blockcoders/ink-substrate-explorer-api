@@ -8,6 +8,9 @@ export class FetchEventsInput {
   @Field(/* istanbul ignore next */ () => Int, { nullable: true })
   take? = 20
 
+  @Field(/* istanbul ignore next */ () => Boolean)
+  orderAsc?: boolean = false
+
   @Field(/* istanbul ignore next */ () => String, { nullable: true })
   contract?: string
 

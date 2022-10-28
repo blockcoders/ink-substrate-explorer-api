@@ -2,13 +2,14 @@
 
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import '@polkadot/api-augment'
-import { ApiPromise, WsProvider } from '@polkadot/api'
+import { ApiPromise } from '@polkadot/api'
 import { BlockHash, Header } from '@polkadot/types/interfaces'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import PQueue from 'p-queue'
 import { BlocksService } from '../blocks/blocks.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
+import { connect } from '../utils'
 const retry = require('async-await-retry')
 
 const FIRST_BLOCK_TO_LOAD = Number(process.env.FIRST_BLOCK_TO_LOAD) || 0
@@ -26,24 +27,18 @@ export class SubscriptionsService implements OnModuleInit {
     private readonly eventsService: EventsService,
   ) {}
 
-  async onModuleInit(): Promise<void> {
+  onModuleInit(): void {
     try {
       this.logger.info('Subscribing to new heads...')
-      await this.syncBlocks()
+      this.syncBlocks()
     } catch (error) {
       this.logger.error({ error }, 'Error while processing blocks.')
       throw error
     }
   }
 
-  static async connect(): Promise<ApiPromise> {
-    const provider = new WsProvider(WS_PROVIDER)
-    return ApiPromise.create({ provider })
-  }
-
   async syncBlocks() {
-    const api = await SubscriptionsService.connect()
-
+    const api = await connect(WS_PROVIDER)
     const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
     const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
     const loadFromBlockNumber = LOAD_ALL_BLOCKS ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber
@@ -83,8 +78,11 @@ export class SubscriptionsService implements OnModuleInit {
 
   async getBlockData(api: ApiPromise, hash: BlockHash) {
     const [block, records] = await Promise.all([api.rpc.chain.getBlock(hash), api.query.system.events.at(hash)])
+    const encodedLength = block.encodedLength
     const { header, extrinsics } = block.block || {}
-    return { header, extrinsics, records }
+    const timestampArgs = extrinsics.map((e) => e.method).find((m) => m.section === 'timestamp' && m.method === 'set')
+    const timestamp = Number(timestampArgs?.args[0].toString()) || Date.now()
+    return { header, extrinsics, records, timestamp, encodedLength }
   }
 
   getBlocksToLoad(from: number, to: number): number[] {
@@ -116,11 +114,15 @@ export class SubscriptionsService implements OnModuleInit {
   }
 
   async registerBlockData(blockData: any) {
-    const { header, extrinsics, records } = blockData
-    const block = await this.blocksService.createFromHeader(header)
-    const transactions = await this.transactionsService.createTransactionsFromExtrinsics(extrinsics, block.hash)
+    const { header, extrinsics, records, timestamp, encodedLength } = blockData
+    const block = await this.blocksService.createFromHeader(header, timestamp, encodedLength)
+    const transactions = await this.transactionsService.createTransactionsFromExtrinsics(
+      extrinsics,
+      block.hash,
+      timestamp,
+    )
     for (const [index, tx] of transactions.entries()) {
-      await this.eventsService.createEventsFromRecords(records, index, tx.hash)
+      await this.eventsService.createEventsFromRecords(records, index, tx.hash, timestamp)
     }
     return block
   }

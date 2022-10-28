@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql'
 import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
 import { Transaction } from '../../transactions/entity/transaction.entity'
 
@@ -19,6 +19,14 @@ export class Block extends BaseEntity {
   @Column('int')
   @Field(/* istanbul ignore next */ () => Int)
   number!: number
+
+  @Column('bigint')
+  @Field(/* istanbul ignore next */ () => Float)
+  timestamp!: number
+
+  @Column('bigint')
+  @Field(/* istanbul ignore next */ () => Float)
+  encodedLength!: number
 
   @OneToMany(
     /* istanbul ignore next */ () => Transaction,

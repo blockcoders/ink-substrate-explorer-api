@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, Float, ObjectType } from '@nestjs/graphql'
+import { DecodedEvent } from '@polkadot/api-contract/types'
 import { Codec } from '@polkadot/types-codec/types'
 import { IEventData } from '@polkadot/types/types'
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm'
@@ -39,6 +40,10 @@ export class Event extends BaseEntity {
   @Field(/* istanbul ignore next */ () => String)
   topics!: string
 
+  @Column('bigint')
+  @Field(/* istanbul ignore next */ () => Float)
+  timestamp!: number
+
   @ManyToOne(
     /* istanbul ignore next */ () => Transaction,
     /* istanbul ignore next */ (transaction: Transaction) => transaction.events,
@@ -53,6 +58,10 @@ export class Event extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true, default: {} })
   @Field(/* istanbul ignore next */ () => String, { nullable: true })
   data?: Codec[] & IEventData
+
+  @Column({ type: 'jsonb', nullable: true, default: {} })
+  @Field(/* istanbul ignore next */ () => String, { nullable: true })
+  decodedData?: DecodedEvent
 
   @CreateDateColumn({
     default: /* istanbul ignore next */ () => 'NOW()',

@@ -3,7 +3,8 @@ import { FetchEventsInput } from '../events/dtos/fetch-events.input'
 import { Event } from '../events/entity/event.entity'
 import { EventsService } from '../events/events.service'
 import { ContractsService } from './contracts.service'
-import { Contract } from './entity/contract.entity'
+import { FetchContractsInput } from './dtos/fetch-contracts.input'
+import { Contract, ContractQuery } from './entity/contract.entity'
 
 @Resolver(() => Contract)
 export class ContractsResolver {
@@ -12,6 +13,16 @@ export class ContractsResolver {
   @Query(/* istanbul ignore next */ () => Contract)
   async getContract(@Args('address', { type: () => String }) address: string) {
     return this.contractsService.findOne(address)
+  }
+
+  @Query(/* istanbul ignore next */ () => [Contract])
+  async getContracts(@Args() args: FetchContractsInput) {
+    return this.contractsService.fetchContracts(args)
+  }
+
+  @Query(/* istanbul ignore next */ () => Contract)
+  async getContractQueries(@Args('address', { type: () => String }) address: string) {
+    return this.contractsService.getContractQueries(address)
   }
 
   @Mutation(/* istanbul ignore next */ () => Boolean)
@@ -34,5 +45,23 @@ export class ContractsResolver {
       contract: address,
     }
     return this.eventsService.fetchEvents(args)
+  }
+
+  @ResolveField('queries', /* istanbul ignore next */ () => [ContractQuery])
+  async queries(@Parent() contract: Contract) {
+    const { queries } = contract
+    if (!queries) {
+      return []
+    }
+    queries.forEach((query) => {
+      query.args = query.args.map((arg) => JSON.stringify(arg))
+    })
+    return queries
+  }
+
+  @ResolveField('hasMetadata', /* istanbul ignore next */ () => Boolean)
+  async hasMetadata(@Parent() contract: Contract) {
+    const { metadata } = contract
+    return !!metadata
   }
 }

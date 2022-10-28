@@ -13,19 +13,19 @@ services:
       - postgres
     build:
       context: .
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile #dev.Dockefile
     ports:
       - 8080:8080
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/dist
+    env_file:
+      - .env
     networks:
       ink-explorer-network:
         aliases:
           - "backend"
-    env_file:
-      - .env
   postgres:
     image: postgres:14.4
     restart: always

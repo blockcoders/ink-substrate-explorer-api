@@ -11,6 +11,7 @@ export const mockTransaction = {
   signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
   nonce: 37,
   tip: 0,
+  timestamp: 1600000000000,
   createdDate: '2022-08-25 23:42:49.006343',
 }
 
@@ -41,6 +42,8 @@ export const mockTransactions = [
   },
 ]
 
+export const mockTimestamp = 1600000000000
+
 export const mockExtrinsics = [
   {
     hash: stringToHex('0x01c780fccc47dc4e9652180876a8267dc9f9dd501ed249f077e32c1653a89f2a'),
@@ -57,6 +60,22 @@ export const mockExtrinsics = [
     method: {
       method: 'set',
       section: 'timestamp',
+      args: [mockTimestamp],
+    },
+    encodedLength: 0,
+    registry: {
+      chainDecimals: {
+        toString: () => '12',
+      },
+      chainSS58: {
+        toString: () => '42',
+      },
+    },
+    era: {},
+    version: 0,
+    type: 0,
+    callIndex: {
+      toString: () => '0x0000',
     },
   },
   {
@@ -74,6 +93,7 @@ export const mockExtrinsics = [
     method: {
       method: 'call',
       section: 'timestamp',
+      args: [mockTimestamp],
     },
   },
 ]

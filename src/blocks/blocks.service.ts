@@ -26,16 +26,22 @@ export class BlocksService {
   }
 
   async fetchBlocks(args: FetchBlocksInput): Promise<Block[]> {
-    return this.blockRepository.find(args)
+    const { skip, take, orderByNumber, orderAsc } = args
+    const order: any = {}
+    const by = orderByNumber ? 'number' : 'timestamp'
+    order[by] = orderAsc ? 'ASC' : 'DESC'
+    return this.blockRepository.find({ skip, take, order })
   }
 
-  async createFromHeader(header: Header): Promise<Block> {
+  async createFromHeader(header: Header, timestamp: number, encodedLength: number): Promise<Block> {
     try {
       const { hash, parentHash, number } = header
       const block = this.blockRepository.create({
         hash: hash.toString().toLowerCase(),
         parentHash: parentHash.toString().toLowerCase(),
         number: parseInt(number.toHex()),
+        timestamp,
+        encodedLength,
       })
       const persistedBlock = await retry(
         async () => {
