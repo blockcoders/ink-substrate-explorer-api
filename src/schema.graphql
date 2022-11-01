@@ -31,6 +31,7 @@ type Event {
   decodedData: String
   formattedData: String!
   id: String!
+  identifier: String
   index: String!
   method: String!
   section: String!

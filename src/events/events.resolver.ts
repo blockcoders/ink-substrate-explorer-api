@@ -38,7 +38,7 @@ export class EventsResolver {
         throw new Error('Event not found')
       }
       const response = await this.eventsService.decodeEvents([event], contractAddress as string)
-      return JSON.stringify(response)
+      return JSON.stringify(response[0])
     } catch (error) {
       return error
     }
