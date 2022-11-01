@@ -17,7 +17,8 @@ describe('EventsResolver', () => {
           useFactory: jest.fn(() => ({
             findById: () => mockEvents[0],
             fetchEvents: () => mockEvents,
-            decodeEvents: () => mockDecodedEvent,
+            decodeEvent: () => mockDecodedEvent,
+            decodeEvents: () => [mockDecodedEvent],
             formatDecoded: () => mockFormattedEvent,
           })),
         },
@@ -57,7 +58,7 @@ describe('EventsResolver', () => {
         take: 10,
         contract: mockEvents[0].contractAddress,
       }
-      expect(resolver.decodeEvents(args)).resolves.toEqual(JSON.stringify(mockDecodedEvent))
+      expect(resolver.decodeEvents(args)).resolves.toEqual(JSON.stringify([mockDecodedEvent]))
     })
 
     it('should return an error message', () => {

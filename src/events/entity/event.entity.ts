@@ -28,6 +28,10 @@ export class Event extends BaseEntity {
   @Field(/* istanbul ignore next */ () => String)
   index!: string
 
+  @Column({ nullable: true })
+  @Field(/* istanbul ignore next */ () => String, { nullable: true })
+  identifier?: string
+
   @Column()
   @Field(/* istanbul ignore next */ () => String)
   section!: string
