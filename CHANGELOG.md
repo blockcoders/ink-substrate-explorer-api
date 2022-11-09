@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/09**
+- [#2e913c0](https://github.com/blockcoders/ink-substrate-explorer-api/commit/2e913c0bd7442116e93d44e38c2131b3cb4ae38c) Add ssl ca
+- [#695d76a](https://github.com/blockcoders/ink-substrate-explorer-api/commit/695d76aba46dedbbd08f41ba378b2dcc75a0e61d) update badges
+
 ## 1.0.3
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/09**
 - [#10](https://github.com/blockcoders/nestjs-ethers/pull/10) Fix contract query name formatter
