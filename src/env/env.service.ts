@@ -23,6 +23,7 @@ export class EnvService {
   public readonly DATABASE_PASSWORD: string
   public readonly DATABASE_RETRY_ATTEMPTS: number
   public readonly DATABASE_RETRY_DELAY: number
+  public readonly DATABASE_SSL_CA: string
 
   constructor(private readonly config: ConfigService) {
     // public env variables
@@ -42,6 +43,7 @@ export class EnvService {
     this.DATABASE_PASSWORD = this.config.get<string>('DATABASE_PASSWORD', 'password')
     this.DATABASE_RETRY_ATTEMPTS = parseInt(this.config.get<string>('DATABASE_RETRY_ATTEMPTS', '20'), 10)
     this.DATABASE_RETRY_DELAY = parseInt(this.config.get<string>('DATABASE_RETRY_DELAY', '6000'), 10)
+    this.DATABASE_SSL_CA = this.config.get<string>('DATABASE_SSL_CA', '')
   }
 
   public isProduction(): boolean {

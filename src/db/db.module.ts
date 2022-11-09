@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { Block } from '../blocks/entity/block.entity'
 import { Contract } from '../contracts/entity/contract.entity'
 import { EnvModule } from '../env/env.module'
@@ -13,7 +13,7 @@ import { Transaction } from '../transactions/entity/transaction.entity'
       imports: [EnvModule],
       inject: [EnvService],
       useFactory: async (env: EnvService) => {
-        return {
+        const config: TypeOrmModuleOptions = {
           type: 'postgres',
           host: env.DATABASE_HOST,
           port: env.DATABASE_PORT,
@@ -25,6 +25,18 @@ import { Transaction } from '../transactions/entity/transaction.entity'
           synchronize: true,
           autoLoadEntities: true,
           keepConnectionAlive: false,
+        }
+
+        if (!env.isProduction()) {
+          return config
+        }
+
+        return {
+          ...config,
+          ssl: {
+            ca: env.DATABASE_SSL_CA,
+            rejectUnauthorized: false,
+          },
         }
       },
     }),

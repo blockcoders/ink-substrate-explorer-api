@@ -54,6 +54,9 @@ export class EnvironmentVariables {
 
   @IsNumberString()
   DATABASE_RETRY_DELAY: string | undefined
+
+  @IsString()
+  DATABASE_SSL_CA: string | undefined
 }
 
 export function validate(config: Record<string, unknown>) {
