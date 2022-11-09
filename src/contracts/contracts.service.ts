@@ -64,7 +64,7 @@ export class ContractsService {
         method,
         docs,
         args,
-        name: (identifier[0].toUpperCase() + identifier.substring(1)).replace('_', ' '),
+        name: (identifier[0].toUpperCase() + identifier.substring(1)).replaceAll('_', ' '),
       })
     })
     contract.queries = contractQueries

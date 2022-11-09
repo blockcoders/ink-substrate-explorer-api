@@ -9,6 +9,6 @@ export class AppResolver {
 
   @Query(/* istanbul ignore next */ () => String)
   version(): string {
-    return 'v1.0.2'
+    return 'v1.0.3'
   }
 }
