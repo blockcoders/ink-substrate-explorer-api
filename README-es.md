@@ -1,8 +1,13 @@
-# Ink! Explorer API
+Ink! Explorer API
+=================
 
-[![App Build](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml/badge.svg)](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml)
+[![App Build](https://img.shields.io/github/workflow/status/blockcoders/ink-substrate-explorer-api/Pulll%20Request%20App%20Build/main?logo=github)](https://github.com/blockcoders/ink-substrate-explorer-api/actions/workflows/pr.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/blockcoders/ink-substrate-explorer-api/badge.svg?branch=main)](https://coveralls.io/github/blockcoders/ink-substrate-explorer-api?branch=main)
-[![Known Vulnerabilities](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-api/badge.svg)](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-api)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fe5ba084394c4730b35948e2a39ad1c7)](https://www.codacy.com/gh/blockcoders/ink-substrate-explorer-api/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=blockcoders/ink-substrate-explorer-api&amp;utm_campaign=Badge_Grade)
+[![BCH compliance](https://bettercodehub.com/edge/badge/blockcoders/ink-substrate-explorer-api?branch=main)](https://bettercodehub.com/)
+[![Docker Image Version](https://img.shields.io/docker/v/blockcoders/ink-substrate-explorer-api?logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/blockcoders/ink-substrate-explorer-api/general)
+[![Docker Image Size](https://img.shields.io/docker/image-size/blockcoders/ink-substrate-explorer-api?logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/blockcoders/ink-substrate-explorer-api/general)
+[![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 ## **Acerca del explorador**
 
