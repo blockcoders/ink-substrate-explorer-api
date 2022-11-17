@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import { Injectable, OnModuleInit } from '@nestjs/common'
-import '@polkadot/api-augment'
 import { ApiPromise } from '@polkadot/api'
 import { BlockHash, Header } from '@polkadot/types/interfaces'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
@@ -35,7 +34,7 @@ export class SubscriptionsService implements OnModuleInit {
   }
 
   async syncBlocks() {
-    const api = await connect(this.env.WS_PROVIDER)
+    const api = await connect(this.env.WS_PROVIDER, this.logger)
     const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
     const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
     const loadFromBlockNumber = this.env.LOAD_ALL_BLOCKS ? this.env.FIRST_BLOCK_TO_LOAD : lastDBBlockNumber

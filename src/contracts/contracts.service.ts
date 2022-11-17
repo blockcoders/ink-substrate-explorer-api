@@ -48,7 +48,7 @@ export class ContractsService {
   }
 
   async getContractQueries(contractAddress: string): Promise<Contract> {
-    const api = await connect(this.env.WS_PROVIDER)
+    const api = await connect(this.env.WS_PROVIDER, this.logger)
     const contract = await this.findOne(contractAddress)
     const { address, metadata } = contract
     if (!address || !metadata) {
