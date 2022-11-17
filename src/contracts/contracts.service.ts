@@ -3,16 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Abi, ContractPromise } from '@polkadot/api-contract'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import { Repository } from 'typeorm'
+import { EnvService } from '../env/env.service'
 import { connect } from '../utils'
 import { FetchContractsInput } from './dtos/fetch-contracts.input'
 import { Contract, ContractQuery } from './entity/contract.entity'
-const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
 
 @Injectable()
 export class ContractsService {
   constructor(
     @InjectPinoLogger(ContractsService.name)
     private readonly logger: PinoLogger,
+    private readonly env: EnvService,
     @InjectRepository(Contract)
     private readonly contractRepository: Repository<Contract>,
   ) {}
@@ -47,7 +48,7 @@ export class ContractsService {
   }
 
   async getContractQueries(contractAddress: string): Promise<Contract> {
-    const api = await connect(WS_PROVIDER)
+    const api = await connect(this.env.WS_PROVIDER)
     const contract = await this.findOne(contractAddress)
     const { address, metadata } = contract
     if (!address || !metadata) {

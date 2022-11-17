@@ -27,7 +27,7 @@ import { Transaction } from '../transactions/entity/transaction.entity'
           keepConnectionAlive: false,
         }
 
-        if (!env.isProduction()) {
+        if (!env.DATABASE_SSL_CA) {
           return config
         }
 

@@ -21,9 +21,13 @@ export class EnvService {
   public readonly DATABASE_NAME: string
   public readonly DATABASE_USERNAME: string
   public readonly DATABASE_PASSWORD: string
+  public readonly DATABASE_SSL_CA: string
   public readonly DATABASE_RETRY_ATTEMPTS: number
   public readonly DATABASE_RETRY_DELAY: number
-  public readonly DATABASE_SSL_CA: string
+  public readonly WS_PROVIDER: string
+  public readonly LOAD_ALL_BLOCKS: boolean
+  public readonly FIRST_BLOCK_TO_LOAD: number
+  public readonly BLOCKS_CONCURRENCY: number
 
   constructor(private readonly config: ConfigService) {
     // public env variables
@@ -41,9 +45,13 @@ export class EnvService {
     this.DATABASE_NAME = this.config.get<string>('DATABASE_NAME', '')
     this.DATABASE_USERNAME = this.config.get<string>('DATABASE_USERNAME', '')
     this.DATABASE_PASSWORD = this.config.get<string>('DATABASE_PASSWORD', 'password')
+    this.DATABASE_SSL_CA = this.config.get<string>('DATABASE_SSL_CA', '')
     this.DATABASE_RETRY_ATTEMPTS = parseInt(this.config.get<string>('DATABASE_RETRY_ATTEMPTS', '20'), 10)
     this.DATABASE_RETRY_DELAY = parseInt(this.config.get<string>('DATABASE_RETRY_DELAY', '6000'), 10)
-    this.DATABASE_SSL_CA = this.config.get<string>('DATABASE_SSL_CA', '')
+    this.WS_PROVIDER = this.config.get<string>('WS_PROVIDER', '')
+    this.LOAD_ALL_BLOCKS = config.get<string>('LOAD_ALL_BLOCKS', 'false') === 'true'
+    this.FIRST_BLOCK_TO_LOAD = parseInt(this.config.get<string>('FIRST_BLOCK_TO_LOAD', '0'), 10)
+    this.BLOCKS_CONCURRENCY = parseInt(this.config.get<string>('BLOCKS_CONCURRENCY', '1000'), 10)
   }
 
   public isProduction(): boolean {

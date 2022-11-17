@@ -6,10 +6,12 @@ import { mockEvents } from '../../mocks/events-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockExtrinsics, mockTimestamp, mockTransactions } from '../../mocks/transactions-mock'
 import { BlocksService } from '../blocks/blocks.service'
+import { EnvModule } from '../env/env.module'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
 import { connect } from '../utils'
 import { SubscriptionsService } from './subscriptions.service'
+
 jest.mock('@polkadot/api')
 jest.mock('../utils')
 
@@ -29,6 +31,7 @@ describe('subscriptionsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EnvModule],
       providers: [
         SubscriptionsService,
         {

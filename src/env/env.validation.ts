@@ -23,22 +23,22 @@ export class EnvironmentVariables {
   LOG_LEVEL: PinoLevel = 'debug'
 
   @IsBooleanString()
-  GRAPHQL_DEBUG = false
+  GRAPHQL_DEBUG: string | undefined
 
   @IsBooleanString()
-  GRAPHQL_PLAYGROUND = false
+  GRAPHQL_PLAYGROUND: string | undefined
 
   @IsBooleanString()
-  GRAPHQL_SORT_SCHEMA = true
+  GRAPHQL_SORT_SCHEMA: string | undefined
 
   @IsBooleanString()
-  GRAPHQL_INTROSPECTION = false
+  GRAPHQL_INTROSPECTION: string | undefined
 
   @IsString()
   DATABASE_HOST: string | undefined
 
   @IsNumberString()
-  DATABASE_PORT = '5432'
+  DATABASE_PORT: string | undefined
 
   @IsString()
   DATABASE_NAME: string | undefined
@@ -49,6 +49,9 @@ export class EnvironmentVariables {
   @IsString()
   DATABASE_PASSWORD: string | undefined
 
+  @IsString()
+  DATABASE_SSL_CA: string | undefined
+
   @IsNumberString()
   DATABASE_RETRY_ATTEMPTS: string | undefined
 
@@ -56,7 +59,16 @@ export class EnvironmentVariables {
   DATABASE_RETRY_DELAY: string | undefined
 
   @IsString()
-  DATABASE_SSL_CA: string | undefined
+  WS_PROVIDER: string | undefined
+
+  @IsBooleanString()
+  LOAD_ALL_BLOCKS: boolean | undefined
+
+  @IsNumberString()
+  FIRST_BLOCK_TO_LOAD: number | undefined
+
+  @IsNumberString()
+  BLOCKS_CONCURRENCY: number | undefined
 }
 
 export function validate(config: Record<string, unknown>) {

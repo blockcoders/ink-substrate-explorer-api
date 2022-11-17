@@ -9,6 +9,7 @@ import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockTransaction } from '../../mocks/transactions-mock'
 import { ContractsService } from '../contracts/contracts.service'
 import { Contract } from '../contracts/entity/contract.entity'
+import { EnvModule } from '../env/env.module'
 import { Event } from './entity/event.entity'
 import { EventsService } from './events.service'
 
@@ -19,6 +20,7 @@ describe('EventsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EnvModule],
       providers: [
         EventsService,
         {
