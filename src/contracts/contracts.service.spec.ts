@@ -7,6 +7,7 @@ import { apiMock } from '../../mocks/api-mock'
 import { BASE64_METADATA } from '../../mocks/base64-metadata.mock'
 import { mockContractQueries } from '../../mocks/contracts-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
+import { EnvModule } from '../env/env.module'
 import { connect } from '../utils'
 import { ContractsService } from './contracts.service'
 import { Contract } from './entity/contract.entity'
@@ -28,6 +29,7 @@ describe('ContractService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EnvModule],
       providers: [
         ContractsService,
         {

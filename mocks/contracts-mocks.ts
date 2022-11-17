@@ -1,7 +1,7 @@
 import abi from './erc20'
 
 export const generateAbiInBase64 = () => {
-  const buff = new Buffer(JSON.stringify(abi))
+  const buff = Buffer.from(JSON.stringify(abi))
   const base64data = buff.toString('base64')
   return base64data
 }

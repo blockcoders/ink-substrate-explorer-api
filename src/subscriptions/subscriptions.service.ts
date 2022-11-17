@@ -1,27 +1,23 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import { Injectable, OnModuleInit } from '@nestjs/common'
-import '@polkadot/api-augment'
 import { ApiPromise } from '@polkadot/api'
 import { BlockHash, Header } from '@polkadot/types/interfaces'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import PQueue from 'p-queue'
 import { BlocksService } from '../blocks/blocks.service'
+import { EnvService } from '../env/env.service'
 import { EventsService } from '../events/events.service'
 import { TransactionsService } from '../transactions/transactions.service'
 import { connect } from '../utils'
-const retry = require('async-await-retry')
-
-const FIRST_BLOCK_TO_LOAD = Number(process.env.FIRST_BLOCK_TO_LOAD) || 0
-const BLOCKS_CONCURRENCY = Number(process.env.BLOCKS_CONCURRENCY) || 1000
-const LOAD_ALL_BLOCKS = process.env.LOAD_ALL_BLOCKS === 'true'
-const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
+const asyncRetry = require('async-await-retry')
 
 @Injectable()
 export class SubscriptionsService implements OnModuleInit {
   constructor(
     @InjectPinoLogger(SubscriptionsService.name)
     private readonly logger: PinoLogger,
+    private readonly env: EnvService,
     private readonly blocksService: BlocksService,
     private transactionsService: TransactionsService,
     private readonly eventsService: EventsService,
@@ -38,10 +34,10 @@ export class SubscriptionsService implements OnModuleInit {
   }
 
   async syncBlocks() {
-    const api = await connect(WS_PROVIDER)
+    const api = await connect(this.env.WS_PROVIDER, this.logger)
     const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
     const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
-    const loadFromBlockNumber = LOAD_ALL_BLOCKS ? FIRST_BLOCK_TO_LOAD : lastDBBlockNumber
+    const loadFromBlockNumber = this.env.LOAD_ALL_BLOCKS ? this.env.FIRST_BLOCK_TO_LOAD : lastDBBlockNumber
 
     await this.subscribeNewHeads(api)
 
@@ -55,7 +51,7 @@ export class SubscriptionsService implements OnModuleInit {
     const blocksToLoad = this.getBlocksToLoad(loadFromBlockNumber, lastBlockNumber)
     this.logger.info(`Loading ${blocksToLoad.length} blocks. This may take a while...`)
     this.logger.debug(`From: ${blocksToLoad[0]}. To: ${blocksToLoad[blocksToLoad.length - 1]}`)
-    const queue = new PQueue({ concurrency: BLOCKS_CONCURRENCY })
+    const queue = new PQueue({ concurrency: this.env.BLOCKS_CONCURRENCY })
     const q = blocksToLoad.map(
       (blockNumber) => () =>
         new Promise(async (res, rej) => {
@@ -91,7 +87,7 @@ export class SubscriptionsService implements OnModuleInit {
 
   async processBlock(api: ApiPromise, blockNumber: number) {
     try {
-      return await retry(
+      return await asyncRetry(
         async () => {
           const hash = await api.rpc.chain.getBlockHash(blockNumber)
           const blockData = await this.getBlockData(api, hash)
