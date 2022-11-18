@@ -9,6 +9,10 @@ Ink! Explorer API
 [![Docker Image Size](https://img.shields.io/docker/image-size/blockcoders/ink-substrate-explorer-api?logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/blockcoders/ink-substrate-explorer-api/general)
 [![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
+## Demo
+
+[ink-explorer-api.blockcoders.io](https://ink-explorer-api.blockcoders.io/graphql)
+
 ## **Acerca del explorador**
 
 Ink Explorer es una aplicacion que provee informacion relativa a los contratos que utilizan Ink! en blockchains basadas en Substrate. Se suscribe a la blockchain y a los eventos emitidos por los modulos de Ink! y guarda la informacion en su propia base de datos PostgreSQL. El back-end expone una API que puede interactuar con la base de datos y ejecutar consultas rapidas para obtener informacion especifica en poco tiempo.
