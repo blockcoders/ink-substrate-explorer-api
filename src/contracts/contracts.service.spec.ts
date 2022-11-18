@@ -14,6 +14,22 @@ import { Contract } from './entity/contract.entity'
 
 jest.mock('../utils')
 
+jest.mock('@polkadot/api-contract', () => ({
+  Abi: jest.fn(),
+  ContractPromise: jest.fn(() => ({
+    query: {
+      fake: {
+        meta: {
+          method: '',
+          docs: '',
+          args: '',
+          identifier: 'Fake_',
+        },
+      },
+    },
+  })),
+}))
+
 const mockContracts = [
   {
     address: '5F73xwbK9jtcG1YY38DG5wVLm42y15pCa8zE79snVT5z9X1t',
@@ -103,8 +119,8 @@ describe('ContractService', () => {
   })
 
   describe('getContractQueries', () => {
-    it.skip('should get a contract with queries', async () => {
-      const repoSpy = jest.spyOn(repo, 'findOne').mockResolvedValueOnce(mockContractQueries as unknown as Contract)
+    it('should get a contract with queries', async () => {
+      const repoSpy = jest.spyOn(service, 'findOne').mockResolvedValueOnce(mockContractQueries as unknown as Contract)
       const contract = await service.getContractQueries(mockContractQueries.address)
       expect(contract.address).toEqual(mockContractQueries.address)
       expect(contract.metadata).toEqual(mockContractQueries.metadata)
