@@ -37,7 +37,6 @@ export class SubscriptionsService implements OnModuleInit {
 
   async syncBlocks() {
     const api = await connect(this.env.WS_PROVIDER, this.logger)
-    // const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
     let syncData = await this.syncService.find()
 
     if (!syncData) {

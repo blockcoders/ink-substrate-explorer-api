@@ -120,7 +120,6 @@ describe('subscriptionsService', () => {
     })
 
     it('should show fail', async () => {
-      // jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
       jest.spyOn(service, 'processBlock').mockRejectedValueOnce(new Error('Failed to process block'))
       try {
