@@ -1,5 +1,5 @@
 import { stringToHex } from '@polkadot/util'
-import { Transaction } from 'src/transactions/entity/transaction.entity'
+import { Transaction } from '../src/transactions/entity/transaction.entity'
 
 export const mockTransaction = {
   hash: '0x055878018de242a21b7bd4b9512f4c24217da75ab2b9bf4eb93e95247b1a8f43',

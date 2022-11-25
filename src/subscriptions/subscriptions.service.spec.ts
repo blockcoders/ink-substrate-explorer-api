@@ -8,6 +8,7 @@ import { mockExtrinsics, mockTimestamp, mockTransactions } from '../../mocks/tra
 import { BlocksService } from '../blocks/blocks.service'
 import { EnvModule } from '../env/env.module'
 import { EventsService } from '../events/events.service'
+import { SyncService } from '../sync/sync.service'
 import { TransactionsService } from '../transactions/transactions.service'
 import { connect } from '../utils'
 import { SubscriptionsService } from './subscriptions.service'
@@ -18,7 +19,7 @@ jest.mock('../utils')
 describe('subscriptionsService', () => {
   let service: SubscriptionsService
   let api: ApiPromise
-  let blockService: BlocksService
+  let syncService: SyncService
 
   beforeAll(async () => {
     const MockedApi = ApiPromise as jest.MockedClass<typeof ApiPromise>
@@ -53,12 +54,25 @@ describe('subscriptionsService', () => {
             createEventsFromRecords: jest.fn().mockResolvedValue(mockEvents),
           },
         },
+        {
+          provide: SyncService,
+          useValue: {
+            find: jest.fn().mockResolvedValue({
+              lastSynced: 20,
+            }),
+            createSync: jest.fn().mockResolvedValue({
+              lastSynced: 20,
+            }),
+            finishSync: jest.fn(),
+            updateSync: jest.fn(),
+          },
+        },
         mockPinoService(SubscriptionsService.name),
       ],
     }).compile()
 
     service = module.get<SubscriptionsService>(SubscriptionsService)
-    blockService = module.get<BlocksService>(BlocksService)
+    syncService = module.get<SyncService>(SyncService)
   })
 
   it('should be defined', () => {
@@ -82,7 +96,6 @@ describe('subscriptionsService', () => {
 
   describe('syncBlocks', () => {
     it('should load all blocks', async () => {
-      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
       jest
         .spyOn(service, 'processBlock')
@@ -93,27 +106,26 @@ describe('subscriptionsService', () => {
 
       expect(result).toEqual([mockBlocks[0].hash, mockBlocks[1].hash])
 
-      expect(blockService.getLastBlock).toBeCalledTimes(1)
+      expect(syncService.find).toBeCalledTimes(1)
     })
 
     it('should show already sync message', async () => {
-      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 100 } as any)
+      jest.spyOn(syncService, 'find').mockResolvedValue({ lastSynced: 100 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
 
       const result = await service.syncBlocks()
 
       expect(result).toBe(undefined)
-      expect(blockService.getLastBlock).toBeCalledTimes(1)
+      expect(syncService.find).toBeCalledTimes(1)
     })
 
     it('should show fail', async () => {
-      jest.spyOn(blockService, 'getLastBlock').mockResolvedValue({ ...mockBlock, number: 20 } as any)
       jest.spyOn(service, 'subscribeNewHeads').mockImplementation(() => Promise.resolve([]) as any)
       jest.spyOn(service, 'processBlock').mockRejectedValueOnce(new Error('Failed to process block'))
       try {
         await service.syncBlocks()
       } catch (error) {
-        expect(blockService.getLastBlock).toBeCalledTimes(1)
+        expect(syncService.find).toBeCalledTimes(1)
         expect((error as Error).message).toBe('Failed to process block')
       }
     })

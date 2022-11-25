@@ -18,6 +18,9 @@ import { EventsModule } from './events/events.module'
 import { EventsResolver } from './events/events.resolver'
 import { EventsService } from './events/events.service'
 import { SubscriptionsModule } from './subscriptions/subscriptions.module'
+import { SyncModule } from './sync/sync.module'
+import { SyncResolver } from './sync/sync.resolver'
+import { SyncService } from './sync/sync.service'
 import { TransactionsModule } from './transactions/transactions.module'
 import { TransactionsResolver } from './transactions/transactions.resolver'
 import { TransactionsService } from './transactions/transactions.service'
@@ -31,7 +34,7 @@ import { TransactionsService } from './transactions/transactions.service'
       useFactory: async (env: EnvService) => env.getPinoConfig(),
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      imports: [EnvModule, BlocksModule, EventsModule, TransactionsModule],
+      imports: [EnvModule, BlocksModule, EventsModule, TransactionsModule, SyncModule],
       inject: [EnvService],
       driver: ApolloDriver,
       useFactory: (env: EnvService) => {
@@ -50,6 +53,7 @@ import { TransactionsService } from './transactions/transactions.service'
     TransactionsModule,
     ContractsModule,
     SubscriptionsModule,
+    SyncModule,
   ],
   providers: [
     AppResolver,
@@ -61,6 +65,8 @@ import { TransactionsService } from './transactions/transactions.service'
     TransactionsService,
     ContractsResolver,
     ContractsService,
+    SyncResolver,
+    SyncService,
   ],
 })
 export class AppModule {}

@@ -5,6 +5,7 @@ import { Contract } from '../contracts/entity/contract.entity'
 import { EnvModule } from '../env/env.module'
 import { EnvService } from '../env/env.service'
 import { Event } from '../events/entity/event.entity'
+import { Sync } from '../sync/entity/sync.entity'
 import { Transaction } from '../transactions/entity/transaction.entity'
 
 @Module({
@@ -40,7 +41,7 @@ import { Transaction } from '../transactions/entity/transaction.entity'
         }
       },
     }),
-    TypeOrmModule.forFeature([Block, Transaction, Event, Contract]),
+    TypeOrmModule.forFeature([Block, Transaction, Event, Contract, Sync]),
   ],
   exports: [TypeOrmModule],
 })
