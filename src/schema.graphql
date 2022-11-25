@@ -54,11 +54,19 @@ type Query {
   getContracts(skip: Int = 0, take: Int = 20): [Contract!]!
   getEvent(id: String!): Event!
   getEvents(contract: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20, transactionHash: String): [Event!]!
+  getSync: Sync!
   getTransaction(hash: String!): Transaction!
   getTransactions(blockHash: String, orderAsc: Boolean = false, skip: Int = 0, take: Int = 20): [Transaction!]!
   getTransactionsByContract(address: String!, orderAsc: Boolean = false, skip: Int = 0, take: Int = 10): [Transaction!]!
   status: String!
   version: String!
+}
+
+type Sync {
+  id: Float!
+  lastSynced: Float!
+  status: String!
+  timestamp: String!
 }
 
 type Transaction {

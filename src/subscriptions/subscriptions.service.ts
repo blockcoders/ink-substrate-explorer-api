@@ -8,6 +8,7 @@ import PQueue from 'p-queue'
 import { BlocksService } from '../blocks/blocks.service'
 import { EnvService } from '../env/env.service'
 import { EventsService } from '../events/events.service'
+import { SyncService } from '../sync/sync.service'
 import { TransactionsService } from '../transactions/transactions.service'
 import { connect } from '../utils'
 const asyncRetry = require('async-await-retry')
@@ -21,6 +22,7 @@ export class SubscriptionsService implements OnModuleInit {
     private readonly blocksService: BlocksService,
     private transactionsService: TransactionsService,
     private readonly eventsService: EventsService,
+    private readonly syncService: SyncService,
   ) {}
 
   onModuleInit(): void {
@@ -35,7 +37,14 @@ export class SubscriptionsService implements OnModuleInit {
 
   async syncBlocks() {
     const api = await connect(this.env.WS_PROVIDER, this.logger)
-    const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
+    // const lastDBBlockNumber = (await this.blocksService.getLastBlock())?.number || 0
+    let syncData = await this.syncService.find()
+
+    if (!syncData) {
+      syncData = await this.syncService.createSync()
+    }
+
+    const lastDBBlockNumber = syncData?.lastSynced
     const lastBlockNumber = (await api.rpc.chain.getHeader()).number.toNumber()
     const loadFromBlockNumber = this.env.LOAD_ALL_BLOCKS ? this.env.FIRST_BLOCK_TO_LOAD : lastDBBlockNumber
 
@@ -48,21 +57,30 @@ export class SubscriptionsService implements OnModuleInit {
       return
     }
 
-    const blocksToLoad = this.getBlocksToLoad(loadFromBlockNumber, lastBlockNumber)
-    this.logger.info(`Loading ${blocksToLoad.length} blocks. This may take a while...`)
-    this.logger.debug(`From: ${blocksToLoad[0]}. To: ${blocksToLoad[blocksToLoad.length - 1]}`)
-    const queue = new PQueue({ concurrency: this.env.BLOCKS_CONCURRENCY })
-    const q = blocksToLoad.map(
-      (blockNumber) => () =>
-        new Promise(async (res, rej) => {
-          try {
-            res(this.processBlock(api, blockNumber))
-          } catch (error) {
-            rej(error)
-          }
-        }),
-    )
-    return queue.addAll(q as any)
+    let result: any = undefined
+    try {
+      const blocksToLoad = this.getBlocksToLoad(loadFromBlockNumber, lastBlockNumber)
+      this.logger.info(`Loading ${blocksToLoad.length} blocks. This may take a while...`)
+      this.logger.debug(`From: ${blocksToLoad[0]}. To: ${blocksToLoad[blocksToLoad.length - 1]}`)
+      const queue = new PQueue({ concurrency: this.env.BLOCKS_CONCURRENCY })
+      const q = blocksToLoad.map(
+        (blockNumber) => () =>
+          new Promise(async (res, rej) => {
+            try {
+              res(this.processBlock(api, blockNumber))
+            } catch (error) {
+              rej(error)
+            }
+          }),
+      )
+      result = await queue.addAll(q as any)
+    } catch (error) {
+      this.logger.error('Error syncing')
+    } finally {
+      this.logger.debug('syncing finished')
+      await this.syncService.finishSync()
+      return result
+    }
   }
 
   async subscribeNewHeads(api: ApiPromise) {
@@ -87,11 +105,18 @@ export class SubscriptionsService implements OnModuleInit {
 
   async processBlock(api: ApiPromise, blockNumber: number) {
     try {
+      let maxBlockNumber = 0
       return await asyncRetry(
         async () => {
           const hash = await api.rpc.chain.getBlockHash(blockNumber)
           const blockData = await this.getBlockData(api, hash)
           const block = await this.registerBlockData(blockData)
+          maxBlockNumber = Math.max(block.number, maxBlockNumber)
+          await this.syncService.updateSync({
+            lastSynced: maxBlockNumber,
+            timestamp: String(block.timestamp),
+            status: 'syncing',
+          })
           this.logger.info(`Block ${block.number} loaded.`)
           this.logger.debug(`Block hash: ${block.hash}`)
           return hash
