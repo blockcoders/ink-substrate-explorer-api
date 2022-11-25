@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/25**
+- [#13](https://github.com/blockcoders/nestjs-ethers/pull/13) add sync module
+- [#12](https://github.com/blockcoders/nestjs-ethers/pull/12) fix test
+- [#11](https://github.com/blockcoders/nestjs-ethers/pull/11) Fix env variables
+
 ## 1.0.4
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/09**
 - [#2e913c0](https://github.com/blockcoders/ink-substrate-explorer-api/commit/2e913c0bd7442116e93d44e38c2131b3cb4ae38c) Add ssl ca

@@ -24,7 +24,7 @@ describe('AppResolver', () => {
 
   describe('version', () => {
     it('should return the current version', () => {
-      expect(resolver.version()).toEqual('v1.0.4')
+      expect(resolver.version()).toEqual('v1.0.5')
     })
   })
 })

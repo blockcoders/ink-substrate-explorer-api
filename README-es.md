@@ -250,7 +250,7 @@ query {
 ```graphql
 {
   "data": {
-    "version": "v1.0.1"
+    "version": "v1.0.5"
   }
 }
 ```
