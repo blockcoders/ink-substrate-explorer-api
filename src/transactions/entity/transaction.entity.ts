@@ -7,8 +7,8 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  ObjectIdColumn,
   OneToMany,
-  PrimaryColumn,
 } from 'typeorm'
 import { Block } from '../../blocks/entity/block.entity'
 import { Event } from '../../events/entity/event.entity'
@@ -17,7 +17,7 @@ import { Event } from '../../events/entity/event.entity'
 @Entity({ name: 'transactions' })
 @Index(['signer'])
 export class Transaction extends BaseEntity {
-  @PrimaryColumn({
+  @ObjectIdColumn({
     unique: true,
   })
   @Field(/* istanbul ignore next */ () => String)

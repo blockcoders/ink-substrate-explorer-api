@@ -2,14 +2,14 @@ import { Field, Float, ObjectType } from '@nestjs/graphql'
 import { DecodedEvent } from '@polkadot/api-contract/types'
 import { Codec } from '@polkadot/types-codec/types'
 import { IEventData } from '@polkadot/types/types'
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, CreateDateColumn, ObjectIdColumn } from 'typeorm'
 import { Contract } from '../../contracts/entity/contract.entity'
 import { Transaction } from '../../transactions/entity/transaction.entity'
 
 @ObjectType()
 @Entity({ name: 'events' })
 export class Event extends BaseEntity {
-  @PrimaryColumn()
+  @ObjectIdColumn()
   @Field(/* istanbul ignore next */ () => String)
   id!: string
 

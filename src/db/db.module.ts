@@ -15,17 +15,17 @@ import { Transaction } from '../transactions/entity/transaction.entity'
       inject: [EnvService],
       useFactory: async (env: EnvService) => {
         const config: TypeOrmModuleOptions = {
-          type: 'postgres',
+          type: 'mongodb',
           host: env.DATABASE_HOST,
           port: env.DATABASE_PORT,
           username: env.DATABASE_USERNAME,
           password: env.DATABASE_PASSWORD,
-          database: env.DATABASE_NAME,
-          retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
-          retryDelay: env.DATABASE_RETRY_DELAY,
+          // database: env.DATABASE_NAME,
+          // retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
+          // retryDelay: env.DATABASE_RETRY_DELAY,
           synchronize: true,
           autoLoadEntities: true,
-          keepConnectionAlive: false,
+          // keepConnectionAlive: false,
         }
 
         if (!env.DATABASE_SSL_CA) {
@@ -34,10 +34,10 @@ import { Transaction } from '../transactions/entity/transaction.entity'
 
         return {
           ...config,
-          ssl: {
-            ca: env.DATABASE_SSL_CA,
-            rejectUnauthorized: false,
-          },
+          // ssl: {
+          //   ca: env.DATABASE_SSL_CA,
+          //   rejectUnauthorized: false,
+          // },
         }
       },
     }),

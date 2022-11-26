@@ -2,8 +2,8 @@ import 'dotenv/config'
 import { DataSource } from 'typeorm'
 
 export const connectionSource = new DataSource({
-  type: 'postgres',
-  host: '127.0.0.1',
+  type: 'mongodb',
+  host: 'localhost',
   port: Number(process.env.DATABASE_PORT),
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
