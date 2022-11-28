@@ -138,7 +138,7 @@ export class SubscriptionsService implements OnModuleInit {
     const block = await this.blocksService.createFromHeader(header, timestamp, encodedLength)
     const transactions = await this.transactionsService.createTransactionsFromExtrinsics(
       extrinsics,
-      block.hash.toString(),
+      block.hash?.toString() || '',
       timestamp,
     )
     for (const [index, tx] of transactions.entries()) {

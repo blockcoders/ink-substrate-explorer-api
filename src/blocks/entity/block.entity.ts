@@ -5,6 +5,8 @@ import { Transaction } from '../../transactions/entity/transaction.entity'
 @ObjectType()
 @Entity({ name: 'blocks' })
 @Index(['hash', 'number'])
+@Index(['number'])
+@Index(['timestamp'])
 export class Block extends BaseEntity {
   @ObjectIdColumn({ unique: true, type: 'string' })
   @Field(/* istanbul ignore next */ () => String)
