@@ -1,13 +1,26 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 import { AbiParam } from '@polkadot/api-contract/types'
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, ObjectIdColumn, OneToMany, PrimaryColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ObjectID,
+  ObjectIdColumn,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm'
 import { Event } from '../../events/entity/event.entity'
 
 @ObjectType()
 @Entity({ name: 'contracts' })
 @Index(['address'])
 export class Contract extends BaseEntity {
-  @ObjectIdColumn({
+  @ObjectIdColumn()
+  _id!: ObjectID
+
+  @Column({
     unique: true,
   })
   @PrimaryColumn()

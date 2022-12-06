@@ -5,7 +5,7 @@ import { GenericExtrinsic } from '@polkadot/types'
 import { Vec } from '@polkadot/types-codec'
 import { AnyTuple, ArgsDef } from '@polkadot/types-codec/types'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { Repository } from 'typeorm'
+import { MongoRepository } from 'typeorm'
 import { FetchTransactionsByContractInput } from './dtos/fetch-transactions-by-contract.input'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
@@ -17,7 +17,7 @@ export class TransactionsService {
     @InjectPinoLogger(TransactionsService.name)
     private readonly logger: PinoLogger,
     @InjectRepository(Transaction)
-    private readonly transactionRepository: Repository<Transaction>,
+    private readonly transactionRepository: MongoRepository<Transaction>,
   ) {}
 
   async findOne(hash: string): Promise<Transaction> {

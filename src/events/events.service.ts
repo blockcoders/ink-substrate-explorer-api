@@ -6,7 +6,7 @@ import { Vec } from '@polkadot/types-codec'
 import { FrameSystemEventRecord } from '@polkadot/types/lookup'
 import { numberToU8a } from '@polkadot/util'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { Repository } from 'typeorm'
+import { MongoRepository } from 'typeorm'
 import { fromString } from 'uuidv4'
 import { Contract } from '../contracts/entity/contract.entity'
 import { FetchEventsInput } from './dtos/fetch-events.input'
@@ -18,9 +18,9 @@ export class EventsService {
     @InjectPinoLogger(EventsService.name)
     private readonly logger: PinoLogger,
     @InjectRepository(Event)
-    private readonly eventRepository: Repository<Event>,
+    private readonly eventRepository: MongoRepository<Event>,
     @InjectRepository(Contract)
-    private readonly contractRespository: Repository<Contract>,
+    private readonly contractRespository: MongoRepository<Contract>,
   ) {}
 
   async fetchEvents(args: FetchEventsInput): Promise<Event[]> {
