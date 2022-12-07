@@ -75,7 +75,7 @@ export class TransactionsService {
             signature: signature.toString(),
             signer: signer.toString(),
             nonce: nonce.toNumber(),
-            tip: tip.toNumber(),
+            tip: tip.toString(),
             timestamp,
             version,
             type: type,
