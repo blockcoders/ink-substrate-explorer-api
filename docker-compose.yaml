@@ -6,6 +6,27 @@ networks:
     driver: ink-explorer-network
 
 services:
+  backend:
+    #image: blockcoders/ink-substrate-explorer-api:latest
+    restart: on-failure
+    depends_on:
+      - postgres
+    build:
+      context: .
+      # dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
+    env_file:
+      - .env
+    networks:
+      ink-explorer-network:
+        aliases:
+          - "backend"
   mongo:
     image: mongo:latest
     environment:
@@ -22,50 +43,3 @@ services:
       ink-explorer-network:
         aliases:
           - "mongo"
-  # backend:
-  #   #image: blockcoders/ink-substrate-explorer-api:latest
-  #   restart: on-failure
-  #   depends_on:
-  #     - postgres
-  #   build:
-  #     context: .
-  #     # dockerfile: dev.Dockerfile
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 8080:8080
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #     - /usr/src/app/dist
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     ink-explorer-network:
-  #       aliases:
-  #         - "backend"
-  # postgres:
-  #   image: postgres:14.4
-  #   restart: always
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     - POSTGRES_USER=root
-  #     - POSTGRES_PASSWORD=password
-  #     - POSTGRES_DB=ink
-  #   networks:
-  #     ink-explorer-network:
-  #       aliases:
-  #         - "postgres"
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-  #     PGADMIN_DEFAULT_PASSWORD: "admin"
-  #   ports:
-  #     - 80:80
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     ink-explorer-network:
-  #       aliases:
-  #         - "pgadmin"
