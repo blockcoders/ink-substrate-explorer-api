@@ -20,15 +20,12 @@ import { Transaction } from '../transactions/entity/transaction.entity'
           port: env.DATABASE_PORT,
           username: env.DATABASE_USERNAME,
           password: env.DATABASE_PASSWORD,
-          // database: 'test',
-          // database: 'test',
-          // retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
-          // retryDelay: env.DATABASE_RETRY_DELAY,
+          database: env.DATABASE_NAME,
+          retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
+          retryDelay: env.DATABASE_RETRY_DELAY,
           synchronize: true,
           autoLoadEntities: true,
-          logger: 'debug',
-
-          // keepConnectionAlive: false,
+          keepConnectionAlive: false,
         }
 
         if (!env.DATABASE_SSL_CA) {

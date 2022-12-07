@@ -9,11 +9,15 @@ services:
   mongo:
     image: mongo:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongo
-      - MONGO_INITDB_ROOT_PASSWORD=mongo
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
       - MONGO_INITDB_DATABASE=ink
+      - MONGO_INITDB_USER=mongodb
+      - MONGO_INITDB_PWD=mongodb
     ports:
       - '27017:27017'
+    volumes:
+      - ./initdb.d/:/docker-entrypoint-initdb.d/
     networks:
       ink-explorer-network:
         aliases:
