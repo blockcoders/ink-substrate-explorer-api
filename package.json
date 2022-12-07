@@ -43,10 +43,11 @@
     "typeorm:drop": "npm run typeorm schema:drop",
     "typeorm:reset": "npm run typeorm:drop && npm run typeorm:sync",
     "typeorm:migrate": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate -d ormconfig.ts -- -n",
-    "typeorm:create": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:create -d ormconfig.ts -- -n",
+    "typeorm:create": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:create -d ormconfig.ts",
     "typeorm:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run -d ormconfig.ts",
     "typeorm:revert": "npm run typeorm migration:revert",
-    "check": "npm run lint && npm run test && npm run build"
+    "check": "npm run lint && npm run test && npm run build",
+    "mongo:indexes": "ts-node mongo-indexes"
   },
   "precommit": [
     "lint:ci",
@@ -109,6 +110,7 @@
     "graphql": "^16.6.0",
     "graphql-type-json": "^0.3.2",
     "mongodb": "^4.12.1",
+    "mongoose": "^6.8.0",
     "nestjs-pino": "^3.1.1",
     "p-queue": "^6.6.2",
     "pg": "^8.8.0",

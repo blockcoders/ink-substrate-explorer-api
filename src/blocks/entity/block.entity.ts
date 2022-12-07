@@ -1,12 +1,9 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql'
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, ObjectID, ObjectIdColumn, OneToMany } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, ObjectID, ObjectIdColumn, OneToMany } from 'typeorm'
 import { Transaction } from '../../transactions/entity/transaction.entity'
 
 @ObjectType()
 @Entity({ name: 'blocks' })
-@Index(['hash', 'number'])
-@Index(['number'])
-@Index(['timestamp'])
 export class Block extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectID

@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   ObjectID,
@@ -16,7 +15,6 @@ import { Event } from '../../events/entity/event.entity'
 
 @ObjectType()
 @Entity({ name: 'transactions' })
-@Index(['signer'])
 export class Transaction extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectID
