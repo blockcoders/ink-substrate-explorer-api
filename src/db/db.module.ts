@@ -34,10 +34,7 @@ import { Transaction } from '../transactions/entity/transaction.entity'
 
         return {
           ...config,
-          // ssl: {
-          //   ca: env.DATABASE_SSL_CA,
-          //   rejectUnauthorized: false,
-          // },
+          sslCA: env.DATABASE_SSL_CA,
         }
       },
     }),
