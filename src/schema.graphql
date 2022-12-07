@@ -85,7 +85,7 @@ type Transaction {
   signer: String
   ss58: String
   timestamp: Float!
-  tip: Int
+  tip: String
   tokens: String
   type: Int
   version: Int
