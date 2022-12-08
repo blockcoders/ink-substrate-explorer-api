@@ -5,7 +5,7 @@ import { ApiPromise } from '@polkadot/api'
 import { BlockHash, Header } from '@polkadot/types/interfaces'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import PQueue from 'p-queue'
-import { main as addMongonIndexes } from '../../mongo-indexes'
+import { DbService } from 'src/db/db.service'
 import { BlocksService } from '../blocks/blocks.service'
 import { EnvService } from '../env/env.service'
 import { EventsService } from '../events/events.service'
@@ -24,6 +24,7 @@ export class SubscriptionsService implements OnModuleInit {
     private transactionsService: TransactionsService,
     private readonly eventsService: EventsService,
     private readonly syncService: SyncService,
+    private readonly dbService: DbService,
   ) {}
 
   onModuleInit(): void {
@@ -79,7 +80,7 @@ export class SubscriptionsService implements OnModuleInit {
     } finally {
       this.logger.debug('syncing finished')
       await this.syncService.finishSync()
-      await addMongonIndexes()
+      await this.dbService.addIndexes()
       return result
     }
   }

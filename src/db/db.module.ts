@@ -7,6 +7,7 @@ import { EnvService } from '../env/env.service'
 import { Event } from '../events/entity/event.entity'
 import { Sync } from '../sync/entity/sync.entity'
 import { Transaction } from '../transactions/entity/transaction.entity'
+import { DbService } from './db.service';
 
 @Module({
   imports: [
@@ -41,5 +42,6 @@ import { Transaction } from '../transactions/entity/transaction.entity'
     TypeOrmModule.forFeature([Block, Transaction, Event, Contract, Sync]),
   ],
   exports: [TypeOrmModule],
+  providers: [DbService],
 })
 export class DBModule {}
