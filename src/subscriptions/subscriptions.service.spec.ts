@@ -15,6 +15,9 @@ import { SubscriptionsService } from './subscriptions.service'
 
 jest.mock('@polkadot/api')
 jest.mock('../utils')
+jest.mock('../../mongo-indexes', () => ({
+  main: jest.fn(),
+}))
 
 describe('subscriptionsService', () => {
   let service: SubscriptionsService
