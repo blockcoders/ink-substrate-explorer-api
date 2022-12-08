@@ -7,7 +7,7 @@ const username = process.env.DATABASE_USERNAME
 const password = process.env.DATABASE_PASSWORD
 const database = process.env.DATABASE_NAME
 
-async function main() {
+export async function main() {
   const con = await mongoose.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`)
 
   // block indexes
@@ -22,16 +22,24 @@ async function main() {
   const transactions = con.connection.collection('transactions')
   await transactions.createIndex({ timestamp: -1 })
   await transactions.createIndex({ timestamp: 1 })
+  await transactions.createIndex({ blockHash: -1 })
+  await transactions.createIndex({ blockHash: 1 })
 
   // events indexes
   const events = con.connection.collection('events')
   await events.createIndex({ timestamp: -1 })
   await events.createIndex({ timestamp: 1 })
+  await events.createIndex({ contract: -1 })
+  await events.createIndex({ contract: 1 })
+  await events.createIndex({ transactionHash: -1 })
+  await events.createIndex({ transactionHash: 1 })
+
+  console.log('all indexes added')
 }
 
-main()
-  .catch((err) => console.log(err))
-  .then(() => {
-    console.log('all index added')
-    process.exit()
-  })
+// main()
+//   .catch((err) => console.log(err))
+//   .then(() => {
+//     console.log('all index added')
+//     process.exit()
+//   })
