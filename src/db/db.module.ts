@@ -7,10 +7,11 @@ import { EnvService } from '../env/env.service'
 import { Event } from '../events/entity/event.entity'
 import { Sync } from '../sync/entity/sync.entity'
 import { Transaction } from '../transactions/entity/transaction.entity'
-import { DbService } from './db.service';
+import { DbService } from './db.service'
 
 @Module({
   imports: [
+    EnvModule,
     TypeOrmModule.forRootAsync({
       imports: [EnvModule],
       inject: [EnvService],
@@ -41,7 +42,7 @@ import { DbService } from './db.service';
     }),
     TypeOrmModule.forFeature([Block, Transaction, Event, Contract, Sync]),
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, DbService],
   providers: [DbService],
 })
 export class DBModule {}
