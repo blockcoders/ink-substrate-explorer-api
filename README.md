@@ -229,7 +229,7 @@ query {
 ```graphql
 {
   "data": {
-    "version": "v1.0.5"
+    "version": "v1.0.6"
   }
 }
 ```
@@ -373,7 +373,7 @@ query {
       "signer": "5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc",
       "ss58": "42",
       "timestamp": 1666888006111,
-      "tip": 0,
+      "tip": "0",
       "tokens": "Unit",
       "type": 4,
       "version": 132
@@ -443,7 +443,7 @@ query {
         "signer": "5GVmSPghWsjACADGYi78dmhuZEgfgDwfixR7BM3aMEoNuTBc",
         "ss58": "42",
         "timestamp": 1666888006111,
-        "tip": 0,
+        "tip": "0",
         "tokens": "Unit",
         "type": 4,
         "version": 132
@@ -505,7 +505,7 @@ query {
         "signer": "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM",
         "ss58": "42",
         "timestamp": 1666888006111,
-        "tip": 0,
+        "tip": "0",
         "tokens": "Unit",
         "type": 4,
         "version": 4
