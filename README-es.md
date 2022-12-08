@@ -15,7 +15,7 @@ Ink! Explorer API
 
 ## **Acerca del explorador**
 
-Ink Explorer es una aplicacion que provee informacion relativa a los contratos que utilizan Ink! en blockchains basadas en Substrate. Se suscribe a la blockchain y a los eventos emitidos por los modulos de Ink! y guarda la informacion en su propia base de datos PostgreSQL. El back-end expone una API que puede interactuar con la base de datos y ejecutar consultas rapidas para obtener informacion especifica en poco tiempo.
+Ink Explorer es una aplicacion que provee informacion relativa a los contratos que utilizan Ink! en blockchains basadas en Substrate. Se suscribe a la blockchain y a los eventos emitidos por los modulos de Ink! y guarda la informacion en su propia base de datos. El back-end expone una API que puede interactuar con la base de datos y ejecutar consultas rapidas para obtener informacion especifica en poco tiempo.
 
 La idea de este proyecto es brindar una herramienta que permita a los desarrolladores de Ink! explorar y analizar los contratos que se encuentran en blockchain. Esta herramienta se puede utilizar para analizar los contratos que se encuentran en blockchains basadas en Substrate que utilizan módulos Ink!. También se puede usar para analizar contratos que están en una blockchain local.
 
@@ -40,7 +40,7 @@ pnpm i --frozen-lockfile
 
 ### Configurar las variables de entorno
 
-**Nota**: El archivo .env tiene la configuracion para GraphQL, la base de datos PostgreSQL, Node y la url del RPC de la blockchain basada en Substrate.
+**Nota**: El archivo .env tiene la configuracion para GraphQL, la base de datos Mongo, Node y la url del RPC de la blockchain basada en Substrate.
 
 ```sh
 cp .env.sample .env
@@ -67,10 +67,10 @@ GRAPHQL_INTROSPECTION=true
 #### Configuraciones de la base de datos
 
 ```sh
-DATABASE_HOST=postgres
+DATABASE_HOST=mongo
 DATABASE_NAME=ink
-DATABASE_USERNAME=root
-DATABASE_PASSWORD=password
+DATABASE_USERNAME=mongodb
+DATABASE_PASSWORD=mongodb
 DATABASE_RETRY_ATTEMPTS=5
 DATABASE_RETRY_DELAY=3000
 ```
@@ -89,37 +89,16 @@ BLOCK_CONCURRENCY=1000
 
 ## **Levantando el servicio (DEV)**
 
-### Instanciar una BD Postgres utilizando docker (opcional)
+### Instanciar una BD Mongo utilizando docker (opcional)
 
-Para levantar el servicio es necesario contar con una **BD PostgreSQL**. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
-Ejecutando el siguiente comando tambien instanciara un contenedor para pgAdmin:
+Para levantar el servicio es necesario contar con una **BD Mongo**. Para esto, el archivo **dev-docker-compose.yaml** ya tiene una imagen configurada lista para usar.
+Ejecutando el siguiente comando tambien instanciara un contenedor para Mongo Express:
 
 ```sh
 docker-compose -f dev-docker-compose.yaml up -d
 ```
 
-Una vez que el servicio se está ejecutando, se puede acceder a pgAdmin siguiendo el enlace que se muestra en la terminal (en este caso localhost:80).
-
-![pgAdmin](/.images/pg_admin_up.png)
-
-Las credenciales para acceder a pgAdmin son (establecidas en el archivo dev-docker-compose):
-
-- PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-- PGADMIN_DEFAULT_PASSWORD: "admin"
-
-Registre un nuevo servidor en pgAdmin y establezca las credenciales para la base de datos PostgreSQL:
-
-Haga clic derecho en 'Servidores' y seleccione "Registrarse" -> "Servidor"
-
-![pgAdmin](/.images/pg_admin_select_server.png)
-
-Establezca un nombre para el servidor (en este ejemplo, "Docker")
-
-![pgAdmin](/.images/pg_admin_server_name.png)
-
-Establezca las credenciales para la base de datos PostgreSQL (esto se puede encontrar en el archivo dev-docker-compose):
-
-![pgAdmin](/.images/pg_admin_connection.png)
+Una vez que el servicio se está ejecutando, se puede acceder a Mongo Express siguiendo el enlace que se muestra en la terminal (en este caso localhost:8081).
 
 ### Instanciar un nodo local de Substrate (opcional)
 
@@ -143,17 +122,17 @@ pnpm start:dev
 Ejecuta el servicio en el modo de desarrollo.
 El servicio se recargará si realiza ediciones.
 
-**Nota**: Se requiere una base de datos postgres en funcionamiento y una conexión válida a un nodo de Substrate.
+**Nota**: Se requiere una base de datos Mongo en funcionamiento y una conexión válida a un nodo de Substrate.
 
 ## **Levantando el servicio (PROD)**
 
-Para iniciar los contenedores del servicio de backend, la BD y pgAdmin ejecutar el siguiente comando:
+Para iniciar los contenedores del servicio de backend, la BD y Mongo Express ejecutar el siguiente comando:
 
 ```sh
 docker-compose up -d
 ```
 
-**Nota**: Se requiere una base de datos postgres en funcionamiento y una conexión válida a un nodo de Substrate.
+**Nota**: Se requiere una base de datos Mongo en funcionamiento y una conexión válida a un nodo de Substrate.
 Opcionalmente, comente el servicio de back-end en el archivo docker-compose si desea ejecutar la imagen localmente.
 
 ## Ejecutar la imagen de Docker del servicio back-end

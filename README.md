@@ -15,7 +15,7 @@ Ink! Explorer API
 
 ## **About the explorer**
 
-Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains. It subscribes to blockchain and Ink modules events and store the information on its own PostgreSQL database. The backend exposes an API that can interact with the DB and run fast queries to get specific information in a short time.
+Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains. It subscribes to blockchain and Ink modules events and store the information on its own database. The backend exposes an API that can interact with the DB and run fast queries to get specific information in a short time.
 
 The idea of this project is to provide a tool that allows developers of Ink! explore and analyze the contracts found on the blockchain. This tool can be used to analyze the contracts found on Substrate based blockchains that are using Ink! modules. It can also be used to analyze contracts that are on a local blockchain.
 
@@ -40,7 +40,7 @@ pnpm i --frozen-lockfile
 
 ### Configure the environment variables
 
-**Note**: The .env file has the configuration for GraphQL, the PostgreSQL database, Node and the RPC url of the Substrate Blockchain.
+**Note**: The .env file has the configuration for GraphQL, the Mongo database, Node and the RPC url of the Substrate Blockchain.
 
 ```sh
 cp .env.sample .env
@@ -67,10 +67,10 @@ GRAPHQL_INTROSPECTION=true
 #### Database configurations
 
 ```sh
-DATABASE_HOST=postgres
+DATABASE_HOST=mongo
 DATABASE_NAME=ink
-DATABASE_USERNAME=root
-DATABASE_PASSWORD=password
+DATABASE_USERNAME=mongodb
+DATABASE_PASSWORD=mongodb
 DATABASE_RETRY_ATTEMPTS=5
 DATABASE_RETRY_DELAY=3000
 ```
@@ -89,37 +89,16 @@ BLOCK_CONCURRENCY=1000
 
 ## **Starting the project (DEV)**
 
-### Start a Postgres DB using docker (optional)
+### Start a Mongo DB using docker (optional)
 
-To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
-Running this command it will also start a container for pgAdmin:
+To start the project a **Mongo DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
+Running this command it will also start a container for Mongo Express:
 
 ```sh
 docker-compose -f dev-docker-compose.yaml up -d
 ```
 
-Once the service is running, pgAdmin can be accessed following the link that is shown in the terminal (In this case localhost:80).
-
-![pgAdmin](/.images/pg_admin_up.png)
-
-The credentials to access pgAdmin are (set in the dev-docker-compose file):
-
-- PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-- PGADMIN_DEFAULT_PASSWORD: "admin"
-
-Register a new server in pgAdmin and set the credentials for the PostgreSQL DB:
-
-Right click on 'Servers' and select "Register" -> "Server"
-
-![pgAdmin](/.images/pg_admin_select_server.png)
-
-Set a name for the server (In this example "Docker")
-
-![pgAdmin](/.images/pg_admin_server_name.png)
-
-Set the credentials for the PostgreSQL DB (this can be found in the dev-docker-compose file):
-
-![pgAdmin](/.images/pg_admin_connection.png)
+Once the service is running, Mongo Express can be accessed following the link that is shown in the terminal (In this case localhost:8081).
 
 ### Start a local Substrate Node (optional)
 
@@ -143,17 +122,17 @@ pnpm start:dev
 Runs the service in the development mode.
 The service will reload if you make edits.
 
-**Note**: A postgresDB up and running and a valid connection to a substrate node are required.
+**Note**: A Mongo DB up and running and a valid connection to a substrate node are required.
 
 ## **Starting the project (PROD)**
 
-To start the backend service, DB and pgAdmin containers run the following command:
+To start the backend service, Mongo DB and Mongo Express containers run the following command:
 
 ```sh
 docker-compose up -d
 ```
 
-**Note**: A postgresDB up and running and a valid connection to a substrate node are required.
+**Note**: A Mongo DB up and running and a valid connection to a substrate node are required.
 Optionally comment the backend service in the docker-compose file if you want to run the image locally.
 
 ## Running the Back-end service Docker image
