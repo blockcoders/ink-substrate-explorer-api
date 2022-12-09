@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { MongoRepository } from 'typeorm'
 import { UpdateSyncDto } from './dto/updateSync.dto'
 import { Sync } from './entity/sync.entity'
 
@@ -8,7 +8,7 @@ import { Sync } from './entity/sync.entity'
 export class SyncService {
   constructor(
     @InjectRepository(Sync)
-    private readonly syncRepository: Repository<Sync>,
+    private readonly syncRepository: MongoRepository<Sync>,
   ) {}
 
   async find(): Promise<Sync | null> {
@@ -17,11 +17,11 @@ export class SyncService {
   }
 
   async updateSync(data: UpdateSyncDto): Promise<any> {
-    await this.syncRepository.update({ id: 1 }, data)
+    return await this.syncRepository.findOneAndUpdate({ id: 1 }, { $set: data })
   }
 
   async finishSync(): Promise<void> {
-    await this.syncRepository.update({ id: 1 }, { status: 'synced' })
+    await this.syncRepository.findOneAndUpdate({ id: 1 }, { $set: { status: 'synced' } })
   }
 
   async createSync(): Promise<Sync> {

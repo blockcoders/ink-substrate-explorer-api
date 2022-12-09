@@ -4,20 +4,22 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
+  ObjectID,
+  ObjectIdColumn,
   OneToMany,
-  PrimaryColumn,
 } from 'typeorm'
 import { Block } from '../../blocks/entity/block.entity'
 import { Event } from '../../events/entity/event.entity'
 
 @ObjectType()
 @Entity({ name: 'transactions' })
-@Index(['signer'])
 export class Transaction extends BaseEntity {
-  @PrimaryColumn({
+  @ObjectIdColumn()
+  _id!: ObjectID
+
+  @Column({
     unique: true,
   })
   @Field(/* istanbul ignore next */ () => String)

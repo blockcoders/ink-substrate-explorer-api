@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Abi, ContractPromise } from '@polkadot/api-contract'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { Repository } from 'typeorm'
+import { MongoRepository } from 'typeorm'
 import { EnvService } from '../env/env.service'
 import { connect } from '../utils'
 import { FetchContractsInput } from './dtos/fetch-contracts.input'
@@ -15,7 +15,7 @@ export class ContractsService {
     private readonly logger: PinoLogger,
     private readonly env: EnvService,
     @InjectRepository(Contract)
-    private readonly contractRepository: Repository<Contract>,
+    private readonly contractRepository: MongoRepository<Contract>,
   ) {}
 
   async findOne(address: string): Promise<Contract> {

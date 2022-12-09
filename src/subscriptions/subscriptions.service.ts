@@ -6,6 +6,7 @@ import { BlockHash, Header } from '@polkadot/types/interfaces'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
 import PQueue from 'p-queue'
 import { BlocksService } from '../blocks/blocks.service'
+import { DbService } from '../db/db.service'
 import { EnvService } from '../env/env.service'
 import { EventsService } from '../events/events.service'
 import { SyncService } from '../sync/sync.service'
@@ -23,6 +24,7 @@ export class SubscriptionsService implements OnModuleInit {
     private transactionsService: TransactionsService,
     private readonly eventsService: EventsService,
     private readonly syncService: SyncService,
+    private readonly dbService: DbService,
   ) {}
 
   onModuleInit(): void {
@@ -78,6 +80,7 @@ export class SubscriptionsService implements OnModuleInit {
     } finally {
       this.logger.debug('syncing finished')
       await this.syncService.finishSync()
+      await this.dbService.addIndexes()
       return result
     }
   }
@@ -138,7 +141,7 @@ export class SubscriptionsService implements OnModuleInit {
     const block = await this.blocksService.createFromHeader(header, timestamp, encodedLength)
     const transactions = await this.transactionsService.createTransactionsFromExtrinsics(
       extrinsics,
-      block.hash,
+      block.hash?.toString() || '',
       timestamp,
     )
     for (const [index, tx] of transactions.entries()) {

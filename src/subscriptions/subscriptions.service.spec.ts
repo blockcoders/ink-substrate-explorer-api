@@ -6,6 +6,7 @@ import { mockEvents } from '../../mocks/events-mocks'
 import { mockPinoService } from '../../mocks/pino-mocks'
 import { mockExtrinsics, mockTimestamp, mockTransactions } from '../../mocks/transactions-mock'
 import { BlocksService } from '../blocks/blocks.service'
+import { DbService } from '../db/db.service'
 import { EnvModule } from '../env/env.module'
 import { EventsService } from '../events/events.service'
 import { SyncService } from '../sync/sync.service'
@@ -65,6 +66,12 @@ describe('subscriptionsService', () => {
             }),
             finishSync: jest.fn(),
             updateSync: jest.fn(),
+          },
+        },
+        {
+          provide: DbService,
+          useValue: {
+            addIndexes: jest.fn(),
           },
         },
         mockPinoService(SubscriptionsService.name),

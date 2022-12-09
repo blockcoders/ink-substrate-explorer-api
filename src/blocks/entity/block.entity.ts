@@ -1,14 +1,14 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql'
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, ObjectID, ObjectIdColumn, OneToMany } from 'typeorm'
 import { Transaction } from '../../transactions/entity/transaction.entity'
 
 @ObjectType()
 @Entity({ name: 'blocks' })
-@Index(['hash', 'number'])
 export class Block extends BaseEntity {
-  @PrimaryColumn({
-    unique: true,
-  })
+  @ObjectIdColumn()
+  _id!: ObjectID
+
+  @Column({ unique: true, type: 'string' })
   @Field(/* istanbul ignore next */ () => String)
   hash!: string
 

@@ -1,26 +1,29 @@
 version: '3.7'
 services:
-  postgres:
-    image: postgres:14.4
+  mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=ink
+      - MONGO_INITDB_USER=mongodb
+      - MONGO_INITDB_PWD=mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./initdb.d/:/docker-entrypoint-initdb.d/
+  mongo-express:
+    image: mongo-express
     restart: always
     ports:
-      - 5432:5432
+      - 8081:8081
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=ink
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017
   substrate:
     image: blockcoders/substrate-contracts-node
     restart: on-failure
     ports:
       - 9944:9944
     command: '--dev --ws-external'
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
-    ports:
-      - 80:80
-    depends_on:
-      - postgres

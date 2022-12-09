@@ -5,7 +5,7 @@ import { GenericExtrinsic } from '@polkadot/types'
 import { Vec } from '@polkadot/types-codec'
 import { AnyTuple, ArgsDef } from '@polkadot/types-codec/types'
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino'
-import { Repository } from 'typeorm'
+import { MongoRepository } from 'typeorm'
 import { FetchTransactionsByContractInput } from './dtos/fetch-transactions-by-contract.input'
 import { FetchTransactionsInput } from './dtos/fetch-transactions.input'
 import { Transaction } from './entity/transaction.entity'
@@ -17,7 +17,7 @@ export class TransactionsService {
     @InjectPinoLogger(TransactionsService.name)
     private readonly logger: PinoLogger,
     @InjectRepository(Transaction)
-    private readonly transactionRepository: Repository<Transaction>,
+    private readonly transactionRepository: MongoRepository<Transaction>,
   ) {}
 
   async findOne(hash: string): Promise<Transaction> {
@@ -30,10 +30,16 @@ export class TransactionsService {
 
   async fetchTransactions(args: FetchTransactionsInput): Promise<Transaction[]> {
     const { skip, take, blockHash, orderAsc } = args
+    const where: any = {}
+
+    if (blockHash) {
+      where['blockHash'] = blockHash
+    }
+
     return this.transactionRepository.find({
       skip,
       take,
-      where: { blockHash },
+      where,
       order: { timestamp: orderAsc ? 'ASC' : 'DESC' },
     })
   }
@@ -113,14 +119,46 @@ export class TransactionsService {
   }
 
   async getTransactionsByContractAddress(args: FetchTransactionsByContractInput): Promise<Transaction[]> {
-    const { skip = 0, take = 10, address, orderAsc = false } = args
-    return this.transactionRepository
-      .createQueryBuilder('transaction')
-      .leftJoin('transaction.events', 'event')
-      .where('event.contractAddress = :address', { address })
+    const { skip = 0, take = 10, address, orderAsc } = args
+    const a = await this.transactionRepository
+      .aggregate([
+        {
+          $lookup: {
+            from: 'events',
+            let: { tx: '$hash' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: ['$transactionHash', '$$tx'],
+                      },
+                      {
+                        $eq: ['$contract.address', address],
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                $project: { _id: 1, contract: 1 },
+              },
+            ],
+            as: 'events',
+          },
+        },
+        {
+          $match: {
+            $expr: { $gte: [{ $size: '$events' }, 1] },
+          },
+        },
+      ])
+      .limit(take)
       .skip(skip)
-      .take(take)
-      .orderBy('transaction.timestamp', orderAsc ? 'ASC' : 'DESC')
-      .getMany()
+      .sort({ timestamp: orderAsc ? 1 : -1 })
+
+    const arr = await a.toArray()
+    return arr as any
   }
 }
