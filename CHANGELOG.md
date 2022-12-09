@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/12/09**
+- [#15](https://github.com/blockcoders/nestjs-ethers/pull/15) Migrate to mongodb
+- [#14](https://github.com/blockcoders/nestjs-ethers/pull/14) Change tip data type to string 
+
+## BREAKING CHANGE
+- Replace postgres for mongodb
+
 ## 1.0.5
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/25**
 - [#13](https://github.com/blockcoders/nestjs-ethers/pull/13) add sync module
