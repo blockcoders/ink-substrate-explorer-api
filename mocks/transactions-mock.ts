@@ -10,7 +10,7 @@ export const mockTransaction = {
     '0xdcd2f242d04cf19bf4695606a4244da9c7ab1d7a71153bcc3010909294dcb633e14841e833f35de113f8400b9687f10b93a27d3940926ba434318a7fc639f986',
   signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
   nonce: 37,
-  tip: 0,
+  tip: '0',
   timestamp: 1600000000000,
   createdDate: '2022-08-25 23:42:49.006343',
 }
@@ -25,7 +25,7 @@ export const mockTransactions = [
       '0xdcd2f242d04cf19bf4695606a4244da9c7ab1d7a71153bcc3010909294dcb633e14841e833f35de113f8400b9687f10b93a27d3940926ba434318a7fc639f986',
     signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
     nonce: 33,
-    tip: 0,
+    tip: '0',
     createdDate: '2022-08-25 22:49:21.987641',
   },
   {
@@ -37,7 +37,7 @@ export const mockTransactions = [
       '0x4eb9be0d2604225259ca3a0f183d424122f0fc6e2694e5d2f161f1c82b14fd5079ca525f9d89b1dbbfce666cbcf4ee843787f07c15993a26cb87ca24573bc087',
     signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
     nonce: 32,
-    tip: 0,
+    tip: '0',
     createdDate: '2022-08-25 22:49:21.96569',
   },
 ]
@@ -105,7 +105,7 @@ mockTransaction1.nonce = 0
 mockTransaction1.signature =
   '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
 mockTransaction1.signer = '5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM'
-mockTransaction1.tip = 0
+mockTransaction1.tip = '0'
 mockTransaction1.method = 'set'
 mockTransaction1.section = 'timestamp'
 
@@ -116,7 +116,7 @@ mockTransaction2.nonce = 4
 mockTransaction2.signature =
   '0x984c98e3d74fcc35ddc5397282d282dcfda496ae95cb98f4e7d6d22125ec1e7cf03dc3f6fab3add1763bec4b8ee01346b198804b4faaaa1b88d37c5dbc9ca98b'
 mockTransaction2.signer = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
-mockTransaction2.tip = 0
+mockTransaction2.tip = '0'
 mockTransaction2.method = 'call'
 mockTransaction2.section = 'timestamp'
 

@@ -63,9 +63,9 @@ export class Transaction extends BaseEntity {
   @Field(/* istanbul ignore next */ () => Int, { nullable: true })
   nonce?: number
 
-  @Column('int')
-  @Field(/* istanbul ignore next */ () => Int, { nullable: true })
-  tip?: number
+  @Column()
+  @Field(/* istanbul ignore next */ () => String, { nullable: true })
+  tip?: string
 
   @Column('int')
   @Field(/* istanbul ignore next */ () => Int, { nullable: true })
