@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/12/09**
+- [#15](https://github.com/blockcoders/nestjs-ethers/pull/15) Migrate to mongodb
+
 ## 1.1.0
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/12/09**
 - [#15](https://github.com/blockcoders/nestjs-ethers/pull/15) Migrate to mongodb

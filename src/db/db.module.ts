@@ -18,11 +18,6 @@ import { DbService } from './db.service'
       useFactory: async (env: EnvService) => {
         const config: TypeOrmModuleOptions = {
           type: 'mongodb',
-          host: env.DATABASE_HOST,
-          port: env.DATABASE_PORT,
-          username: env.DATABASE_USERNAME,
-          password: env.DATABASE_PASSWORD,
-          database: env.DATABASE_NAME,
           retryAttempts: env.DATABASE_RETRY_ATTEMPTS,
           retryDelay: env.DATABASE_RETRY_DELAY,
           synchronize: true,
@@ -30,13 +25,20 @@ import { DbService } from './db.service'
           keepConnectionAlive: false,
         }
 
-        if (!env.DATABASE_SSL_CA) {
-          return config
+        if (env.DATABASE_URI) {
+          return {
+            ...config,
+            url: env.DATABASE_URI,
+          }
         }
 
         return {
           ...config,
-          sslCA: env.DATABASE_SSL_CA,
+          host: env.DATABASE_HOST,
+          port: env.DATABASE_PORT,
+          username: env.DATABASE_USERNAME,
+          password: env.DATABASE_PASSWORD,
+          database: env.DATABASE_NAME,
         }
       },
     }),
