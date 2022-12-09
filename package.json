@@ -1,6 +1,6 @@
 {
   "name": "ink-substrate-explorer-api",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains.",
   "author": "Blockcoders <engineering@blockcoders.io>",
   "license": "MIT",
