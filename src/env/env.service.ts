@@ -21,7 +21,7 @@ export class EnvService {
   public readonly DATABASE_NAME: string
   public readonly DATABASE_USERNAME: string
   public readonly DATABASE_PASSWORD: string
-  public readonly DATABASE_SSL_CA: string
+  public readonly DATABASE_URI: string
   public readonly DATABASE_RETRY_ATTEMPTS: number
   public readonly DATABASE_RETRY_DELAY: number
   public readonly WS_PROVIDER: string
@@ -45,7 +45,7 @@ export class EnvService {
     this.DATABASE_NAME = this.config.get<string>('DATABASE_NAME', '')
     this.DATABASE_USERNAME = this.config.get<string>('DATABASE_USERNAME', '')
     this.DATABASE_PASSWORD = this.config.get<string>('DATABASE_PASSWORD', 'password')
-    this.DATABASE_SSL_CA = this.config.get<string>('DATABASE_SSL_CA', '')
+    this.DATABASE_URI = this.config.get<string>('DATABASE_URI', '')
     this.DATABASE_RETRY_ATTEMPTS = parseInt(this.config.get<string>('DATABASE_RETRY_ATTEMPTS', '20'), 10)
     this.DATABASE_RETRY_DELAY = parseInt(this.config.get<string>('DATABASE_RETRY_DELAY', '6000'), 10)
     this.WS_PROVIDER = this.config.get<string>('WS_PROVIDER', '')

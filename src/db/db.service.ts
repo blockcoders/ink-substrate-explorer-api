@@ -12,13 +12,19 @@ export class DbService {
   ) {}
 
   async addIndexes() {
-    const host = this.env.DATABASE_HOST
-    const port = this.env.DATABASE_PORT
-    const username = this.env.DATABASE_USERNAME
-    const password = this.env.DATABASE_PASSWORD
-    const database = this.env.DATABASE_NAME
+    let con: typeof mongoose
 
-    const con = await mongoose.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`)
+    if (this.env.DATABASE_URI) {
+      con = await mongoose.connect(this.env.DATABASE_URI)
+    } else {
+      const host = this.env.DATABASE_HOST
+      const port = this.env.DATABASE_PORT
+      const username = this.env.DATABASE_USERNAME
+      const password = this.env.DATABASE_PASSWORD
+      const database = this.env.DATABASE_NAME
+
+      con = await mongoose.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`)
+    }
 
     // block indexes
     const blocks = con.connection.collection('blocks')

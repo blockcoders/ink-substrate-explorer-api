@@ -50,7 +50,7 @@ export class EnvironmentVariables {
   DATABASE_PASSWORD: string | undefined
 
   @IsString()
-  DATABASE_SSL_CA: string | undefined
+  DATABASE_URI: string | undefined
 
   @IsNumberString()
   DATABASE_RETRY_ATTEMPTS: string | undefined
